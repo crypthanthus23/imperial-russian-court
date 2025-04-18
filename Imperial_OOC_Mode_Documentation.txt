@@ -1,0 +1,36 @@
+=== IMPERIAL RUSSIAN COURT HUD OOC MODE ===
+
+OVERVIEW:
+The Out of Character (OOC) mode is an important feature that allows players to temporarily step out of their character role while remaining within the roleplay environment. This feature is essential for facilitating meta-discussions, technical assistance, or simply taking a break from active roleplay without leaving the area.
+
+HOW TO ACTIVATE:
+
+1. Access the Settings Menu by clicking on "Settings" from the main HUD menu
+2. Click the "OOC" button to toggle between In Character (IC) and Out of Character (OOC) modes
+3. When in OOC mode, your floating text will display only "OOC" instead of your character stats
+4. The HUD will confirm your status change with a message
+
+TECHNICAL DETAILS:
+
+- The OOC mode sets the isOOC variable to TRUE in the Core HUD script
+- This status is transmitted to the meter script via the sendStatsToMeter() function
+- Compatible meters will recognize this status and adjust their display accordingly
+- All HUDs (Core, Tsar, Tsarina, Tsarevich, etc.) support this functionality
+- Players who have died can access OOC mode through the "OOC Options" button in the death menu
+
+ETIQUETTE GUIDELINES:
+
+- Use OOC mode when discussing technical issues with the roleplay system
+- Indicate OOC communication in chat by using double parentheses: ((This is OOC chat))
+- Avoid using OOC mode to gain advantages in roleplay (metagaming)
+- Remember to switch back to IC mode when resuming character roleplay
+- Be respectful of others who are actively roleplaying when you are in OOC mode
+
+TROUBLESHOOTING:
+
+- If your meter does not properly show OOC status, ensure you have the latest meter script
+- If toggling OOC mode doesn't work, try saying "/9menu" to refresh the HUD
+- For persistent issues, reset the HUD by detaching and reattaching it
+
+This documentation was created as part of the Imperial Russian Court Roleplay System.
+Last updated: April 2, 2025

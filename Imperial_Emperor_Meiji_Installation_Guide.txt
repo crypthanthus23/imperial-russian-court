@@ -1,0 +1,101 @@
+# Emperor Meiji HUD - Installation Guide
+
+## Overview
+The Imperial Emperor Meiji HUD is a specialized system designed for roleplaying Emperor Meiji (Mutsuhito) of Japan during his interactions with the Imperial Russian Court of 1905. This HUD simulates his unique role as the modernizing Emperor of Japan during a crucial period of Japanese history.
+
+## Required Components
+
+To properly set up the Emperor Meiji HUD system, you'll need:
+
+1. **Imperial_Emperor_Meiji_HUD.lsl** - The comprehensive script that handles all Emperor Meiji functionality
+
+## Installation Instructions
+
+### Step 1: Create the HUD Object
+1. In Second Life, create a new object (prim) with an appropriate appearance
+2. Name it "Imperial Emperor Meiji HUD"
+3. In the Edit menu, check "Attachment" and set it to be worn as a HUD
+4. Consider adding decorative elements that reflect Japanese imperial aesthetics
+
+### Step 2: Add the Script
+1. Place **Imperial_Emperor_Meiji_HUD.lsl** into the HUD's inventory
+2. Reset the script to ensure proper initialization
+
+## Usage Instructions
+
+### Main Interface
+The Emperor Meiji HUD provides access to six main categories of interaction:
+
+1. **Family** - Interact with imperial family members
+   - Meet with Empress Shōken
+   - Meet with Crown Prince Yoshihito
+   - Meet with Prince Fushimi
+
+2. **Government** - Consult with Japanese government officials
+   - Confer with Prime Minister Itō Hirobumi
+   - Discuss strategy with Field Marshal Yamagata Aritomo
+   - Meet with other ministers and officials
+
+3. **Residences** - Visit various imperial palaces and villas
+   - Tokyo Imperial Palace
+   - Kyoto Imperial Palace
+   - Numazu Imperial Villa
+   - Hayama Imperial Villa
+
+4. **Modernization** - Oversee various modernization initiatives
+   - Military Reforms
+   - Industrial Development
+   - Educational System
+   - Constitutional Government
+
+5. **Diplomacy** - Conduct diplomatic relations with foreign powers
+   - Russian Empire
+   - Great Britain
+   - United States
+   - Qing Dynasty China
+   - Korea
+
+6. **Interests** - Pursue personal imperial interests
+   - Waka Poetry
+   - Military Affairs
+   - Calligraphy
+   - Shinto Rituals
+
+### OOC Mode
+The HUD includes an Out-Of-Character mode toggle that hides your imperial status and displays your OOC status.
+
+### Stress System
+The HUD incorporates a stress management system:
+- Imperial duties increase stress
+- Personal interests and villa visits reduce stress
+- High stress affects health status
+- Health is automatically displayed in the HUD
+
+## Roleplaying Tips
+
+### Historical Context
+- Emperor Meiji led Japan's transformation from feudal isolation to modern power
+- In 1905, Japan was engaged in the Russo-Japanese War
+- The Anglo-Japanese Alliance (1902) was a cornerstone of foreign policy
+- The Emperor maintained traditional imperial dignity while embracing modernization
+
+### Character Guidance
+- Balance between tradition and progress
+- Formal and dignified in public settings
+- Deep interest in both Japanese tradition and Western innovations
+- Particular fondness for poetry (composed over 100,000 waka poems)
+- Spiritual role as descendant of sun goddess Amaterasu
+
+### Interaction with Russian Court
+- Formal diplomatic relations
+- Underlying tensions due to competing interests in Asia
+- Mutual respect for imperial tradition
+- Cultural exchange within the constraints of geopolitical rivalry
+
+## Technical Notes
+- The HUD uses menu dialogs for all interactions
+- Stats are displayed as floating text above the avatar
+- Interactions produce public roleplay messages in local chat
+- The HUD manages multiple databases of characters, locations, and activities
+
+For additional assistance or information about Emperor Meiji's role in the Imperial Russian Court roleplay system, please contact the system administrator.

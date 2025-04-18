@@ -1,0 +1,94 @@
+# Imperial Secure Giver - Installation Guide
+
+## Overview
+The Imperial Secure Giver is a specialized script that delivers inventory items only to a specific player with a predefined UUID. This script is ideal for distributing sensitive, confidential, or valuable items exclusively to an authorized recipient like the Tsar.
+
+## Features
+- Secure delivery: Only gives items to the player with the exact UUID specified
+- Proximity detection: Notifies when the authorized player is nearby
+- Dialog confirmation: Asks permission before transferring items
+- Security messages: Warns unauthorized players who attempt to access contents
+- Reusable: Can be used multiple times by adding new items to its inventory
+
+## Installation Instructions
+
+### Step 1: Create a Container Object
+1. Create a new object in Second Life with an appropriate appearance
+2. Name it something descriptive (the script will rename it to "Imperial Secure Container")
+3. Adjust the appearance to match your imperial theme
+
+### Step 2: Install the Script
+1. Place the `Imperial_Secure_Giver.lsl` script into the object's inventory
+2. Edit the script to change the `AUTHORIZED_RECIPIENT` UUID to the intended recipient's UUID
+   - Current setting: Tsar's UUID (49238f92-08a4-4f72-bca4-e66a15c75e02)
+3. Customize other settings if desired:
+   - `ITEM_DESCRIPTION`: Description of the items being given
+   - `GIVE_SUCCESS_MESSAGE`: Message sent to recipient upon successful delivery
+   - `UNAUTHORIZED_MESSAGE`: Message sent to unauthorized users
+   - `SCAN_RATE`: How often to check for nearby authorized recipient (in seconds)
+   - `DETECTION_RANGE`: How far to scan for the authorized recipient (in meters)
+
+### Step 3: Add Items to the Container
+1. Place any items you want to deliver into the container's inventory
+2. These can include:
+   - Notecards with confidential information
+   - Special objects or attachments
+   - Clothing or costume items
+   - Script updates
+   - Access keys or permissions
+
+### Step 4: Deployment
+1. Rez the container in an appropriate location
+2. The script will automatically initialize and begin scanning for the authorized recipient
+3. When the authorized player comes within range, they will be notified
+4. The authorized player can touch the object to receive its contents
+5. Unauthorized players will receive a polite rejection message
+
+## Usage Scenarios
+
+### Secure Royal Correspondence
+- Place confidential notecards and intelligence reports in the container
+- Only the Tsar can access these sensitive materials
+
+### Exclusive Royal Regalia
+- Distribute special crowns, scepters, or ceremonial items
+- Ensures these prestigious items only go to the proper recipient
+
+### System Updates
+- Deliver script updates or new HUD components
+- Guarantees only the intended user receives technical modifications
+
+### VIP Access
+- Provide special access tokens or keycards
+- Restricts entry to secure or exclusive areas
+
+## Technical Notes
+
+### Security Considerations
+- While this script restricts item delivery to a specific UUID, remember that UUID spoofing is possible in some virtual environments
+- This script is intended for roleplaying convenience, not high-security applications
+- The object's inventory can still be viewed by the owner of the object
+
+### Performance
+- The script uses sensor scans, which can impact simulator performance if overused
+- Consider increasing the SCAN_RATE value if many such objects are deployed
+
+### Customization
+- The script can be modified to support multiple authorized recipients by using a list of UUIDs
+- Additional authentication steps could be added for higher security
+
+## Troubleshooting
+
+### Items Not Transferring
+- Verify that the items in the container are transferable
+- Check that the recipient has sufficient inventory space
+- Ensure the recipient is not blocking inventory offers
+
+### Recipient Not Detected
+- Verify the UUID is correctly entered in the script
+- Check that the detection range is appropriate for your environment
+- Ensure the recipient is online and in the same region
+
+## Credits
+Imperial Russian Court Roleplay System
+Secure Giver Module

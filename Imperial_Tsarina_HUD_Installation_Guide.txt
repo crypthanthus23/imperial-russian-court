@@ -1,0 +1,82 @@
+==================================================
+Imperial Tsarina HUD and Meter Installation Guide
+==================================================
+
+This guide explains how to properly set up and use the Imperial Tsarina HUD and Meter system for roleplaying Empress Alexandra Feodorovna in the Imperial Russian Court system.
+
+1. COMPONENTS
+-------------
+The system consists of two essential components:
+
+a) Imperial_Tsarina_HUD.lsl
+   - The main HUD script that must be installed in a HUD attachment worn by the player
+   - Contains all Tsarina-specific functionality and roles
+   - Handles dialog menus, command processing, and meter communication
+
+b) Imperial_Tsarina_Meter.lsl
+   - The specialized meter script that displays the Tsarina's status as floating text
+   - Must be installed in a separate attachment worn above the avatar
+   - Features Tsarina-specific styling and information displays
+
+2. INSTALLATION
+--------------
+To install the system properly:
+
+a) Create a HUD object (recommended: a crown or imperial emblem)
+   - Add the Imperial_Tsarina_HUD.lsl script to this object
+   - Attach to the HUD position (recommended: top-right)
+   - This object should not be visible to others
+
+b) Create a meter object (recommended: a small transparent prim)
+   - Add the Imperial_Tsarina_Meter.lsl script to this object
+   - Attach above the avatar's head
+   - This object will display floating text visible to all
+
+3. USAGE
+-------
+Once installed, the Tsarina can use the following features:
+
+a) Touch the HUD to access the main menu with options:
+   - Family: Monitor the Imperial children and provide guidance
+   - Charity: Manage charitable foundations and make donations
+   - Court: Handle court appointments and events
+   - Religious: Engage in spiritual activities and consult with Rasputin
+   - Imperial Powers: Exercise Tsarina prerogatives
+   - OOC Mode: Toggle between in-character and out-of-character modes
+
+b) Special Chat Commands:
+   - /meter: Manually reconnect to the floating text meter if it becomes disconnected
+   
+c) Unique Tsarina Abilities:
+   - Faith Healing for Alexei: Activate a prayer vigil to help the Tsarevich's health
+   - Imperial Treasury Access: Make large charitable donations (up to 10,000 rubles)
+   - Court Appointments: Appoint or dismiss ladies-in-waiting
+   - Imperial Mother: Provide maternal guidance to the Imperial children
+
+4. TROUBLESHOOTING
+-----------------
+If the meter is not displaying properly:
+
+a) Verify both scripts are running in their respective objects
+b) Use the "/meter" chat command to force reconnection
+c) If problems persist, reset both scripts by removing and re-adding them
+
+5. TECHNICAL DETAILS
+------------------
+The HUD and meter communicate on channel -987654321 using a standardized protocol:
+
+a) Connection Initialization:
+   - HUD sends "CONNECT_METER:[UUID]" 
+   - Meter confirms with "HUD_CONNECTED"
+
+b) Data Transmission:
+   - HUD sends "STATS_DATA:" followed by formatted stats
+   - Format: [value1]||[value2]||[value3]...
+
+c) Periodic Updates:
+   - Meter requests "REQUEST_STATS_UPDATE" every 30 seconds
+   - HUD maintains backup text display in case of meter failure
+
+Remember that the Tsarina role carries significant responsibility within the Imperial Court. Your actions affect the entire royal family, particularly the health of Tsarevich Alexei through faith healing interventions.
+
+For any technical issues with the script system, please contact the Imperial Russian Court system administrators.

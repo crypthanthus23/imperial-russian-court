@@ -1,0 +1,58 @@
+# Instrucciones para Descargar y Usar el Sistema de la Corte Imperial Rusa
+
+## Enlaces de Descarga
+
+1. **Manual Completo del Sistema**:
+   - [Manual Completo de Usuario (MD)](https://79c2ae41-1999-4095-9d63-41091a860a04-00-3vays7p8hu12k.spock.replit.dev/Imperial_Russian_Court_System_Manual.md)
+   - Este documento contiene todas las instrucciones detalladas de uso, menús, comandos y funcionalidades.
+
+2. **Paquete Completo de Scripts**:
+   - [Archivo ZIP con Todos los Scripts](https://79c2ae41-1999-4095-9d63-41091a860a04-00-3vays7p8hu12k.spock.replit.dev/Imperial_Court_Complete_System.zip)
+   - Este archivo contiene TODOS los scripts del sistema, incluyendo:
+     * Todos los HUDs (Tsar, Tsarina, Tsarevich, etc.)
+     * Todos los Módulos (Política, Matrimonio, Educación, etc.)
+     * Todos los Scripts de Objetos Interactivos
+     * Todos los Scripts de NPCs
+     * Scripts de Meter y Estadísticas
+
+## Instrucciones de Instalación
+
+1. **Descarga el Archivo ZIP** completo con todos los scripts.
+
+2. **Descomprime el Archivo** en una carpeta en tu computadora.
+
+3. **En Second Life**:
+   - Crea objetos para cada componente (HUD, Meter, NPCs, objetos interactivos)
+   - Copia y pega el script correspondiente en cada objeto
+   - Configura los permisos según las necesidades de tu roleplay
+
+4. **Instalación por Componentes**:
+   - **HUDs**: Deberán ser configurados como attachments personales
+   - **Meters**: Deben configurarse como objetos flotantes sobre la cabeza
+   - **Objetos Interactivos**: Colócalos en las ubicaciones apropiadas del sim
+   - **NPCs**: Configúralos como avatares con los scripts correspondientes
+
+5. **Configuración de Canales**:
+   - Asegúrate de que todos los componentes utilicen el mismo canal base
+   - El valor predeterminado es -98765, pero puedes cambiarlo
+   - Este cambio debe hacerse en TODOS los scripts para que funcionen juntos
+
+## Notas Importantes
+
+- **Permisos LSL**: Verifica que todos los objetos tengan los permisos necesarios
+- **Memoria**: Monitorea el uso de memoria de los scripts más complejos
+- **Personalización**: Modifica los nombres y títulos según las necesidades de tu roleplay
+- **UUIDs Específicos**: Algunos scripts tienen UUIDs codificados para roles especiales (Tsar, Tsarevich)
+- **Respaldos**: Mantén copias de respaldo de los scripts antes de hacer modificaciones
+
+## Soporte y Contacto
+
+Si necesitas asistencia adicional con la instalación o personalización:
+
+- **Email**: imperialcourt@slroleplay.com
+- **Discord**: Imperial Court Roleplay #support
+- **Inworld**: Visita el Centro de Ayuda en el Palacio de Invierno
+
+---
+
+*Instrucciones actualizadas: Abril 2025*

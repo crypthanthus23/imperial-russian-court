@@ -1,0 +1,76 @@
+==================================
+IMPERIAL USHER - COURT ANNOUNCER
+==================================
+
+The Imperial Usher is responsible for announcing the arrival, departure, and various important moments in the Imperial Russian Court. When used properly, it adds formality and grandeur to court proceedings.
+
+SETUP INSTRUCTIONS:
+------------------
+1. Create a new object in Second Life (a humanoid figure works well).
+2. Add the Imperial_Usher.lsl script to the object's contents.
+3. Optional: To use pre-written announcements, add notecards with the following names:
+   - note2: Contains the name of who appears before the Imperial Court
+   - note3: Contains the name of who appears before His Imperial Majesty
+   - note4: Contains the name of who appears before Her Imperial Majesty
+   - note6: Contains the text of an Imperial Decree
+   - note7: Contains the text of an Imperial Wish
+
+USAGE:
+------
+1. Touch the Imperial Usher object to bring up the announcement menu.
+2. Select one of the following announcements:
+
+   - "His Excellency Retires" - Announces that a noble is leaving the court
+   - "Court Appearance" - Announces someone appearing before the Imperial Court
+     (Reads from note2 or prompts for input)
+   - "Before His Majesty" - Announces someone appearing before the Tsar
+     (Reads from note3 or prompts for input)
+   - "Before Her Majesty" - Announces someone appearing before the Tsarina
+     (Reads from note4 or prompts for input)
+   - "His Excellency Appears" - Announces that a noble is entering the court
+   - "Imperial Decree" - Announces an Imperial decree
+     (Reads from note6 or prompts for input)
+   - "Imperial Wish" - Announces an Imperial wish
+     (Reads from note7 or prompts for input)
+   - "Tsar Enters" - Announces the Tsar's entrance to the court
+   - "Tsar Exits" - Announces the Tsar's departure from the court
+   - "Silence for Tsar" - Commands silence for the Tsar to speak
+
+3. If a notecard is not available and the announcement requires additional text, a prompt will appear for you to enter the needed information.
+
+NOTECARD EXAMPLES:
+-----------------
+note2:
+Count Alexander Mikhailovich, Minister of Foreign Affairs
+
+note3:
+Count Ivan Fyodorovich, presenting his credentials as the new Ambassador to Austria
+
+note4:
+Countess Anastasia Nikolaevna, requesting permission for a charity ballet
+
+note6:
+By order of His Imperial Majesty, Tsar Nikolai II, all subjects are hereby reminded that the Winter Ball shall commence on the 15th of December at the Grand Palace. Attendance is mandatory for all members of the court.
+
+note7:
+all courtiers make themselves available for a special announcement regarding the future of the Romanov dynasty to be delivered tomorrow at noon.
+
+PERMISSIONS:
+-----------
+- Only the owner of the object or group members (if the object is group-owned) can use the announcer.
+- Others will receive a message that they are not authorized to make court announcements.
+
+CUSTOMIZATION:
+-------------
+You can edit the script to change:
+- USHER_NAME: The name that appears in announcements
+- The formatting of the announcements
+- The menu timeout period
+
+TECHNICAL NOTES:
+---------------
+- The script uses the public chat channel (0) for all announcements
+- Dialog menus use random negative channels to avoid conflicts
+- Notecards can contain multiple lines of text, which will be combined
+
+For assistance, please contact the Imperial Court Roleplay System administrator.

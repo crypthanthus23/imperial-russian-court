@@ -1,0 +1,97 @@
+# Tsarevich Alexei HUD - Installation Guide
+
+## Overview
+The Imperial Tsarevich HUD is a specialized system designed for roleplaying Tsarevich Alexei Nikolaevich, the hemophiliac heir to the Russian throne. This HUD simulates his unique medical condition and royal status in the Imperial Russian Court.
+
+## Required Components
+
+To properly set up the complete Tsarevich HUD system, you'll need three main components:
+
+1. **Imperial_Tsarevich_HUD.lsl** - The main script that handles Tsarevich-specific functionality
+2. **Imperial_System_Connector.lsl** - The central hub that connects various modules
+3. **Imperial_Court_Meter_Updated.lsl** - The floating text display for stats
+
+## Installation Instructions
+
+### Step 1: Create the HUD Object
+1. In Second Life, create a new object (prim) with an appropriate appearance
+2. Name it "Imperial Tsarevich HUD"
+3. In the Edit menu, check "Attachment" and set it to be worn as a HUD
+4. Consider adding multiple prims to make a visually appealing HUD design
+
+### Step 2: Add the Scripts
+1. Place **Imperial_Tsarevich_HUD.lsl** into the HUD's root prim inventory
+2. Place **Imperial_System_Connector.lsl** into the same prim or a linked prim
+3. Check that the UUID in the Tsarevich HUD script matches your player's UUID:
+   ```
+   key TSAREVICH_UUID = "707c2fdf-6f8a-43c9-a5fb-3debc0941064";
+   ```
+
+### Step 3: Create the Meter Object
+1. Create a separate object that will display floating text above the avatar
+2. Name it "Imperial Tsarevich Meter"
+3. In the Edit menu, check "Attachment" and set it to attach above the head
+4. Place the **Imperial_Court_Meter_Updated.lsl** script into this object
+
+### Step 4: Understanding the Communication System
+The components communicate through several channels:
+- The Tsarevich HUD uses **METER_CHANNEL** (-8675309) to send updates to its internal text display
+- The System Connector uses **HUD_LINK_MESSAGE_CHANNEL** (-55555) to route messages between modules
+- The Meter uses **STATS_CHANNEL** (-987654321) to receive and display stats
+
+## Usage Instructions for Players
+
+### Basic Commands
+- **/ooc** - Toggle Out Of Character mode
+- **/rest** - Toggle resting state (accelerates health recovery)
+- **/activity [type]** - Record an activity (can trigger hemophilia)
+- **/caregiver [name]** - Register a current caregiver
+- **/stats** - View current health and condition stats
+
+### Hemophilia Management
+The hemophilia system automatically:
+- Maintains a baseline risk level (5-15%)
+- Increases risk with dangerous activities
+- May trigger bleeding episodes that require rest and care
+- Recovers faster when a caregiver is present
+
+### Safe vs. Dangerous Activities
+Players should be aware of:
+
+**Safe Activities** (reduce hemophilia risk):
+- Reading
+- Drawing
+- Gentle play
+- Sailing toy boats
+- Stamp collecting
+
+**Dangerous Activities** (increase hemophilia risk):
+- Running
+- Jumping
+- Climbing
+- Fighting
+- Playing rough
+
+## Troubleshooting
+
+### HUD Not Connecting to Meter
+1. Check that both objects are worn correctly
+2. Ensure all communication channels match in both scripts
+3. Try resetting both scripts (detach and reattach)
+
+### Hemophilia System Issues
+1. Verify the Tsarevich UUID is correctly set
+2. Use the /stats command to check current health and risk levels
+3. Try toggling rest mode and activity tracking
+
+### Memory Management
+The System Connector has a built-in memory management system that:
+- Monitors script memory usage
+- Prunes event history when memory gets low
+- Issues warnings when memory usage is high
+
+## Additional Notes
+- The Tsarevich must be treated with appropriate deference by other players
+- Only physicians and immediate family should be allowed to treat bleeding episodes
+- The HUD is designed to create a historically accurate portrayal of hemophilia
+- Touch the System Connector to view current stats and system status

@@ -1,0 +1,66 @@
+# Imperial Court Meter Quiet Mode
+
+This document describes the implementation of quiet mode in the Imperial Court Meter system, designed to reduce chat spam while maintaining necessary feedback. This feature has been implemented in both the standard Imperial Court Meter and specialized meters like the Tsarevich Meter.
+
+## Overview
+
+The Imperial Court Meter has been enhanced with a "quiet mode" feature that suppresses continuous update messages while still providing periodic status notifications. This improvement addresses player concerns about excessive chat messages during normal gameplay.
+
+## Features Added
+
+1. **Quiet Mode Toggle**
+   - Double-click the meter to toggle between quiet and verbose modes
+   - Default setting is quiet mode (reduced messages)
+   - Clear notification when changing modes
+
+2. **Periodic Status Updates**
+   - Status messages appear every 5 minutes instead of with every update
+   - Brief visual feedback (green flash) shows the meter is working
+   - Connection and disconnection events are always reported
+
+3. **Debug Information**
+   - Detailed update information is only shown in verbose mode
+   - Raw data inspection is available but commented out by default
+
+## Using the Enhanced Meter
+
+### Initial Setup
+When you first attach the meter, it will display a welcome message with basic instructions. By default, it operates in quiet mode to minimize distractions.
+
+### Controls
+- **Single Click**: Toggle the visibility of the floating text display
+- **Double Click**: Toggle between quiet mode and verbose mode
+
+### Status Indicators
+- Green flash every 5 minutes indicates successful connection
+- Text message confirms connection status periodically
+- Connection and disconnection events always generate notifications
+
+## Technical Implementation
+
+The quiet mode is implemented through:
+- A `quietMode` boolean variable that defaults to TRUE
+- Conditional message display in the data processing function
+- A periodic status update in the timer event
+- Visual feedback through temporary color changes
+
+## Compatibility
+
+This feature is fully compatible with all existing HUD systems and requires no changes to other components. It works with:
+- Standard Imperial Court HUD
+- Special character HUDs (Tsar, Tsarina, Tsarevich, etc.)
+- All other meter variants
+
+## Special Case: Tsarevich Meter
+
+The Tsarevich meter implementation includes additional features specific to the hemophilia condition:
+
+1. **Critical Alert Override**
+   - Bleeding status notifications are shown regardless of quiet mode setting
+   - Status changes (start or end of bleeding) always trigger immediate notifications
+   - Visual red flashing for bleeding alert is more pronounced and lasts longer
+
+2. **Enhanced Status Display**
+   - Every 5 minutes, the meter provides a specialized status message
+   - When bleeding is active, more urgent warnings are displayed
+   - Color-coded visual feedback (red for bleeding, green for normal)

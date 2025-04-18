@@ -1,0 +1,50 @@
+Imperial Russian Court Relationship System
+Modular Implementation Instructions
+
+OVERVIEW:
+The original relationship system script was encountering "byte code assembly failed: out of memory" errors
+due to LSL's memory limitations. To solve this issue, we've split the system into three separate scripts:
+
+1. Imperial_Court_Relationships_Core.lsl - Handles basic relationship tracking
+2. Imperial_Court_Reputation_Module.lsl - Manages reputation and faction influence
+3. Imperial_Court_Relationship_System_Connector.lsl - Coordinates communication between modules
+
+INSTALLATION:
+To properly install this system in your HUD:
+
+1. Create three separate script objects in your HUD
+2. Copy each script into its respective object
+3. Place all three script objects in the same HUD
+4. Make sure all scripts are properly named to identify their function
+
+HOW IT WORKS:
+- The Core script handles basic relationship tracking between avatars
+- The Reputation Module manages prestige and faction influence
+- The Connector provides a lightweight communication layer between the modules
+- All communication happens via specific channels, authenticated with a shared key
+
+MEMORY OPTIMIZATION TECHNIQUES USED:
+1. Divided functionality into separate scripts to reduce memory per script
+2. Simplified data structures and eliminated duplicate information storage
+3. Reduced maximum tracking limits to conserve memory
+4. Simplified sorting and processing functions
+5. Consolidated redundant functions
+6. Streamlined menu options and dialog flows
+
+EXTENDING THE SYSTEM:
+You can further extend this system by creating additional modules for:
+- Detailed interaction history
+- Specific faction relationships
+- Court event tracking
+- Specialized menus for different aristocratic ranks
+
+Each module should communicate through the same channels and use the same authentication mechanism.
+
+TROUBLESHOOTING:
+If you encounter issues:
+- Check that all three scripts are present in the HUD
+- Verify all scripts use the same authentication key
+- Restart the HUD by detaching and reattaching
+- If a specific script still has memory issues, it may need further optimization
+
+For any questions or assistance, please contact the script developers.

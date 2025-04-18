@@ -1,0 +1,94 @@
+# Imperial Grand Duchess Maria Pavlovna Sr. HUD - Modular Installation Guide
+
+## Overview
+This guide explains how to set up the modular Grand Duchess HUD system in Second Life. The system has been divided into multiple scripts to optimize memory usage and improve performance.
+
+## Required Prims
+You'll need a multi-prim object with at least 7 prims:
+1. Root Prim - Contains the Core HUD script
+2. Module Prim 1 - Family Relations Module
+3. Module Prim 2 - Court Factions Module
+4. Module Prim 3 - Cultural Patronage Module
+5. Module Prim 4 - Residences Module
+6. Module Prim 5 - Jewelry Collection Module
+7. Module Prim 6 - Social Events Module
+
+## Installation Steps
+
+### 1. Create the HUD Object
+- Create a new object in Second Life with at least 7 prims
+- Link the prims together, making sure to select the main/central prim LAST so it becomes the root prim
+- Name the object "Imperial Grand Duchess Maria Pavlovna Sr. HUD"
+
+### 2. Install Scripts
+Place each script in its designated prim:
+
+1. Root Prim: 
+   - Imperial_GD_Core_HUD.lsl
+
+2. Module Prims (one script per prim):
+   - Imperial_GD_Family_Module.lsl
+   - Imperial_GD_Court_Module.lsl
+   - Imperial_GD_Culture_Module.lsl
+   - Imperial_GD_Residences_Module.lsl
+   - Imperial_GD_Jewelry_Module.lsl
+   - Imperial_GD_Social_Events_Module.lsl
+
+### 3. Configuration
+No additional configuration needed. The scripts communicate with each other using link messages on predefined channels.
+
+## Usage Instructions
+
+### Basic Functions
+- Touch the HUD to open the main menu
+- Select from various categories to access specific functions
+- Use "Back" to return to the main menu
+- "OOC Mode" toggles Out of Character status, hiding your imperial identity
+
+### Module Categories
+1. **Family** - Manage relationships with family members
+2. **Court** - Engage with different court factions
+3. **Culture** - Patronize cultural institutions
+4. **Residences** - Visit and manage your various residences
+5. **Jewelry** - Wear your collection of magnificent jewelry
+6. **Social Events** - Host and attend social functions
+7. **Discuss Tsarina** - Special function to discuss Empress Alexandra
+
+## Troubleshooting
+
+### Communication Issues
+If modules aren't responding to commands:
+- Make sure all scripts are in linked prims of the same object
+- Verify no script errors in any module
+- Reset scripts if necessary
+
+### Memory Issues
+If experiencing memory problems:
+- Reset scripts periodically
+- Avoid executing multiple complex functions in rapid succession
+- Remember that LSL has strict memory limitations
+
+## Technical Notes for Scripters
+
+### Communication System
+- Scripts communicate via link_message() on dedicated channels
+- Each module has its own unique channel (see script headers)
+- Commands use a simple "COMMAND=VALUE" syntax
+- Reports from modules are sent back to the Core HUD for display
+
+### Expanding Functionality
+To add new features:
+1. Create a new module script with a unique channel
+2. Add appropriate handlers in the Core HUD
+3. Update menus to include new options
+
+### LSL Memory Management
+- Each module script focuses on a specific domain
+- Large data structures are isolated to their own scripts
+- Core HUD only maintains essential player state
+- Background processes are minimized
+
+## Credit
+Imperial Russian Court Roleplay System
+Scripted by [Your Name/Group]
+Version 1.0

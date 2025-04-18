@@ -1,0 +1,90 @@
+# Imperial Court Protocol and Etiquette System - Installation Guide
+
+## Overview
+The Imperial Court Protocol and Etiquette System has been divided into multiple scripts to optimize memory usage and improve performance. This modular approach allows the complex etiquette system to operate efficiently within LSL memory constraints.
+
+## Required Prims
+You'll need an object with at least 4 prims:
+1. Root Prim - Contains the Etiquette Core script
+2. Module Prim 1 - Forms of Address Module
+3. Module Prim 2 - Order of Precedence Module
+4. Module Prim 3 - Court Customs Module
+
+## Installation Steps
+
+### 1. Create the Etiquette System Object
+- Create a new object in Second Life with at least 4 prims
+- Link the prims together, making sure to select the main/central prim LAST so it becomes the root prim
+- Name the object "Imperial Court Protocol and Etiquette System"
+
+### 2. Install Scripts
+Place each script in its designated prim:
+
+1. Root Prim: 
+   - Imperial_Court_Etiquette_Core.lsl
+
+2. Module Prims (one script per prim):
+   - Imperial_Court_Etiquette_Forms.lsl
+   - Imperial_Court_Etiquette_Precedence.lsl
+   - Imperial_Court_Etiquette_Customs.lsl
+
+### 3. Configuration
+No additional configuration is needed. The scripts communicate with each other using link messages on predefined channels.
+
+## Usage Instructions
+
+### Basic Functions
+- Touch the object to open the main Etiquette menu
+- Select from various categories to learn about different aspects of court protocol
+- Use "Practice" options to test your knowledge
+- Request instruction for personalized learning
+
+### Learning Categories
+1. **Forms of Address** - Learn how to properly address various court ranks
+2. **Order of Precedence** - Study the hierarchy and precedence at court events
+3. **Court Customs** - Master the customs, ceremonies and rituals of imperial court life
+
+### Progression System
+- As you practice, your Etiquette Rank and Protocol Mastery will increase
+- Higher ranks unlock more advanced instruction
+- The system tracks your progress and recommends appropriate areas of study
+
+## Troubleshooting
+
+### Communication Issues
+If modules aren't responding to commands:
+- Make sure all scripts are in linked prims of the same object
+- Verify there are no script errors in any module
+- Reset scripts if necessary
+
+### Memory Issues
+If experiencing memory problems:
+- Reset scripts periodically
+- Avoid executing multiple practice sessions in rapid succession
+- Remember that LSL has strict memory limitations
+
+## Technical Notes for Scripters
+
+### Communication System
+- Scripts communicate via link_message() on dedicated channels
+- Each module has its own unique channel defined at the top of each script
+- Main channel for core: ETIQUETTE_CORE_CHANNEL = -9876543
+- Forms module: ETIQUETTE_FORMS_CHANNEL = -9876544
+- Precedence module: ETIQUETTE_PRECEDENCE_CHANNEL = -9876545
+- Customs module: ETIQUETTE_CUSTOMS_CHANNEL = -9876546
+
+### Expanding Functionality
+To add new features:
+1. Create a new module script with a unique channel
+2. Add appropriate handlers in the Core script
+3. Update menus to include new options
+
+## Integration with Other Systems
+This etiquette system can be integrated with other court roleplay systems:
+- The Core script can send and receive messages from other HUDs and systems
+- Add listeners for HUD_LINK_MESSAGE_CHANNEL in other scripts to receive updates
+- Use the etiquette knowledge for success in court intrigue and social climbing
+
+## Credit
+Imperial Russian Court Roleplay System
+Protocol and Etiquette Module

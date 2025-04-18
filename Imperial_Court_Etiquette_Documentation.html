@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imperial Court Protocol and Etiquette System</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f5eb;
+            color: #333;
+        }
+        header {
+            background-color: #8b0000;
+            color: #f1e9dc;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 5px solid #333;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #8b0000;
+            border-bottom: 2px solid #8b0000;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #555;
+            margin-top: 20px;
+        }
+        .imperial-crest {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 2em;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f5f5f5;
+            padding: 10px;
+            text-align: left;
+        }
+        td {
+            padding: 8px;
+        }
+        .note {
+            background-color: #f9f2f4;
+            border-left: 4px solid #8b0000;
+            padding: 10px;
+            margin: 20px 0;
+        }
+        .module {
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .module h4 {
+            margin-top: 0;
+            color: #8b0000;
+        }
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Imperial Court Protocol and Etiquette System</h1>
+            <p>A Comprehensive Guide for the Russian Imperial Court, 1905</p>
+        </header>
+        
+        <div class="imperial-crest">&#9733; &#9733; &#9733;</div>
+        
+        <h2>System Overview</h2>
+        <p>The Imperial Court Protocol and Etiquette System provides a detailed framework for proper behavior, address, and protocol within the Russian Imperial Court circa 1905. This system allows roleplay participants to learn and practice authentic court etiquette through interactive modules.</p>
+        
+        <div class="note">
+            <p><strong>Historical Context:</strong> The Russian Imperial Court under Tsar Nicholas II maintained elaborate protocols that regulated every aspect of court life. Mastery of these protocols was essential for success in court society.</p>
+        </div>
+        
+        <h2>Modular Architecture</h2>
+        <p>The system employs a modular design to enhance performance and ensure memory efficiency:</p>
+        
+        <div class="module">
+            <h4>Core Module</h4>
+            <p>Acts as the central controller, coordinating communication between sub-modules and tracking player progress. Initializes the system and provides the main menu interface.</p>
+        </div>
+        
+        <div class="module">
+            <h4>Forms of Address Module</h4>
+            <p>Contains the proper forms of address for all court ranks, from the Imperial Family to clergy, nobility, and officials. Teaches players the correct titles and modes of address for each rank.</p>
+        </div>
+        
+        <div class="module">
+            <h4>Order of Precedence Module</h4>
+            <p>Details the complex hierarchical structure that determines ranking, processional order, and seating arrangements at court functions. Covers imperial precedence, processional rules, and seating protocols.</p>
+        </div>
+        
+        <div class="module">
+            <h4>Court Customs Module</h4>
+            <p>Encompasses the rituals, ceremonies, and customs of imperial court life. Includes greeting protocols, formal events, special rituals, and strict rules of conduct.</p>
+        </div>
+        
+        <h2>Learning System</h2>
+        <p>The system employs an interactive learning approach with progression tracking:</p>
+        
+        <h3>Etiquette Rank and Protocol Mastery</h3>
+        <p>Players advance through ranks as they demonstrate knowledge of court protocol:</p>
+        <ul>
+            <li><strong>Etiquette Rank (1-10):</strong> Overall standing in court etiquette knowledge</li>
+            <li><strong>Protocol Mastery (1-10):</strong> Specific skill in executing proper protocols</li>
+        </ul>
+        
+        <h3>Practice System</h3>
+        <p>Each module includes practice scenarios that test the player's knowledge and improve their skills:</p>
+        <ul>
+            <li>Questions about proper forms of address</li>
+            <li>Order of precedence scenarios</li>
+            <li>Court customs practice scenarios</li>
+        </ul>
+        
+        <h3>Guided Instruction</h3>
+        <p>The system offers personalized instruction based on the player's current knowledge level, focusing on areas that need improvement.</p>
+        
+        <h2>Technical Implementation</h2>
+        
+        <h3>Communication System</h3>
+        <p>Modules communicate using LSL link messages on dedicated channels:</p>
+        <table>
+            <tr>
+                <th>Module</th>
+                <th>Channel</th>
+                <th>Purpose</th>
+            </tr>
+            <tr>
+                <td>Core Module</td>
+                <td><code>-9876543</code></td>
+                <td>Main control channel</td>
+            </tr>
+            <tr>
+                <td>Forms Module</td>
+                <td><code>-9876544</code></td>
+                <td>Forms of address communication</td>
+            </tr>
+            <tr>
+                <td>Precedence Module</td>
+                <td><code>-9876545</code></td>
+                <td>Order of precedence communication</td>
+            </tr>
+            <tr>
+                <td>Customs Module</td>
+                <td><code>-9876546</code></td>
+                <td>Court customs communication</td>
+            </tr>
+        </table>
+        
+        <h3>Message Protocol</h3>
+        <p>The system uses a simple command=value syntax for module communication:</p>
+        <ul>
+            <li><code>INIT</code> - Initialize a module</li>
+            <li><code>DISPLAY_MENU</code> - Show module menu</li>
+            <li><code>UPDATE_RANK=+1</code> - Increase etiquette rank</li>
+            <li><code>UPDATE_MASTERY=+2</code> - Increase protocol mastery</li>
+            <li><code>DISPLAY_CORE_MENU</code> - Return to main menu</li>
+        </ul>
+        
+        <h2>Usage Guide</h2>
+        
+        <h3>Basic Operation</h3>
+        <ol>
+            <li>Touch the etiquette system object to open the main menu</li>
+            <li>Select a category to study (Forms of Address, Order of Precedence, or Court Customs)</li>
+            <li>Browse the information or select "Practice" to test your knowledge</li>
+            <li>Use "Request Instruction" for personalized guidance</li>
+        </ol>
+        
+        <h3>Study Progression</h3>
+        <p>For optimal learning, follow this progression:</p>
+        <ol>
+            <li>Master basic forms of address for the Imperial Family</li>
+            <li>Learn the order of precedence for court events</li>
+            <li>Study the greeting protocols for different ranks</li>
+            <li>Understand processional and seating rules</li>
+            <li>Master the complex customs and rituals of court life</li>
+        </ol>
+        
+        <div class="note">
+            <p><strong>Historical Note:</strong> At the Russian Imperial Court, a mistake in etiquette could have serious social consequences. The Dowager Empress Maria Feodorovna and Empress Alexandra maintained rival court factions, each with slightly different interpretations of proper etiquette.</p>
+        </div>
+        
+        <h2>Integration with Other Court Systems</h2>
+        <p>The Etiquette System is designed to integrate with other components of the Imperial Russian Court roleplay system:</p>
+        
+        <h3>HUD Integration</h3>
+        <p>The system can be connected to player HUDs to reflect etiquette knowledge in character stats:</p>
+        <ul>
+            <li>High etiquette rank can boost influence at court events</li>
+            <li>Protocol mastery affects success in diplomatic interactions</li>
+            <li>Proper knowledge of forms of address improves relations with NPCs</li>
+        </ul>
+        
+        <h3>Event Integration</h3>
+        <p>Knowledge of court protocol affects participation in court events:</p>
+        <ul>
+            <li>Proper precedence knowledge determines seating at state dinners</li>
+            <li>Mastery of court customs affects success at balls and receptions</li>
+            <li>Understanding of proper address prevents diplomatic incidents</li>
+        </ul>
+        
+        <h2>Historical References</h2>
+        <p>This system is based on historical research into the protocols of the Russian Imperial Court during the reign of Nicholas II:</p>
+        <ul>
+            <li>Court hierarchy and precedence are modeled after the Table of Ranks established by Peter the Great</li>
+            <li>Forms of address follow the conventions documented in imperial court records</li>
+            <li>Customs and ceremonies reflect the practices of the Winter Palace and other imperial residences</li>
+        </ul>
+        
+        <div class="imperial-crest">&#9733; &#9733; &#9733;</div>
+        
+        <footer>
+            <p>Imperial Russian Court Roleplay System - Protocol and Etiquette Module</p>
+        </footer>
+    </div>
+</body>
+</html>

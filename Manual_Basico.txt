@@ -1,0 +1,73 @@
+====================================
+SISTEMA DE JUEGO DE ROL DE LA CORTE IMPERIAL RUSA
+Manual Básico para Usuarios
+====================================
+
+¡Bienvenido al Sistema de Juego de Rol de la Corte Imperial Rusa! Este manual te guiará en los primeros pasos para usar el sistema.
+
+----- COMPONENTES BÁSICOS -----
+
+1. HUD PRINCIPAL:
+   • Este es el control central para todas las funciones
+   • Se adjunta a tu pantalla (normalmente en la esquina superior derecha)
+   • Tocarlo abre el menú principal con todas las opciones
+
+2. METER DE ESTADÍSTICAS:
+   • Muestra tus estadísticas sobre tu cabeza
+   • Incluye: Salud, Energía, Influencia, Reputación, etc.
+   • Es visible para otros jugadores
+
+----- CÓMO EMPEZAR -----
+
+1. ADJUNTAR EL HUD:
+   • Busca el HUD en tu inventario
+   • Haz clic derecho y selecciona "Adjuntar a HUD > Arriba Derecha"
+   • Espera unos segundos a que se inicialice
+
+2. ADJUNTAR EL METER:
+   • Busca el Meter en tu inventario
+   • Haz clic derecho y selecciona "Adjuntar"
+   • Debería colocarse automáticamente sobre tu cabeza
+
+3. CONFIGURACIÓN INICIAL:
+   • Toca el HUD para abrirlo
+   • Selecciona "Configuración Inicial"
+   • Ingresa tu nombre completo cuando se te solicite
+   • Selecciona tu título nobiliario (si corresponde)
+
+----- COMANDOS BÁSICOS -----
+
+• Tocar el HUD: Abre el menú principal
+• Doble clic en el Meter: Activa/desactiva el modo silencioso
+• Comandos de chat:
+  /icr status - Muestra tu estado actual
+  /icr help - Muestra lista de comandos disponibles
+  /icr quiet - Activa/desactiva notificaciones
+  /icr ooc - Activa/desactiva modo fuera de personaje
+
+----- INTERACCIÓN CON OTROS JUGADORES -----
+
+Para interactuar con otros jugadores:
+1. Haz clic en el avatar del otro jugador
+2. Toca tu HUD para abrir el menú
+3. Selecciona "Social" para ver opciones
+4. Elige la acción que deseas realizar
+
+----- RESOLUCIÓN DE PROBLEMAS -----
+
+• Si el HUD no responde: Quítalo y vuelve a adjuntarlo
+• Si el Meter no muestra estadísticas: Usa /icr reset
+• Si aparecen errores: Contacta a un administrador del roleplay
+
+----- ROLES ESPECIALES -----
+
+Si te han asignado un rol especial (Tsar, Tsarina, etc.), recibirás un HUD especializado con funciones únicas para tu personaje.
+
+----- CONTACTO Y AYUDA -----
+
+Si necesitas ayuda adicional:
+• Email: imperialcourt@slroleplay.com
+• Discord: Imperial Court Roleplay #support
+• Inworld: Visita el Centro de Ayuda en el Palacio de Invierno
+
+¡Esperamos que disfrutes de tu experiencia en la Corte Imperial Rusa de 1905!

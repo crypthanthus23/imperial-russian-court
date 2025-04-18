@@ -1,0 +1,42 @@
+# Imperial Court Meter System Fixes
+
+## Recent Fixes
+
+1. **Removed "incomplete stats data" error**
+   - The meter no longer requires exactly 10 stats fields
+   - This makes the meter more robust to handle partial data
+   - The HUD can now send any subset of stats and the meter will display what it can
+
+2. **Fixed reserved keyword issue**
+   - Changed `key` variable to `keyName` to prevent conflicts with LSL's reserved keyword
+   - This resolves syntax errors in the meter script
+
+3. **Added channel documentation**
+   - Clarified that the STATS_CHANNEL (-987654321) must match METER_STATS_CHANNEL in Core HUD
+   - Ensures proper communication between components
+
+4. **Added debugging capabilities**
+   - Commented debug statements can be enabled to help troubleshoot communication issues
+   - Shows raw data received from HUD and number of parsed data parts
+
+## OOC Mode Display
+
+When in OOC mode, the meter will:
+1. Only display "OOC" in blue text
+2. Hide all character stats
+3. Return to normal display when OOC mode is toggled off
+
+## Troubleshooting
+
+If you continue to have meter communication issues:
+1. Verify that the Core HUD and meter are using the same channel number
+2. Uncomment the debug lines in the meter script to see exactly what data is being received
+3. Check that the data format follows the expected pattern: `NAME:value|CLASS:value|RANK:value|...`
+4. Ensure the meter is physically attached to the same avatar as the HUD
+
+## Connection Process
+
+The meter and HUD connect using this sequence:
+1. HUD sends "CONNECT_METER:[ownerID]" on the stats channel
+2. Meter verifies owner and responds with "HUD_CONNECTED"
+3. HUD begins sending stats updates in the format: `NAME:value|CLASS:value|RANK:value|...`

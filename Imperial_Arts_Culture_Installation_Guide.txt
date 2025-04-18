@@ -1,0 +1,94 @@
+# Imperial Arts and Culture System - Installation Guide
+
+## Overview
+The Imperial Arts and Culture System has been divided into multiple scripts to optimize memory usage and improve performance. This modular approach allows the complex arts system to operate efficiently within LSL memory constraints.
+
+## Required Prims
+You'll need an object with at least 5 prims:
+1. Root Prim - Contains the Arts Core script
+2. Module Prim 1 - Ballet Module
+3. Module Prim 2 - Literature Module
+4. Module Prim 3 - Painting Module
+5. Module Prim 4 - Music Module
+
+## Installation Steps
+
+### 1. Create the Arts System Object
+- Create a new object in Second Life with at least 5 prims
+- Link the prims together, making sure to select the main/central prim LAST so it becomes the root prim
+- Name the object "Imperial Arts and Culture System"
+
+### 2. Install Scripts
+Place each script in its designated prim:
+
+1. Root Prim: 
+   - Imperial_Arts_Culture_Core.lsl
+
+2. Module Prims (one script per prim):
+   - Imperial_Arts_Ballet_Module.lsl
+   - Imperial_Arts_Literature_Module.lsl
+   - Imperial_Arts_Painting_Module.lsl
+   - Imperial_Arts_Music_Module.lsl
+
+### 3. Configuration
+No additional configuration is needed. The scripts communicate with each other using link messages on predefined channels.
+
+## Usage Instructions
+
+### Basic Functions
+- Touch the object to open the main Arts menu
+- Select from various artistic disciplines to learn about and engage with Russian imperial culture
+- Use "Patronize Arts" to become a patron of a specific art form
+- "Host Salon" allows you to hold a cultural gathering showcasing various arts
+
+### Artistic Disciplines
+1. **Ballet** - Learn about Russian ballet productions and dancers
+2. **Literature** - Explore Russian literary works and authors
+3. **Painting** - Study Russian paintings and artists
+4. **Music** - Discover Russian compositions and composers
+
+### Progression System
+- As you engage with the arts, your Art Appreciation and Cultural Influence will increase
+- Higher Cultural Influence increases your prestige in court society
+- You can develop a preference for a specific art form by becoming its patron
+
+## Troubleshooting
+
+### Communication Issues
+If modules aren't responding to commands:
+- Make sure all scripts are in linked prims of the same object
+- Verify there are no script errors in any module
+- Reset scripts if necessary
+
+### Memory Issues
+If experiencing memory problems:
+- Reset scripts periodically
+- Avoid executing multiple complex functions in rapid succession
+- Remember that LSL has strict memory limitations
+
+## Technical Notes for Scripters
+
+### Communication System
+- Scripts communicate via link_message() on dedicated channels
+- Each module has its own unique channel defined at the top of each script
+- Main channel for core: ARTS_CORE_CHANNEL = -7654321
+- Ballet module: BALLET_MODULE_CHANNEL = -7654322
+- Literature module: LITERATURE_MODULE_CHANNEL = -7654323
+- Painting module: PAINTING_MODULE_CHANNEL = -7654324
+- Music module: MUSIC_MODULE_CHANNEL = -7654325
+
+### Expanding Functionality
+To add new features:
+1. Create a new module script with a unique channel
+2. Add appropriate handlers in the Core script
+3. Update menus to include new options
+
+## Integration with Other Systems
+This arts system can be integrated with other court roleplay systems:
+- The Core script can send and receive messages from other HUDs and systems
+- Cultural influence can affect social standing and court politics
+- Artistic preferences can be used for relationship development between characters
+
+## Credit
+Imperial Russian Court Roleplay System
+Arts and Culture Module

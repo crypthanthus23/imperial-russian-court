@@ -1,0 +1,67 @@
+# Imperial Court Meter - Installation Guide
+
+## Overview
+The Imperial Court Meter displays your character's stats as floating text above your avatar. This floating text is visible to other players and shows your rank, title, and essential roleplay statistics. The meter must be paired with an Imperial Court HUD to display your data.
+
+## Installation Instructions
+
+### Step 1: Obtain the Fixed Court Meter
+1. Use the **Imperial_Court_Meter_Fixed.lsl** script instead of the original meter script
+2. This fixed version can understand both the original and new communication formats
+
+### Step 2: Create the Meter Object
+1. In Second Life, create a simple, small object (like a sphere or cylinder)
+2. Name it "Imperial Russian Court Meter"
+3. Resize it to be relatively small (e.g., 0.1m x 0.1m x 0.1m)
+4. Set it to be phantom/non-physical (so it doesn't collide with things)
+5. Make it mostly transparent (alpha set close to 100%)
+
+### Step 3: Add the Script
+1. Open the object's contents/inventory
+2. Add the **Imperial_Court_Meter_Fixed.lsl** script to the object's contents
+3. Reset the script after adding it
+
+### Step 4: Wear the Meter
+1. Right-click on the meter object and select "Attach To" or "Wear"
+2. Choose to attach it to your "Head" or "Avatar Center" attachment point
+3. Position it just above your avatar's head (offset it upward)
+4. Once in position, you should see "Imperial Court Stats Meter (Connect to HUD for data)"
+
+### Step 5: Connect with Your Court HUD
+1. Make sure you're wearing your Imperial Russian Court HUD
+2. The HUD should automatically connect to the meter
+3. If it doesn't connect after a minute, try detaching and reattaching both objects
+4. When properly connected, your character stats will appear in the floating text
+
+## Troubleshooting
+
+### Only My Name Shows
+If only your name appears without any stats:
+1. Make sure you're using the **Imperial_Court_Meter_Fixed.lsl** script
+2. Try detaching and reattaching both the HUD and meter
+3. Check that your HUD is properly configured and has valid player data
+
+### No Text Appears
+If no floating text appears:
+1. Touch the meter object to toggle text visibility
+2. Check that the meter is actually attached to your avatar
+3. Make sure the script is running (reset it if needed)
+
+### Meter Not Connecting to HUD
+If the meter and HUD aren't connecting:
+1. Make sure both are worn by the same avatar
+2. Check that both are using the same communication channel (-987654321)
+3. Try resetting both scripts
+4. Verify that your HUD is sending stats in a supported format
+
+## Additional Features
+
+### Text Visibility Toggle
+* Touch the meter to toggle the visibility of your stats
+* This is useful for taking photos or when you want to be anonymous
+
+### Regular Updates
+* The meter automatically updates every 0.5 seconds
+* Changes to your stats in the HUD will be reflected in the floating text
+
+For further assistance, please contact the Imperial Court Roleplay administrators.

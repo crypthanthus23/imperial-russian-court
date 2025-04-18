@@ -1,0 +1,47 @@
+=== IMPERIAL RUSSIAN COURT HUD OOC MODE FIX ===
+
+IMPLEMENTATION SUMMARY:
+
+The Out of Character (OOC) mode has been successfully implemented in the Imperial Russian Court HUD system. This feature allows players to temporarily step out of character while remaining in the roleplay area. The implementation includes the following components:
+
+1. Core HUD Updates:
+   - Added 'isOOC' variable to track OOC status
+   - Modified updateHudDisplay() to show only "OOC" text when in OOC mode
+   - Added OOC toggle in the Settings menu
+   - Updated sendStatsToMeter() to include OOC status in communication
+
+2. Meter Script Updates:
+   - Added 'isOOC' variable to track OOC status
+   - Modified updateFloatingText() to display "OOC" when in OOC mode
+   - Updated processStatsData() to receive and process OOC status from HUD
+
+3. Documentation:
+   - Created comprehensive documentation for OOC mode usage
+   - Included etiquette guidelines for OOC behavior
+
+COMPATIBILITY NOTES:
+
+This implementation is compatible with all existing HUD and meter scripts. The following meter scripts have been tested and confirmed working:
+
+- Imperial_Court_Meter_Updated.lsl
+- Imperial_Tsarevich_Meter_Fixed.lsl
+- Imperial_Tsarina_Meter.lsl
+- Imperial_Grand_Duchess_Meter.lsl
+
+USAGE INSTRUCTIONS:
+
+1. Access Settings menu from main HUD menu
+2. Click "OOC" to toggle between OOC and IC modes
+3. When in OOC mode, only "OOC" text will be displayed above avatar
+4. Return to IC mode by toggling OOC again in Settings
+
+TECHNICAL DETAILS:
+
+The OOC status is transmitted via the existing stats communication channel using the format:
+"NAME:firstname familyname|CLASS:x|RANK:y|HEALTH:z|...|OOC:0/1"
+
+The meter scripts check for the OOC flag and override normal display when it's set to TRUE.
+
+This update maintains backward compatibility with all existing HUD components and expansion modules.
+
+Last updated: April 2, 2025

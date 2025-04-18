@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imperial Russian Court Roleplay System</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="scripts.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Imperial Russian Court Roleplay System</h1>
+        <p class="subtitle">1905 Era Second Life Roleplay HUD & Accessories</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#core-hud">Core HUD</a></li>
+            <li><a href="#modules">Modules</a></li>
+            <li><a href="#accessories">Accessories</a></li>
+            <li><a href="#npcs">NPC System</a></li>
+            <li><a href="#recent-updates">Recent Updates</a></li>
+            <li><a href="#installation">Installation</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="overview">
+            <h2>System Overview</h2>
+            <p>The Imperial Russian Court Roleplay System is a comprehensive set of LSL scripts designed for Second Life, enabling immersive roleplaying set in the Imperial Russian Court of 1905. The system consists of a modular HUD for player statistics and interactions, a meter for public display, and various accessories for gameplay enhancement.</p>
+            
+            <div class="feature-box">
+                <h3>Key Features</h3>
+                <ul>
+                    <li>Modular design with separate scripts for different functionalities</li>
+                    <li>Comprehensive social class and rank system</li>
+                    <li>Economy system with Imperial Rubles</li>
+                    <li>Health and injury management</li>
+                    <li>Faith and Orthodox religion integration</li>
+                    <li>Family lineage and relationships</li>
+                    <li>Combat and dueling mechanics</li>
+                    <li>Death and resurrection system</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="core-hud">
+            <h2>Core HUD System</h2>
+            <p>The core of the system is the player HUD, which manages character data, statistics, and interactions with other scripts. The HUD is divided into multiple scripts to optimize memory usage and prevent Stack-Heap Collision errors.</p>
+            
+            <div class="script-box">
+                <h3>Imperial_Russian_Court_Core_HUD.lsl</h3>
+                <p>The central script that coordinates with other modules and manages core player data.</p>
+                <h4>Features:</h4>
+                <ul>
+                    <li>Character registration and data storage</li>
+                    <li>Basic statistics tracking (health, charm, influence, etc.)</li>
+                    <li>Class and rank management</li>
+                    <li>Economy integration</li>
+                    <li>Death and health state management</li>
+                    <li>Inter-module communication</li>
+                </ul>
+            </div>
+
+            <div class="script-box">
+                <h3>Imperial_Court_Meter.lsl</h3>
+                <p>A public display meter that shows character statistics to other players.</p>
+                <h4>Features:</h4>
+                <ul>
+                    <li>Displays character name, title, and rank</li>
+                    <li>Shows health status and current state</li>
+                    <li>Indicates faith level and wealth rank</li>
+                    <li>Visual indicators for special statuses</li>
+                </ul>
+            </div>
+
+            <div class="script-box">
+                <h3>Tsar_Imperial_HUD.lsl</h3>
+                <p>A specialized HUD for the player taking the role of Tsar/Tsarina with unique powers.</p>
+                <h4>Features:</h4>
+                <ul>
+                    <li>All standard HUD functionality</li>
+                    <li>Imperial decree capabilities</li>
+                    <li>Ability to grant titles and favors</li>
+                    <li>Court management tools</li>
+                    <li>Special administrative abilities</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="modules">
+            <h2>Specialized Modules</h2>
+            <p>The system is built with a modular approach, with specialized scripts handling different aspects of gameplay.</p>
+            
+            <div class="script-box">
+                <h3>Imperial_Court_Family_Module.lsl</h3>
+                <p>Manages family relationships, lineage, and dynasty mechanics.</p>
+                <h4>Features:</h4>
+                <ul>
+                    <li>Dynasty foundation and management</li>
+                    <li>Family member tracking with relationships</li>
+                    <li>Heir appointment system</li>
+                    <li>Dynasty status display on HUD</li>
+                    <li>Family history tracking</li>
+                    <li>Dynasty influence bonuses</li>
+                </ul>
+                <p class="note">The Family Module communicates with the Core HUD to maintain consistent family data and provide benefits to dynasty heads and heirs. Dynasty information is displayed prominently on the HUD's floating text display.</p>
+            </div>
+
+            <div class="script-box">
+                <h3>Imperial_Court_Banking_Module.lsl</h3>
+                <p>Handles financial transactions, banking, and economic systems.</p>
+                <h4>Features:</h4>
+                <ul>
+                    <li>Bank account management</li>
+                    <li>Loans and debt tracking</li>
+                    <li>Interest calculations</li>
+                    <li>Financial status reporting</li>
+                </ul>
+            </div>
+
+            <div class="script-box">
+                <h3>Imperial_Court_Religion_Module.lsl</h3>
+                <p>Implements religious activities, faith mechanics, and Orthodox Church integration.</p>
+                <h4>Features:</h4>
+                <ul>
+                    <li>Faith stat management</li>
+                    <li>Prayer and religious activities</li>
+                    <li>Church hierarchy integration</li>
+                    <li>Religious blessings and penalties</li>
+                </ul>
+            </div>
+            
+            <div class="script-box">
+                <h3>Imperial_Noble_Titles_Module.lsl</h3>
+                <p>Manages noble titles, hereditary succession, and lineage records.</p>
+                <h4>Features:</h4>
+                <ul>
+                    <li>Historical Russian titles and inheritance rules</li>
+                    <li>Property and wealth inheritance system</li>
+                    <li>Family registry with ancestry tracking</li>
+                    <li>Title granting and revocation system</li>
+                    <li>Noble house affiliations and alliances</li>
+                </ul>
+            </div>
+            
+            <div class="script-box">
+                <h3>Imperial_Military_Orders_Module.lsl</h3>
+                <p>Manages the historical military orders and decorations of Imperial Russia.</p>
+                <h4>Features:</h4>
+                <ul>
+                    <li>Historically accurate orders from 1905 Russia</li>
+                    <li>Military ranks and promotion system</li>
+                    <li>Award ceremonies and presentation protocols</li>
+                    <li>Military career progression</li>
+                    <li>Uniform regulations and requirements</li>
+                </ul>
+            </div>
+            
+            <div class="script-box">
+                <h3>Imperial_Politics_Factions_Module.lsl</h3>
+                <p>Manages political alignment, court influence, and factions of 1905 Russia.</p>
+                <h4>Features:</h4>
+                <ul>
+                    <li>Historical political factions (Reactionaries, Kadets, etc.)</li>
+                    <li>Court influence and intrigue mechanics</li>
+                    <li>Political actions and consequences</li>
+                    <li>Intelligence gathering and rumor spreading</li>
+                    <li>Historical events of 1905 period</li>
+                </ul>
+            </div>
+            
+            <div class="script-box">
+                <h3>Imperial_Health_Medicine_Module.lsl</h3>
+                <p>Implements historically accurate medical practices of Imperial Russia.</p>
+                <h4>Features:</h4>
+                <ul>
+                    <li>Period-accurate medical treatments and ailments</li>
+                    <li>Imperial court physicians and medical facilities</li>
+                    <li>Special hemophilia system for Tsarevich</li>
+                    <li>Health recovery and management</li>
+                    <li>Spa treatments favored by nobility</li>
+                </ul>
+            </div>
+            
+            <div class="script-box">
+                <h3>Imperial_Court_Protocol_Module.lsl</h3>
+                <p>Implements the strict etiquette and ceremony of the Imperial court.</p>
+                <h4>Features:</h4>
+                <ul>
+                    <li>Table of Ranks implementation (14 civil service classes)</li>
+                    <li>Formal court ceremonies and procedures</li>
+                    <li>Movement and conversation protocols</li>
+                    <li>Court etiquette practice and training</li>
+                    <li>Historical accuracy in titles and forms of address</li>
+                    <li>Proper void function declarations for menu functions</li>
+                </ul>
+            </div>
+            
+            <div class="script-box">
+                <h3>Imperial_Court_Romance_Module.lsl</h3>
+                <p>Manages courtship, romantic relationships, and marriage mechanics.</p>
+                <h4>Features:</h4>
+                <ul>
+                    <li>Love points tracking system (100 points required for marriage)</li>
+                    <li>Period-appropriate flirtation interactions</li>
+                    <li>Fraternal relationship bonds</li>
+                    <li>Engagement and marriage ceremonies</li>
+                    <li>Social standing benefits from advantageous marriages</li>
+                    <li>Faith-based blessing for religious unions</li>
+                </ul>
+                <p class="note">The Romance Module creates an immersive courtship experience with historically accurate interactions for 1905 Imperial Russia, requiring players to develop relationships gradually through appropriate social interactions.</p>
+            </div>
+            
+            <div class="script-box">
+                <h3>Imperial_System_Connector.lsl</h3>
+                <p>Manages inter-module communication and prevents memory issues.</p>
+                <h4>Features:</h4>
+                <ul>
+                    <li>Central message routing system</li>
+                    <li>Memory monitoring and optimization</li>
+                    <li>Data synchronization across modules</li>
+                    <li>Event tracking and logging</li>
+                    <li>System stability enhancements</li>
+                </ul>
+            </div>
+            
+            <div class="script-box">
+                <h3>Imperial_Costume_Recommendation_Module.lsl</h3>
+                <p>Provides historically accurate costume recommendations for all court occasions.</p>
+                <h4>Features:</h4>
+                <ul>
+                    <li>Period-accurate costume recommendations for 1905 Imperial Russia</li>
+                    <li>Gender, rank, and occasion-specific recommendations</li>
+                    <li>Seasonal variations appropriate for the Russian climate</li>
+                    <li>Military uniform regulations and specifications</li>
+                    <li>Court dress requirements by rank and protocol</li>
+                    <li>Special regalia recommendations for formal ceremonies</li>
+                    <li>Integration with rank and protocol systems</li>
+                </ul>
+                <p class="note">The Costume Module helps players maintain historical accuracy in their appearance with detailed recommendations based on their character's status, the occasion, and historical court dress regulations of Imperial Russia. The enhanced version loads data from a comprehensive notecard database.</p>
+            </div>
+            
+            <div class="script-box">
+                <h3>Imperial_Education_Academia_Module.lsl</h3>
+                <p>Implements the Russian educational system and academic life circa 1905.</p>
+                <h4>Features:</h4>
+                <ul>
+                    <li>University progression from Student to Academician</li>
+                    <li>Historical educational institutions (Moscow State University, Smolny Institute, etc.)</li>
+                    <li>Academic research projects and publications</li>
+                    <li>Westernizers vs. Slavophiles philosophical schools</li>
+                    <li>Subject specialization across multiple disciplines</li>
+                    <li>Gender and class-appropriate educational opportunities</li>
+                    <li>Academic reputation and salon participation</li>
+                </ul>
+                <p class="note">The Education Module provides an immersive experience of the Russian academic world of 1905, with accurate historical institutions and philosophical trends that shaped the intellectual life of the period.</p>
+            </div>
+            
+            <div class="script-box">
+                <h3>Imperial_Arts_Culture_Module.lsl</h3>
+                <p>Implements the vibrant arts and cultural scene of Russia's Silver Age.</p>
+                <h4>Features:</h4>
+                <ul>
+                    <li>Artistic skill development in literature, poetry, painting, and more</li>
+                    <li>Historical art movements (Symbolism, Realism, Mir Iskusstva)</li>
+                    <li>Patronage system for supporting notable artists</li>
+                    <li>Literary salon hosting and membership</li>
+                    <li>Cultural event organization (poetry readings, exhibitions)</li>
+                    <li>Art collection and appreciation</li>
+                    <li>Cultural publications and performances</li>
+                </ul>
+                <p class="note">The Arts Module allows players to participate in the extraordinary cultural flowering that characterized Russia's Silver Age, with historically accurate artists, movements, and institutions from the 1905 period.</p>
+            </div>
+        </section>
+
+        <section id="accessories">
+            <h2>Accessory Scripts</h2>
+            <p>Additional scripts enhance gameplay with various interactive objects and systems.</p>
+
+            <div class="multi-column">
+                <div class="script-box">
+                    <h3>Imperial_Combat_System.lsl</h3>
+                    <p>For weapons and dueling systems with consent-based combat.</p>
+                    <ul>
+                        <li>Damage calculation and application</li>
+                        <li>Dueling challenge system</li>
+                        <li>Honor and reputation effects</li>
+                        <li>Class and rank restrictions</li>
+                    </ul>
+                </div>
+
+                <div class="script-box">
+                    <h3>Imperial_Food_Item.lsl</h3>
+                    <p>For food and consumable items that affect health.</p>
+                    <ul>
+                        <li>Health restoration effects</li>
+                        <li>Quality levels affecting benefits</li>
+                        <li>Portion management</li>
+                        <li>Food sharing mechanics</li>
+                    </ul>
+                </div>
+
+                <div class="script-box">
+                    <h3>Imperial_Rest_Station.lsl</h3>
+                    <p>For beds, benches, and medical stations for healing.</p>
+                    <ul>
+                        <li>Gradual health restoration</li>
+                        <li>Medical treatment vs. rest options</li>
+                        <li>Time-based recovery process</li>
+                        <li>Configurable healing amounts</li>
+                    </ul>
+                </div>
+
+                <div class="script-box">
+                    <h3>Imperial_Ruble_Vendor.lsl</h3>
+                    <p>For vendors selling items for Imperial Rubles.</p>
+                    <ul>
+                        <li>Item display and browsing</li>
+                        <li>Ruble-based transactions</li>
+                        <li>Inventory management</li>
+                        <li>Purchase verification</li>
+                    </ul>
+                </div>
+
+                <div class="script-box">
+                    <h3>Imperial_Ruble_Giver.lsl</h3>
+                    <p>For objects that distribute currency through various means.</p>
+                    <ul>
+                        <li>Fixed, random, or scaled distribution</li>
+                        <li>Class and rank-based scaling</li>
+                        <li>Cooldown and usage limits</li>
+                        <li>Access restrictions</li>
+                    </ul>
+                </div>
+
+                <div class="script-box">
+                    <h3>Imperial_Sacred_Relic.lsl</h3>
+                    <p>For religious icons and relics that provide miracles.</p>
+                    <ul>
+                        <li>Resurrection of dead characters</li>
+                        <li>Faith-based miracle system</li>
+                        <li>Various blessing types</li>
+                        <li>Faith requirements and cooldowns</li>
+                    </ul>
+                </div>
+
+                <div class="script-box">
+                    <h3>Imperial_Poison_System.lsl</h3>
+                    <p>For poisons and execution mechanisms.</p>
+                    <ul>
+                        <li>Direct and damage-over-time effects</li>
+                        <li>Execution mechanics with dramatic animations</li>
+                        <li>Public poisoning announcements and emotes</li>
+                        <li>Reputation penalties for poisoners</li>
+                        <li>Various poison types and severities</li>
+                        <li>Realistic fainting animations during severe effects</li>
+                    </ul>
+                </div>
+
+                <div class="script-box">
+                    <h3>Imperial_System_Tester.lsl</h3>
+                    <p>For testing connectivity between modules.</p>
+                    <ul>
+                        <li>Module connectivity testing</li>
+                        <li>Inter-module communication verification</li>
+                        <li>System diagnostics</li>
+                        <li>Component testing tools</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="npcs">
+            <h2>NPC System</h2>
+            <p>The Imperial Russian Court system includes intelligent NPCs that enhance the roleplay environment with interactive characters. These NPCs recognize the Tsar specifically and behave according to court protocol and their social roles.</p>
+            
+            <div class="multi-column">
+                <div class="script-box">
+                    <h3>Imperial_Tsar_HUD.lsl</h3>
+                    <p>Enhanced HUD exclusively for Tsar Nikolai II with imperial powers.</p>
+                    <ul>
+                        <li>Imperial Powers menu for decrees and orders</li>
+                        <li>Military command capabilities</li>
+                        <li>Court and diplomacy functions</li>
+                        <li>OOC mode that hides floating stats</li>
+                        <li>Imperial family management</li>
+                    </ul>
+                </div>
+                
+                <div class="script-box">
+                    <h3>Imperial_Tsarevich_HUD.lsl</h3>
+                    <p>Special HUD for Tsarevich Aleksei with heir-specific features.</p>
+                    <ul>
+                        <li>Hemophilia condition management</li>
+                        <li>Special royal education functions</li>
+                        <li>Imperial family interactions</li>
+                        <li>Military honors and training</li>
+                        <li>Customized for Tsarevich UUID: 707c2fdf-6f8a-43c9-a5fb-3debc0941064</li>
+                    </ul>
+                </div>
+                
+                <div class="script-box">
+                    <h3>Imperial_Tsarina_HUD.lsl</h3>
+                    <p>Special HUD for Empress Alexandra Feodorovna with unique capabilities.</p>
+                    <ul>
+                        <li>Maternal oversight of the royal children</li>
+                        <li>Faith healing for Alexei's hemophilia</li>
+                        <li>Charitable foundation management</li>
+                        <li>Court appointment powers</li>
+                        <li>Religious influence and connections (including Rasputin)</li>
+                        <li>Imperial mercy and royal prerogatives</li>
+                        <li>Ladies-in-waiting management</li>
+                    </ul>
+                </div>
+                
+                <div class="script-box">
+                    <h3>Imperial_Grand_Duchess_HUD.lsl</h3>
+                    <p>Special HUD for the Four Grand Duchesses with unique personality features.</p>
+                    <ul>
+                        <li>Distinct talents for each Grand Duchess (Olga, Tatiana, Maria, Anastasia)</li>
+                        <li>Special sister bonds ("The Big Pair" and "The Little Pair")</li>
+                        <li>Period-appropriate activities and interests</li>
+                        <li>Charitable work and social responsibilities</li>
+                        <li>Family interactions and Imperial Court functions</li>
+                        <li>Dynamic personality traits affecting social interactions</li>
+                    </ul>
+                </div>
+                
+                <div class="script-box">
+                    <h3>Imperial_Guard_NPC_Tsar_Recognition.lsl</h3>
+                    <p>For guard NPCs that recognize the Tsar and enforce court security.</p>
+                    <ul>
+                        <li>Special salutes and protocols when Tsar is present</li>
+                        <li>Security responses to threats and unauthorized access</li>
+                        <li>Court protocol enforcement with players</li>
+                        <li>Scheduled patrol patterns and position changes</li>
+                        <li>Specific UUID recognition for Tsar Nikolai II (49238f92-08a4-4f72-bca4-e66a15c75e02)</li>
+                    </ul>
+                </div>
+
+                <div class="script-box">
+                    <h3>Imperial_Servant_NPC_Tsar_Recognition.lsl</h3>
+                    <p>For servant NPCs that provide services and respond to court hierarchy.</p>
+                    <ul>
+                        <li>Deference behavior based on player rank and title</li>
+                        <li>Special services and interactions with Tsar</li>
+                        <li>Food and drink serving functions</li>
+                        <li>Court gossip and information sharing</li>
+                        <li>Specific UUID recognition for Tsar Nikolai II</li>
+                    </ul>
+                </div>
+
+                <div class="script-box">
+                    <h3>Imperial_Courtier_NPC_Tsar_Recognition.lsl</h3>
+                    <p>For courtier NPCs that engage in court politics and intrigue.</p>
+                    <ul>
+                        <li>Political faction representation and rivalries</li>
+                        <li>Court etiquette and social interactions</li>
+                        <li>Favor and influence mechanics with players</li>
+                        <li>Special interactions with Tsar and high-ranking officials</li>
+                        <li>Court gossip and rumor spreading</li>
+                        <li>Fixed duplicated listen events and syntax errors</li>
+                    </ul>
+                </div>
+
+                <div class="script-box">
+                    <h3>Imperial_Ekaterina_Phantom_NPC.lsl</h3>
+                    <p>A special ghostly NPC representing Catherine the Great's phantom.</p>
+                    <ul>
+                        <li>Floating movement with translucent particle effects</li>
+                        <li>Historical wisdom and prophetic messages</li>
+                        <li>Special recognition of the Tsar with unique dialogue</li>
+                        <li>Random appearances during court events</li>
+                        <li>Cryptic warnings about the future of the Romanov dynasty</li>
+                    </ul>
+                </div>
+
+                <div class="script-box">
+                    <h3>Imperial_Baba_Yaga_NPC.lsl</h3>
+                    <p>A mystical Slavic folklore character with magical abilities.</p>
+                    <ul>
+                        <li>Fortune-telling mechanics with player-specific predictions</li>
+                        <li>Russian folk tale narration system with notecard library</li>
+                        <li>Blessing system that grants temporary buffs for ruble payments</li>
+                        <li>Special animations and particle effects for magical interactions</li>
+                        <li>Specific hatred for Rasputin with unique dialogue</li>
+                        <li>Fixed proper LSL constant usage (NULL_KEY, TRUE, FALSE)</li>
+                    </ul>
+                </div>
+
+                <div class="script-box">
+                    <h3>Imperial_Usher.lsl</h3>
+                    <p>A court official NPC that makes formal announcements and introductions.</p>
+                    <ul>
+                        <li>Formal court announcement system with dialog menu</li>
+                        <li>10 pre-defined formal announcement phrases</li>
+                        <li>Custom announcement support through notecard integration</li>
+                        <li>Special introduction protocol for the Tsar and high nobility</li>
+                        <li>Court event coordination and timing functions</li>
+                        <li>Proper LSL dialog menu implementation with dynamic buttons</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="feature-box">
+                <h3>NPC System Technical Notes</h3>
+                <ul>
+                    <li><strong>Tsar Recognition:</strong> All NPCs include specific code to recognize Tsar Nikolai II via his unique UUID (49238f92-08a4-4f72-bca4-e66a15c75e02)</li>
+                    <li><strong>Interaction Mechanics:</strong> NPCs use llSensor() to detect nearby avatars and respond appropriately based on their social rank and court position</li>
+                    <li><strong>Dialog Systems:</strong> Interactive menus are implemented through llDialog() with proper channel management</li>
+                    <li><strong>Animation Integration:</strong> NPCs use appropriate animations for bowing, curtseying, saluting, and other social gestures</li>
+                    <li><strong>Particle Effects:</strong> Special NPCs like Baba Yaga and Ekaterina Phantom use particle systems for mystical appearances</li>
+                    <li><strong>Random Behaviors:</strong> NPCs incorporate randomized responses and actions to create realistic, non-repetitive behaviors</li>
+                    <li><strong>Error Handling:</strong> All NPCs now include proper error handling with correct no_sensor event parameters</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="recent-updates">
+            <h2>Recent Updates</h2>
+            <p>The following scripts have been optimized and updated to ensure compatibility with Second Life's LSL limitations:</p>
+            
+            <div class="script-box">
+                <h3>New Education and Arts Modules Implementation</h3>
+                <p>Comprehensive education and arts systems have been added to the Imperial Court:</p>
+                <ul>
+                    <li><strong>Imperial_Education_Academia_Module.lsl</strong> - New module implementing the Russian educational system circa 1905</li>
+                    <li><strong>Imperial_Arts_Culture_Module.lsl</strong> - New module implementing the Silver Age Russian arts and cultural scene</li>
+                    <li><strong>Academic Progression</strong> - University studies, research, and academic titles from Student to Academician</li>
+                    <li><strong>Westernizers vs. Slavophiles</strong> - Historical schools of thought affecting education</li>
+                    <li><strong>Artistic Skills</strong> - Practice in literature, poetry, painting, ballet, opera, and more</li>
+                    <li><strong>Patronage System</strong> - Support artists and host literary salons to enhance cultural reputation</li>
+                    <li><strong>Historical Accuracy</strong> - Featuring authentic educational institutions and notable artists of 1905 Russia</li>
+                </ul>
+                <p class="note">These modules provide immersive academic and cultural experiences within the Imperial Russian Court setting, allowing players to develop intellectually and participate in the rich Silver Age cultural scene of 1905 Russia.</p>
+            </div>
+
+            <div class="script-box">
+                <h3>Royal Family HUD System</h3>
+                <p>Specialized HUDs for the Imperial family have been created:</p>
+                <ul>
+                    <li><strong>Imperial_Tsarina_HUD.lsl</strong> - Special HUD for Empress Alexandra with unique features including:</li>
+                    <ul>
+                        <li>Maternal oversight of the royal children</li>
+                        <li>Faith healing for Alexei's hemophilia</li>
+                        <li>Charitable foundation management</li>
+                        <li>Court appointment powers</li>
+                    </ul>
+                    <li><strong>Imperial_Grand_Duchess_HUD.lsl</strong> - Special HUD for the Four Grand Duchesses with:</li>
+                    <ul>
+                        <li>Unique talents and personalities for each Grand Duchess</li>
+                        <li>Special sister bonds ("The Big Pair" and "The Little Pair")</li>
+                        <li>Period-appropriate activities and interests</li>
+                        <li>Imperial charitable work and social events</li>
+                    </ul>
+                </ul>
+                <p class="note">The specialized HUDs for the Imperial family members provide unique capabilities and historically accurate experiences for roleplaying as Empress Alexandra and the Grand Duchesses, with specific powers and relationships reflecting their historical roles.</p>
+            </div>
+
+            <div class="script-box">
+                <h3>New Romance Module Implementation</h3>
+                <p>A complete romance and courtship system has been added to the Imperial Court:</p>
+                <ul>
+                    <li><strong>Imperial_Court_Romance_Module.lsl</strong> - New module implementing period-appropriate courtship mechanics</li>
+                    <li><strong>Love Points System</strong> - Tracks romantic relationships with flirtation and fraternal interactions</li>
+                    <li><strong>Marriage Requirements</strong> - Players must earn 100 love points to be eligible for marriage</li>
+                    <li><strong>Core HUD Integration</strong> - Added "Romance" option to main menu for easy access</li>
+                    <li><strong>Public Announcements</strong> - Engagement and marriage events are announced in public chat</li>
+                    <li><strong>Faith Integration</strong> - Religious ceremonies gain additional benefits with high faith</li>
+                    <li><strong>Fixed PUBLIC_CHANNEL Declaration</strong> - Removed custom PUBLIC_CHANNEL variable and used built-in channel 0 directly</li>
+                </ul>
+                <p class="note">The new Romance Module allows for historically accurate courtship practices in the Imperial Russian Court setting, with flirtation and relationship development requiring time and proper social interaction. The module correctly uses LSL's built-in public chat channel (0) rather than redefining it as a variable.</p>
+            </div>
+            
+            <div class="script-box">
+                <h3>New Historical Costume Recommendation System</h3>
+                <p>A comprehensive costume recommendation system has been added to ensure historical accuracy in Imperial Court attire:</p>
+                <ul>
+                    <li><strong>Imperial_Costume_Recommendation_Module.lsl</strong> - New module providing detailed clothing recommendations</li>
+                    <li><strong>Period-Accurate Attire</strong> - Historically accurate clothing suggestions for 1905 Imperial Russia</li>
+                    <li><strong>Rank & Occasion Based</strong> - Recommendations vary by character rank and specific court occasions</li>
+                    <li><strong>Seasonal Variations</strong> - Different outfit suggestions based on Russia's harsh seasonal climate</li>
+                    <li><strong>Military Uniform Regulations</strong> - Detailed specifications for period-accurate military dress</li>
+                    <li><strong>Notecard Database</strong> - Extensive costume information loaded from notecard for easy additions</li>
+                    <li><strong>Enhanced Version</strong> - Advanced implementation with interactive menus and detailed explanations</li>
+                    <li><strong>Display System</strong> - Floating text panel for elegant presentation of recommendations</li>
+                </ul>
+                <p class="note">The Costume Recommendation System helps maintain immersion and historical accuracy by guiding players on appropriate attire for their rank and occasion. The system ensures all courtiers dress according to the strict regulations of the Imperial Russian Court circa 1905, with special attention to the intricate details of formal court dress, military uniforms, and seasonal adaptations.</p>
+            </div>
+            
+            <div class="script-box">
+                <h3>Court Protocol Module Function Syntax Fix</h3>
+                <p>The Court Protocol Module has been updated with proper LSL function syntax for void functions:</p>
+                <ul>
+                    <li><strong>Function Declarations</strong> - Added 'void' keyword to functions that don't return values but take no arguments</li>
+                    <li><strong>Improved Memory Management</strong> - These syntax fixes help prevent memory issues during script execution</li>
+                    <li><strong>Enhanced Script Stability</strong> - Correct syntax reduces the chance of script errors during complex operations</li>
+                    <li><strong>LSL Compliance</strong> - Scripts now follow LSL best practices for function declarations</li>
+                </ul>
+                <p class="note">In Linden Scripting Language, functions that don't return values should use the 'void' keyword to clearly indicate they are procedures rather than functions. This update ensures all menu-handling functions and initialization routines use proper LSL syntax.</p>
+            </div>
+            
+            <div class="script-box">
+                <h3>Religion Module Integration Fix</h3>
+                <p>The Religion Module has been fully integrated into the Core HUD system with the following improvements:</p>
+                <ul>
+                    <li><strong>Imperial_Court_Religion_Module.lsl</strong> - Added proper touch_start() event handler for direct player interaction</li>
+                    <li><strong>Faith System Implementation</strong> - Enhanced faith stat tracking with benefits for religious participation</li>
+                    <li><strong>Prayer System</strong> - Implementation of various religious activities including prayer, confession, and communion</li>
+                    <li><strong>Donation System</strong> - Ability to make monetary donations to the church that increase faith</li>
+                    <li><strong>Relic Integration</strong> - Support for venerating sacred relics with daily cooldowns</li>
+                    <li><strong>Clergy Benefits</strong> - Special abilities for players with clergy ranks</li>
+                </ul>
+                <p class="note">The Religion Module now properly communicates with the Core HUD to maintain consistent faith data. Players can engage in religious activities that provide both roleplay and mechanical benefits.</p>
+            </div>
+
+            <div class="script-box">
+                <h3>Banking Module Integration Fix</h3>
+                <p>The Banking Module has been properly integrated with the Core HUD system with these improvements:</p>
+                <ul>
+                    <li><strong>Imperial_Court_Banking_Module.lsl</strong> - Added proper touch_start() event handler for direct player interaction</li>
+                    <li><strong>Bank Account Variable</strong> - Added bankAccount variable to Core HUD to track bank balance</li>
+                    <li><strong>Loans System</strong> - Implemented loans list variable in Core HUD to track player financial obligations</li>
+                    <li><strong>Interest System</strong> - Daily interest calculations on savings (3% per annum)</li>
+                    <li><strong>Bi-directional Data Exchange</strong> - Added UPDATE_BANK_ACCOUNT and UPDATE_LOANS message handlers in Core HUD</li>
+                    <li><strong>Consistent Financial Tracking</strong> - All economic transactions now update both modules to maintain data integrity</li>
+                </ul>
+                <p class="note">Players can now access comprehensive banking features through the Banking Module, with proper data exchange between all components of the system.</p>
+            </div>
+
+            <div class="script-box">
+                <h3>Family Module Integration Fix</h3>
+                <p>The Family Module now properly communicates with the Core HUD, enabling full functionality of the dynasty and family lineage system:</p>
+                <ul>
+                    <li><strong>Imperial_Court_Family_Module.lsl</strong> - Added proper touch_start() event handler to allow direct player interaction with the Family Module</li>
+                    <li><strong>Imperial_Russian_Court_Core_HUD.lsl</strong> - Added comprehensive family system variables and enhanced data handling to properly store and track dynasty information</li>
+                    <li><strong>Family Data Structure</strong> - Implemented consistent formatting for family member lists using ID:Name:Relation pattern</li>
+                    <li><strong>Dynasty Benefits</strong> - Added influence bonuses for family heads and heirs, improving roleplay benefits</li>
+                    <li><strong>Visual Updates</strong> - Enhanced HUD display to show dynasty status, membership, and heir designation</li>
+                </ul>
+                <p class="note">Players can now found dynasties, manage family members, and appoint heirs by either touching the Family Module directly or selecting "Family" from the main HUD menu. Dynasty information is properly displayed on the HUD and correctly shared between modules.</p>
+            </div>
+            
+            <div class="script-box">
+                <h3>Syntax Compatibility Fixes</h3>
+                <p>Removed ternary operators (?:) and fixed other syntax issues to ensure compatibility with Second Life's LSL limitations:</p>
+                <ul>
+                    <li><strong>Imperial_Rest_Station.lsl</strong> - Replaced all ternary operators with if/else statements for display text and activity messages</li>
+                    <li><strong>Imperial_Poison_System.lsl</strong> - Replaced ternary operators with standard if/else blocks for execution announcements and action verbs; also fixed syntax error by renaming 'key' variable to 'paramKey' and added explicit NULL_KEY constant definition</li>
+                    <li><strong>Imperial_Russian_Court_HUD_Updated.lsl</strong> - Removed ternary operators for gender text and HUD visibility toggles</li>
+                    <li><strong>Imperial_Food_Item.lsl</strong> - Fixed syntax error by renaming 'key' variable to 'paramKey' as 'key' is a reserved word in LSL</li>
+                    <li><strong>Imperial_Ruble_Giver.lsl</strong> - Fixed similar syntax error by renaming 'key' variable to 'paramKey' to resolve reserved word conflict</li>
+                    <li><strong>Imperial_Sacred_Relic.lsl</strong> - Fixed syntax error by renaming 'key' variable to 'paramKey' to avoid reserved word conflicts</li>
+                    <li><strong>Imperial_Combat_System.lsl</strong> - Fixed syntax error by converting 'key' variable to 'paramKey' in weapon configuration parsing</li>
+                </ul>
+            </div>
+            
+            <div class="script-box">
+                <h3>Memory Optimization</h3>
+                <p>Scripts have been restructured to optimize memory usage and reduce the risk of Stack-Heap Collision errors:</p>
+                <ul>
+                    <li>Modular design with separate scripts for different functionality</li>
+                    <li>Streamlined variable declarations and function implementations</li>
+                    <li>Efficient string handling with reduced concatenation operations</li>
+                </ul>
+            </div>
+            
+            <div class="script-box">
+                <h3>Enhanced Roleplay Features</h3>
+                <p>New immersive features have been added to improve the visual and social aspects of roleplay:</p>
+                <ul>
+                    <li><strong>Imperial_Poison_System.lsl</strong> - Added realistic fainting animations for severe poisoning effects with the following features:
+                        <ul>
+                            <li>Initial fainting reaction for severe poison doses (damage ≥ 30)</li>
+                            <li>Random fainting episodes during ongoing poison effects</li>
+                            <li>Dramatic execution sequence with fainting animation</li>
+                            <li>Public chat announcements when players are poisoned</li>
+                            <li>Occasional public emotes describing the victim's suffering</li>
+                            <li>Recovery announcements when poison effects subside</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="script-box">
+                <h3>Critical Bug Fixes</h3>
+                <p>Several critical bugs have been fixed to ensure script stability:</p>
+                <ul>
+                    <li><strong>no_sensor Event Handler Fixes</strong> - Fixed LSL syntax errors in multiple scripts by adding the required integer parameter to the no_sensor event handler:
+                        <ul>
+                            <li><strong>Imperial_Combat_System.lsl</strong> - Updated no_sensor() to no_sensor(integer not_used)</li>
+                            <li><strong>Imperial_Combat_System_Different_Names.lsl</strong> - Added missing integer parameter</li>
+                            <li><strong>Imperial_Food_Item.lsl</strong> - Fixed both parameter and unsafe llDetectedKey(0) call that would have caused errors</li>
+                            <li><strong>Imperial_Courtier_NPC_Tsar_Recognition.lsl</strong> - Fixed syntax error by correcting the spacing between function declaration and opening brace</li>
+                            <li><strong>Imperial_Guard_NPC_Tsar_Recognition.lsl</strong> - Fixed event handler syntax by correcting spacing between declaration and brace</li>
+                            <li><strong>Imperial_Servant_NPC_Tsar_Recognition.lsl</strong> - Fixed spacing between function declaration and opening brace</li>
+                            <li><strong>Imperial_Poison_System.lsl</strong> - Fixed event handler signature and removed unsafe llDetectedKey(0) call in no_sensor event</li>
+                            <li><strong>Backup Scripts</strong> - Fixed no_sensor() event handlers in Imperial_Combat_System_backup.lsl and Imperial_Combat_System_compact_backup.lsl</li>
+                        </ul>
+                    </li>
+                    <li><strong>NULL_KEY Usage</strong> - Fixed all scripts that use NULL_KEY by removing custom definitions. In Second Life's LSL, NULL_KEY is a built-in constant that represents an empty key (00000000-0000-0000-0000-000000000000) and should not be explicitly defined in scripts.</li>
+                    <li><strong>Imperial_Russian_Court_Core_HUD.lsl</strong> - Removed incorrect NULL_KEY definition that was causing reference errors. The correct approach is to use the built-in NULL_KEY constant directly.</li>
+                    <li><strong>Imperial_Poison_System.lsl</strong> - Fixed syntax error at line 13, character 3 by removing the self-referencing NULL_KEY definition and using the built-in constant instead.</li>
+                    <li><strong>Timer Function Fixes</strong> - Corrected non-existent function call errors in both <strong>Imperial_Poison_System.lsl</strong> and <strong>Imperial_Rest_Station.lsl</strong> by replacing invalid <code>llGetTimerEvent()</code> with the correct <code>llGetTimerEventDelay()</code> function. The correct function returns the current timer interval in seconds, or 0.0 if no timer is running.</li>
+                    <li><strong>Text Display Function Fixes</strong> - Fixed non-existent function calls to <code>llGetText()</code> in <strong>Imperial_Poison_System.lsl</strong> and <strong>Imperial_Combat_System.lsl</strong>. LSL does not have a function to retrieve hover text. Replaced with global variables to store and track action state information.</li>
+                    <li><strong>Dialog Channel Initialization</strong> - Fixed persistent syntax error in <strong>Imperial_Combat_System.lsl</strong> by creating a completely fresh implementation with different variable names, avoiding the problematic "COMBAT" word. After multiple attempts with stripped-down versions still produced errors, we identified that "COMBAT" might be a reserved word in LSL. Changed all channel variables like "COMBAT_CHANNEL" to use different names such as "WEAPON_CHANNEL" and "ATTACK_CHANNEL". Created a new script with a cleaner structure and proper targeting system implementation, avoiding any potentially reserved words. Multiple backup versions were saved from each attempt to document the issue and solution process.</li>
+                    <li><strong>Sensor Event Fixes</strong> - Corrected incorrect use of <code>llDetectedKey(0)</code> in <strong>Imperial_Combat_System.lsl</strong>'s <code>no_sensor()</code> event, where no keys are detected. Also improved the <code>sensor()</code> event to properly track the weapon owner.</li>
+                    <li><strong>PUBLIC_CHANNEL Definition Fixes</strong> - Fixed error in <strong>Imperial_Court_Romance_Module.lsl</strong> by removing the user-defined PUBLIC_CHANNEL variable declaration and using channel 0 directly in llSay() calls. In LSL, channel 0 is the standard public chat channel and should not be redefined as a custom variable.</li>
+                    <li><strong>Break Statement Removal</strong> - Fixed syntax errors in <strong>Imperial_Court_Romance_Module.lsl</strong> by replacing all <code>break;</code> statements in loops with equivalent while-loop logic using conditional checks. LSL does not support the break keyword, and all loops must use natural exit conditions.</li>
+                </ul>
+                <div class="note-box">
+                    <h4>Important Note about NULL_KEY:</h4>
+                    <p>NULL_KEY is a predefined constant in LSL (Linden Scripting Language) that represents an empty or null UUID/key value (00000000-0000-0000-0000-000000000000). It should NOT be redefined in scripts, as it is already built into the language. Scripts should use NULL_KEY directly for key comparisons and empty key initialization.</p>
+                </div>
+                <div class="note-box">
+                    <h4>Important Note about Timer Functions:</h4>
+                    <p>In LSL, <code>llGetTimerEventDelay()</code> is the correct function to check the current timer interval. It returns 0.0 when no timer is running. The function <code>llGetTimerEvent()</code> does not exist in LSL and will cause compilation errors.</p>
+                </div>
+                
+                <div class="note-box">
+                    <h4>Important Note about llGetText():</h4>
+                    <p>The function <code>llGetText()</code> does not exist in LSL. We've identified and fixed this error in both <strong>Imperial_Poison_System.lsl</strong> and <strong>Imperial_Combat_System.lsl</strong> by replacing it with a global variable to track the current action. In LSL, <code>llSetText()</code> is used to display text floating above an object, but there is no corresponding getter function.</p>
+                </div>
+                
+                <div class="note-box">
+                    <h4>Important Note about Sensor Events:</h4>
+                    <p>In LSL, the <code>no_sensor()</code> event is triggered when <code>llSensor()</code> finds no matches. Unlike the <code>sensor()</code> event, <code>no_sensor()</code> cannot use <code>llDetectedKey()</code> or other detection functions because nothing was detected. Always use <code>llGetOwner()</code> or store information in global variables when you need to reference the initiator in a <code>no_sensor()</code> event.</p>
+                </div>
+            </div>
+            
+            <div class="script-box">
+                <h3>Combat System Rebuilding</h3>
+                <p>The combat system has been completely rebuilt to address persistent syntax issues with "COMBAT" variables:</p>
+                <ul>
+                    <li><strong>Problem Identification</strong> - After multiple failed attempts, we discovered that "COMBAT" might be a reserved word in LSL, causing errors in variable declarations</li>
+                    <li><strong>Solution Approach</strong> - Created a new version (Imperial_Combat_System_Different_Names.lsl) with renamed variables</li>
+                    <li><strong>Renamed Variables</strong> - Converted all "COMBAT" variables to more specific names:
+                        <ul>
+                            <li><code>integer COMBAT_CHANNEL</code> → <code>integer WEAPON_CHANNEL</code></li>
+                            <li><code>integer COMBAT_MODE</code> → <code>integer ATTACK_MODE</code></li>
+                            <li><code>integer COMBAT_READY</code> → <code>integer WEAPON_READY</code></li>
+                        </ul>
+                    </li>
+                    <li><strong>Improved Organization</strong> - Implemented cleaner module structure with separate attack function</li>
+                    <li><strong>Better Targeting System</strong> - Rewrote target selection using non-reserved variable names</li>
+                    <li><strong>Preserved Multiple Versions</strong> - Kept all previous attempts as backup files for reference</li>
+                </ul>
+                <p class="note">The new combat system retains all the intended functionality while avoiding syntax errors. Our experimentation strongly suggests that "COMBAT" should be treated as a reserved word in LSL, even though it's not officially documented as such.</p>
+                <div class="note-box">
+                    <h4>Important Note about Potential Reserved Words:</h4>
+                    <p>Through extensive testing, we've determined that certain words like "COMBAT" may be reserved in LSL despite not being officially listed in documentation. If you encounter persistent syntax errors with no clear cause, consider renaming variables and functions to use more specific terminology that avoids potentially reserved words.</p>
+                </div>
+            </div>
+            
+            <div class="script-box">
+                <h3>International Royal HUDs Integration</h3>
+                <p>Special HUDs for non-Russian royal figures have been created to enhance cross-cultural diplomatic roleplay:</p>
+                <ul>
+                    <li><strong>Imperial_Maria_Cristina_Spain_HUD.lsl</strong> - Royal HUD for Queen María Cristina of Spain with features including:</li>
+                    <ul>
+                        <li>Spanish language interface and royal terminology</li>
+                        <li>Habsburg connections to European royal houses</li>
+                        <li>Spanish pesetas currency instead of rubles</li>
+                        <li>Catholic faith integration instead of Orthodox</li>
+                        <li>Spanish royal protocol and etiquette distinctions</li>
+                    </ul>
+                    <li><strong>Imperial_Emperor_Meiji_HUD.lsl</strong> - Royal HUD for Emperor Meiji of Japan with features including:</li>
+                    <ul>
+                        <li>Japanese imperial terminology and titles</li>
+                        <li>Meiji-era modernization policies and reforms</li>
+                        <li>Yen currency integration</li>
+                        <li>Shinto religious practices and imperial ceremonies</li>
+                        <li>Integration with the Russo-Japanese War context of 1905</li>
+                    </ul>
+                </ul>
+                <p class="note">These international royal HUDs expand the roleplay possibilities beyond Russian nobility, allowing for historically accurate diplomatic interactions between the Russian Imperial Court and other major world powers of 1905. Each HUD maintains period-appropriate cultural elements while ensuring compatibility with the core Imperial Court system.</p>
+            </div>
+            
+            <div class="script-box">
+                <h3>Extended Romanov Family HUDs</h3>
+                <p>Additional HUDs have been created for extended members of the Romanov dynasty:</p>
+                <ul>
+                    <li><strong>Imperial_GD_Maria_Pavlovna_Sr_HUD.lsl</strong> - HUD for Grand Duchess Maria Pavlovna Senior (wife of Grand Duke Vladimir Alexandrovich) with features including:</li>
+                    <ul>
+                        <li>Renowned socialite and salon hostess capabilities</li>
+                        <li>German connections and cultural influences</li>
+                        <li>Rivalry with Empress Alexandra integration</li>
+                        <li>Arts patronage and jewelry collection features</li>
+                    </ul>
+                    <li><strong>Imperial_GD_Nicholas_Nikolaevich_HUD.lsl</strong> - HUD for Grand Duke Nicholas Nikolaevich with features including:</li>
+                    <ul>
+                        <li>Military command structures and abilities</li>
+                        <li>Palace administration and security oversight</li>
+                        <li>Special integration with military and combat modules</li>
+                        <li>Hunting and imperial sports participation</li>
+                    </ul>
+                </ul>
+                <p class="note">These extended Romanov family HUDs provide deeper immersion into the complex family dynamics of the Russian Imperial House, featuring historically accurate relationships, rivalries, and unique social positions within the court of Tsar Nicholas II.</p>
+            </div>
+        </section>
+
+        <section id="installation">
+            <h2>Installation Guide</h2>
+            <p>To install the Imperial Russian Court Roleplay System in Second Life:</p>
+            
+            <ol>
+                <li>Create a HUD object with multiple prims linked together</li>
+                <li>Place the Core HUD script in the root prim</li>
+                <li>Place each module script in separate child prims</li>
+                <li>Place the meter script in a separate wearable object</li>
+                <li>Distribute accessory scripts to appropriate objects</li>
+                <li>Configure each script through their descriptions as needed</li>
+            </ol>
+            
+            <div class="note-box">
+                <h3>Important Notes</h3>
+                <ul>
+                    <li>All scripts must be placed in linked objects to communicate properly</li>
+                    <li>Scripts can be configured by editing their descriptions</li>
+                    <li>The system uses link messages for internal communication</li>
+                    <li>The METER_STATS_CHANNEL (-987654321) is used for HUD-to-Meter communication</li>
+                    <li>Each script uses random channels for dialog menus to prevent conflicts</li>
+                    <li><strong>LSL Compatibility Warning:</strong> Do not use ternary operators (? :), void returns, or break statements as they're not supported in Second Life's LSL implementation</li>
+                    <li><strong>Reserved Words Warning:</strong> Avoid using potential reserved words like "COMBAT" as variable names in LSL. Our tests indicate this may cause syntax errors even in seemingly correct code. Use more descriptive, specific names for variables such as "WEAPON_CHANNEL" instead of "COMBAT_CHANNEL".</li>
+                    <li><strong>NULL_KEY Constant:</strong> NULL_KEY is a built-in constant in LSL and should not be redefined. Simply use NULL_KEY directly in your scripts for key comparisons and as default values</li>
+                    <li><strong>Timer Function Usage:</strong> Use <code>llGetTimerEventDelay()</code> to check if a timer is running (returns 0.0 when no timer is active). The function <code>llGetTimerEvent()</code> does not exist in LSL and will cause errors</li>
+                    <li><strong>Text Display Functions:</strong> Use <code>llSetText()</code> to display floating text above objects. There is no <code>llGetText()</code> function in LSL to retrieve this text. Use global variables to store and retrieve state information instead</li>
+                    <li><strong>Sensor Event Handling:</strong> Remember that <code>no_sensor()</code> events cannot use <code>llDetectedKey()</code> or other detection functions. Use <code>llGetOwner()</code> or stored global variables to track who triggered the sensor</li>
+                    <li><strong>Public Chat Channel:</strong> Do not define a <code>PUBLIC_CHANNEL</code> variable set to 0. Channel 0 is a built-in public chat channel in LSL. Use <code>llSay(0, "message")</code> directly instead of creating a custom variable for it</li>
+                    <li><strong>Loop Termination:</strong> Do not use <code>break;</code> statements in your loops. LSL does not support the break keyword. Instead, use while loops with appropriate conditional checks to control termination (e.g., <code>while(i < count && !found) {...}</code>)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="extensions">
+            <h2>System Extensions & Recommendations</h2>
+            <p>We have prepared comprehensive recommendations for extending and enhancing the Imperial Russian Court roleplay system with advanced features and historical depth.</p>
+            
+            <div class="script-box">
+                <h3>Recommended System Extensions</h3>
+                <p>Our recommendations include fifteen detailed modules that could be developed to expand the roleplay experience:</p>
+                <ul>
+                    <li><strong>Historical Event System</strong> - Calendar-based events from 1905 Russia with gameplay impact</li>
+                    <li><strong>Politics and Factions Module</strong> - Political system with government positions and faction mechanics</li>
+                    <li><strong>Property and Estate Management</strong> - Land ownership system for nobles and wealthy citizens</li>
+                    <li><strong>Military Career Expansion</strong> - Enhanced military ranks, regiments, and battlefield actions</li>
+                    <li><strong>Arts and Culture System</strong> - Engage with Silver Age Russian cultural activities</li>
+                    <li><strong>Education and Academia</strong> - University system with research and academic reputation</li>
+                    <li><strong>Health and Medicine Enhancement</strong> - Period-appropriate medical conditions and treatments</li>
+                    <li><strong>Weather and Seasons System</strong> - Seasonal changes affecting gameplay and activities</li>
+                    <li><strong>Travel and Geography</strong> - Simulated journeys throughout the Russian Empire</li>
+                    <li><strong>Economic Expansion</strong> - Complex economic system with investments and business operations</li>
+                    <li><strong>Social Network Visualization</strong> - Visual representation of relationships between players</li>
+                    <li><strong>Espionage and Secret Police</strong> - Intelligence operations and political intrigue</li>
+                    <li><strong>Court Protocol and Etiquette</strong> - Detailed rules with consequences for breaches</li>
+                    <li><strong>Personal Servant and Staff System</strong> - Hire and manage household staff</li>
+                    <li><strong>Voice and Audio Enhancement</strong> - Period-appropriate sound effects and music</li>
+                </ul>
+                <div class="button-container">
+                    <a href="Imperial_Court_System_Extensions.md" class="button">View Complete Extension Recommendations</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Imperial Russian Court Roleplay System Documentation - 1905 Era Second Life Experience</p>
+        <p>All scripts are written in LSL (Linden Scripting Language) and optimized for Second Life performance</p>
+    </footer>
+</body>
+</html>

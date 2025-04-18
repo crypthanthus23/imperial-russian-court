@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imperial Russian Court System - Installation Guide</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+        h1 {
+            color: #9e2a2b;
+            text-align: center;
+            border-bottom: 2px solid #d4af37;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #335c81;
+            border-left: 4px solid #9e2a2b;
+            padding-left: 10px;
+            margin-top: 40px;
+        }
+        h3 {
+            color: #355070;
+            margin-top: 25px;
+        }
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        pre {
+            background-color: #f7f7f7;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border-left: 3px solid #9e2a2b;
+        }
+        ul, ol {
+            padding-left: 25px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #335c81;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .note {
+            background-color: #fffdf0;
+            border-left: 4px solid #d4af37;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+        .warning {
+            background-color: #fff0f0;
+            border-left: 4px solid #9e2a2b;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+        .step {
+            background-color: #f0f7ff;
+            border: 1px solid #cce5ff;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background-color: #335c81;
+            color: white;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .image-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        img {
+            max-width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+        }
+        .download-link {
+            display: inline-block;
+            background-color: #335c81;
+            color: white;
+            padding: 8px 15px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+        .download-link:hover {
+            background-color: #24425c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Imperial Russian Court System - Installation Guide</h1>
+        
+        <p>This comprehensive guide will walk you through the process of setting up the Imperial Russian Court roleplay system in Second Life, step by step. Follow these instructions carefully to ensure proper installation and functionality.</p>
+
+        <div class="note">
+            <strong>Note:</strong> Before beginning installation, make sure you have building permissions in your Second Life region and basic knowledge of LSL (Linden Scripting Language) concepts.
+        </div>
+        
+        <h2>Table of Contents</h2>
+        <ol>
+            <li><a href="#overview">System Overview</a></li>
+            <li><a href="#hud-creation">Creating the HUD Object</a></li>
+            <li><a href="#core-installation">Installing the Core System</a></li>
+            <li><a href="#modules-installation">Installing Additional Modules</a></li>
+            <li><a href="#special-huds">Setting Up Special HUDs</a></li>
+            <li><a href="#foreign-visitors">Setting Up Foreign Visitors Module</a></li>
+            <li><a href="#meter-installation">Installing the Public Meter</a></li>
+            <li><a href="#npc-setup">Setting Up NPC Characters</a></li>
+            <li><a href="#accessories">Configuring Accessories</a></li>
+            <li><a href="#testing">Testing and Troubleshooting</a></li>
+            <li><a href="#script-list">Complete Script List and Downloads</a></li>
+        </ol>
+        
+        <h2 id="overview">1. System Overview</h2>
+        
+        <p>The Imperial Russian Court system consists of multiple interconnected components:</p>
+        
+        <ul>
+            <li><strong>Core HUD:</strong> The central script coordinating all functionality</li>
+            <li><strong>Module Scripts:</strong> Specialized scripts for different aspects of gameplay</li>
+            <li><strong>Special HUDs:</strong> Custom HUDs for characters like the Tsar, Tsarina, Grand Duchesses, etc.</li>
+            <li><strong>Public Meter:</strong> Displays character information to other players</li>
+            <li><strong>NPC Characters:</strong> Interactive non-player characters with specific behaviors</li>
+            <li><strong>Accessories:</strong> Additional items like weapons, food, sacred relics, etc.</li>
+        </ul>
+        
+        <div class="note">
+            <strong>Important:</strong> The HUD and Core System are actually the same physical object. The HUD is the physical object you attach to your avatar, while the Core System refers to the main controlling script within that object.
+        </div>
+        
+        <h2 id="hud-creation">2. Creating the HUD Object</h2>
+        
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Create a new prim</strong>
+            <p>In Second Life, right-click on the ground and select "Create" to make a new prim. A simple box shape works well as a starting point for your HUD.</p>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>Size and position the prim</strong>
+            <p>Adjust the prim to an appropriate size for a HUD. Typical dimensions might be:</p>
+            <ul>
+                <li>X: 0.3 meters</li>
+                <li>Y: 0.3 meters</li>
+                <li>Z: 0.05 meters</li>
+            </ul>
+            <p>This creates a small, flat object that won't be too intrusive when attached.</p>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>Add additional prims for modules</strong>
+            <p>Create additional prims and link them to the main prim to create a multi-part HUD. This allows for a more organized structure, with each module potentially having its own prim.</p>
+            <p>Create at least one additional prim for each major module you plan to include:</p>
+            <ul>
+                <li>One prim for Family Module</li>
+                <li>One prim for Religion Module</li>
+                <li>One prim for Banking Module</li>
+                <li>One prim for Politics Module</li>
+                <li>Additional prims as needed for other modules</li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">4</span>
+            <strong>Link the prims</strong>
+            <p>Select all the prims you've created, with the main HUD prim selected last (it will have a yellow highlight instead of blue). Then press Ctrl+L to link them together into a single object.</p>
+            <p>The last-selected prim becomes the "root prim" that will contain the Core System script.</p>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">5</span>
+            <strong>Set HUD properties</strong>
+            <p>Right-click the linked object and select "Edit". In the "General" tab, check the following settings:</p>
+            <ul>
+                <li>Check "Phantom" to ensure the HUD doesn't interact physically with the environment</li>
+                <li>Make sure "Temporary" is unchecked</li>
+                <li>Set the object name to "Imperial Russian Court HUD"</li>
+            </ul>
+        </div>
+        
+        <div class="warning">
+            <strong>Important:</strong> Do not set the object to "Physical" as this can cause issues when attached as a HUD.
+        </div>
+        
+        <h2 id="core-installation">3. Installing the Core System</h2>
+        
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Open the contents of the root prim</strong>
+            <p>Right-click on your linked HUD object and select "Edit". Then click the "Contents" tab to view and edit the contents of the object.</p>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>Create the Core HUD script</strong>
+            <p>Click the "New Script" button in the contents tab. This creates a new script inside the object.</p>
+            <p>Rename the script to "Imperial_Russian_Court_Core_HUD" by right-clicking on it and selecting "Rename".</p>
+            <p>Double-click the script to open it for editing.</p>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>Replace script content</strong>
+            <p>Delete all the default script content and replace it with the <code>Imperial_Russian_Court_Core_HUD.lsl</code> script content that we've developed.</p>
+            <p>Save the script with Ctrl+S or by clicking the Save button.</p>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">4</span>
+            <strong>Add the System Connector script</strong>
+            <p>Create another new script in the same root prim.</p>
+            <p>Rename it to "Imperial_System_Connector_Fixed".</p>
+            <p>Replace its content with our <code>Imperial_System_Connector_Fixed.lsl</code> script.</p>
+            <p>Save the script.</p>
+        </div>
+        
+        <div class="note">
+            <strong>Note:</strong> The System Connector script handles communication between all modules and prevents memory issues. It must be installed in the same prim as the Core HUD script.
+        </div>
+        
+        <div class="step">
+            <span class="step-number">5</span>
+            <strong>Set up the HUD attachment point</strong>
+            <p>To enable the object to be worn as a HUD:</p>
+            <ul>
+                <li>Right-click the linked object and select "Attach to HUD" → Select your preferred position (typically "Top Right")</li>
+                <li>Alternatively, take the object into your inventory, right-click it there, and select "Attach to HUD" → Choose position</li>
+            </ul>
+            <p>You can adjust the precise position once attached by editing it while worn.</p>
+        </div>
+        
+        <h2 id="modules-installation">4. Installing Additional Modules</h2>
+        
+        <p>Each module should be installed in its own prim within the linked HUD object. This helps manage memory usage and prevents script size issues.</p>
+        
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Access each module prim</strong>
+            <p>Edit the linked HUD object and select each child prim individually to add the appropriate module scripts.</p>
+            <p>You can select individual prims in a linked object by:</p>
+            <ul>
+                <li>Right-clicking the object and selecting "Edit"</li>
+                <li>In Edit mode, click on the specific prim you want to modify</li>
+                <li>Click the "Contents" tab to access that specific prim's contents</li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>Add module scripts</strong>
+            <p>For each module, add a new script to the appropriate prim, rename it to match the module name, and paste in the corresponding script content.</p>
+            
+            <p>Here are the recommended modules to install and which prims to place them in:</p>
+            
+            <table>
+                <tr>
+                    <th>Module Script</th>
+                    <th>Prim Location</th>
+                </tr>
+                <tr>
+                    <td>Imperial_Court_Family_Module.lsl</td>
+                    <td>Family Module Prim</td>
+                </tr>
+                <tr>
+                    <td>Imperial_Court_Religion_Module.lsl</td>
+                    <td>Religion Module Prim</td>
+                </tr>
+                <tr>
+                    <td>Imperial_Court_Banking_Module.lsl</td>
+                    <td>Banking Module Prim</td>
+                </tr>
+                <tr>
+                    <td>Imperial_Politics_Factions_Module.lsl</td>
+                    <td>Politics Module Prim</td>
+                </tr>
+                <tr>
+                    <td>Imperial_Noble_Titles_Module.lsl</td>
+                    <td>Titles Module Prim</td>
+                </tr>
+                <tr>
+                    <td>Imperial_Military_Orders_Module.lsl</td>
+                    <td>Military Module Prim</td>
+                </tr>
+                <tr>
+                    <td>Imperial_Health_Medicine_Module.lsl</td>
+                    <td>Health Module Prim</td>
+                </tr>
+                <tr>
+                    <td>Imperial_Court_Protocol_Module.lsl</td>
+                    <td>Protocol Module Prim</td>
+                </tr>
+                <tr>
+                    <td>Imperial_Court_Relationships_System.lsl</td>
+                    <td>Relationships Module Prim</td>
+                </tr>
+                <tr>
+                    <td>Imperial_Court_Romance_Module.lsl</td>
+                    <td>Romance Module Prim</td>
+                </tr>
+                <tr>
+                    <td>Imperial_Education_Academia_Module.lsl</td>
+                    <td>Education Module Prim</td>
+                </tr>
+                <tr>
+                    <td>Imperial_Arts_Culture_Module.lsl</td>
+                    <td>Arts Module Prim</td>
+                </tr>
+                <tr>
+                    <td>Imperial_Costume_Recommendation_Module.lsl</td>
+                    <td>Costume Module Prim</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="warning">
+            <strong>Memory Management:</strong> Second Life scripts have a memory limit of 64KB. By distributing scripts across multiple prims in a linked set, you can avoid hitting this limit. The modules communicate with each other through link messages handled by the System Connector.
+        </div>
+        
+        <h2 id="special-huds">5. Setting Up Special HUDs</h2>
+        
+        <p>For special characters like the Tsar, Tsarina, and Grand Duchesses, you'll need to create dedicated HUDs with specific scripts.</p>
+        
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Create special HUD objects</strong>
+            <p>For each special character, create a new HUD object following the same basic process as the standard HUD creation (steps 1-5 in section 2).</p>
+            <p>Label each special HUD clearly, for example:</p>
+            <ul>
+                <li>"Imperial Tsar HUD"</li>
+                <li>"Imperial Tsarina HUD"</li>
+                <li>"Imperial Tsarevich HUD"</li>
+                <li>"Imperial Grand Duchess HUD"</li>
+                <li>"Imperial Dowager Empress HUD"</li>
+                <li>etc.</li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>Install special scripts</strong>
+            <p>For each special HUD, you need to install:</p>
+            <ol>
+                <li>The standard Core HUD script (modified for the special role)</li>
+                <li>The System Connector script</li>
+                <li>The special role-specific script</li>
+            </ol>
+            
+            <p>Here are the special HUD scripts to install:</p>
+            
+            <table>
+                <tr>
+                    <th>Character</th>
+                    <th>Special Script</th>
+                </tr>
+                <tr>
+                    <td>Tsar Nikolai II</td>
+                    <td>Imperial_Tsar_HUD.lsl</td>
+                </tr>
+                <tr>
+                    <td>Tsarina Alexandra</td>
+                    <td>Imperial_Tsarina_HUD.lsl</td>
+                </tr>
+                <tr>
+                    <td>Tsarevich Aleksei</td>
+                    <td>Imperial_Tsarevich_HUD.lsl</td>
+                </tr>
+                <tr>
+                    <td>Grand Duchesses</td>
+                    <td>Imperial_Grand_Duchess_HUD.lsl</td>
+                </tr>
+                <tr>
+                    <td>Dowager Empress</td>
+                    <td>Imperial_Dowager_Empress_HUD.lsl</td>
+                </tr>
+                <tr>
+                    <td>Rasputin</td>
+                    <td>Imperial_Rasputin_HUD.lsl</td>
+                </tr>
+                <tr>
+                    <td>Grand Duke Michael</td>
+                    <td>Imperial_Grand_Duke_Michael_HUD.lsl</td>
+                </tr>
+                <tr>
+                    <td>Grand Duchess Xenia</td>
+                    <td>Imperial_Grand_Duchess_Xenia_HUD.lsl</td>
+                </tr>
+                <tr>
+                    <td>Grand Duchess Olga Alexandrovna</td>
+                    <td>Imperial_Grand_Duchess_Olga_Alex_HUD.lsl</td>
+                </tr>
+                <tr>
+                    <td>Grand Duke Dmitri</td>
+                    <td>Imperial_Grand_Duke_Dmitri_HUD.lsl</td>
+                </tr>
+                <tr>
+                    <td>Maria Cristina of Spain</td>
+                    <td>Imperial_Maria_Cristina_Spain_HUD.lsl</td>
+                </tr>
+                <tr>
+                    <td>Emperor Meiji of Japan</td>
+                    <td>Imperial_Emperor_Meiji_HUD.lsl</td>
+                </tr>
+                <tr>
+                    <td>Grand Duchess Maria Pavlovna Sr.</td>
+                    <td>Imperial_GD_Maria_Pavlovna_Sr_HUD.lsl</td>
+                </tr>
+                <tr>
+                    <td>Grand Duke Nicholas Nikolaevich</td>
+                    <td>Imperial_GD_Nicholas_Nikolaevich_HUD.lsl</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="note">
+            <strong>Important:</strong> For the Tsar HUD, make sure to check that the owner's UUID matches the Tsar UUID defined in the scripts (49238f92-08a4-4f72-bca4-e66a15c75e02). Similarly, for the Tsarevich HUD, verify the UUID is correctly set to the Tsarevich UUID (707c2fdf-6f8a-43c9-a5fb-3debc0941064).
+        </div>
+        
+        <h3>Tsarevich HUD Special Features</h3>
+        
+        <p>The Tsarevich HUD includes special features to simulate Aleksei's hemophilia condition:</p>
+        
+        <h2 id="foreign-visitors">6. Setting Up Foreign Visitors Module</h2>
+        
+        <p>The Foreign Visitors Module allows players from other courts and countries to register with the Imperial Russian Court and receive appropriate diplomatic treatment and benefits.</p>
+        
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Create the Foreign Visitors Registration Bureau</strong>
+            <p>Create a new object to serve as the registration bureau for foreign visitors:</p>
+            <ul>
+                <li>Create a prim with an appropriate design (desk, bureau, or registration book)</li>
+                <li>Name it "Imperial Foreign Visitors Registration Bureau"</li>
+                <li>Make it big enough to be easily visible in your roleplay area</li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>Install the Foreign Visitors Module Script</strong>
+            <p>Add a new script to the registration bureau:</p>
+            <ol>
+                <li>Create a new script in the contents of the object</li>
+                <li>Rename it to "Imperial_Foreign_Visitors_Module"</li>
+                <li>Replace its content with the <code>Imperial_Foreign_Visitors_Module.lsl</code> script</li>
+                <li>Save the script</li>
+            </ol>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>Create the Foreign Visitors Connector</strong>
+            <p>Add another script to the registration bureau to connect it with the rest of the system:</p>
+            <ol>
+                <li>Create another new script in the contents of the object</li>
+                <li>Rename it to "Imperial_Foreign_Visitors_Connector"</li>
+                <li>Replace its content with the <code>Imperial_Foreign_Visitors_Connector.lsl</code> script</li>
+                <li>Save the script</li>
+            </ol>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">4</span>
+            <strong>Create the Foreign Visitor HUD</strong>
+            <p>Create a special HUD for foreign visitors to wear:</p>
+            <ol>
+                <li>Create a new HUD object following the same basic process as the standard HUD creation</li>
+                <li>Label it "Imperial Foreign Visitor HUD"</li>
+                <li>Add a new script to the HUD</li>
+                <li>Rename it to "Imperial_Foreign_Visitor_HUD"</li>
+                <li>Replace its content with the <code>Imperial_Foreign_Visitor_HUD.lsl</code> script</li>
+                <li>Save the script</li>
+            </ol>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">5</span>
+            <strong>Position the registration bureau</strong>
+            <p>Place the Imperial Foreign Visitors Registration Bureau in a prominent location in your court area, such as:</p>
+            <ul>
+                <li>Near the entrance to the palace or court area</li>
+                <li>In a dedicated diplomatic reception room</li>
+                <li>Near the main throne room or audience chamber</li>
+            </ul>
+        </div>
+        
+        <div class="note">
+            <strong>Features:</strong> The Foreign Visitors Module allows visitors to register their name, country, court/government, rank/position, and title. Upon registration, they receive 3,000 rubles as a diplomatic stipend and their information is integrated with the court relationship system.
+        </div>
+        
+        <div class="warning">
+            <strong>Diplomatic Relations:</strong> The Foreign Visitors Module includes pre-configured diplomatic relations between Russia and other major powers as of 1905, including strained relations with Germany and Japan, and strong alliance with France. These can be adjusted through the system as diplomatic events unfold in roleplay.
+        </div>
+        
+        <ul>
+            <li><strong>Hemophilia Management System:</strong> Tracks bleeding risk, triggers bleeding episodes from injuries or dangerous activities, and requires medical care</li>
+            <li><strong>Activity System:</strong> Different activities have different risk levels for triggering bleeding episodes</li>
+            <li><strong>Caregiver System:</strong> Allows certain players to be designated as caregivers who can help manage bleeding episodes</li>
+            <li><strong>Daily Health Changes:</strong> Each day has a baseline risk level that affects vulnerability to injuries</li>
+            <li><strong>Special Commands:</strong> Includes chat commands like /rest, /activity, /caregiver, and /stats for managing the condition</li>
+        </ul>
+        
+        <div class="warning">
+            <strong>Historical Note:</strong> The real Tsarevich Aleksei suffered from hemophilia, a genetic blood disorder that prevented normal blood clotting. The condition was kept secret from the Russian public and greatly influenced the Romanov family dynamics, including the rise of Rasputin as a healer.
+        </div>
+        
+        <h2 id="meter-installation">7. Installing the Public Meter</h2>
+        
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Create the meter object</strong>
+            <p>Create a new object that will serve as the public meter. This is typically a flat, rectangular prim that will display text above the player's head.</p>
+            <p>Recommended dimensions:</p>
+            <ul>
+                <li>X: 0.3 meters</li>
+                <li>Y: 0.02 meters</li>
+                <li>Z: 0.1 meters</li>
+            </ul>
+            <p>Set the object to "Phantom" to prevent it from interacting physically with the environment.</p>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>Install the meter script</strong>
+            <p>Create a new script in the meter object and rename it to "Imperial_Court_Meter_Updated".</p>
+            <p>Replace the script content with the <code>Imperial_Court_Meter_Updated.lsl</code> script.</p>
+            <p>Save the script.</p>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>Set up attachment point</strong>
+            <p>Configure the meter to attach above the avatar's head:</p>
+            <ul>
+                <li>Right-click the meter object and select "Attach" → "Avatar Center" or "Head"</li>
+                <li>Adjust the position while worn to make sure it displays properly above the head</li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">4</span>
+            <strong>Link meter with HUD</strong>
+            <p>The meter communicates with the HUD via chat channels. Make sure the channels defined in both scripts match:</p>
+            <ul>
+                <li>Check <code>METER_CHANNEL</code> variable in both the Core HUD script and Meter script</li>
+                <li>They should be set to the same negative integer value (e.g., -8675309)</li>
+            </ul>
+        </div>
+        
+        <h2 id="npc-setup">8. Setting Up NPC Characters</h2>
+        
+        <p>NPC characters add depth to the roleplay environment by providing interactive non-player characters with specialized behaviors.</p>
+        
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Create NPC avatars</strong>
+            <p>For each NPC, create an avatar in Second Life with an appropriate appearance for the character (guard, servant, courtier, etc.).</p>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>Add NPC scripts</strong>
+            <p>Create a prim object to serve as the "brain" for each NPC. This can be hidden inside the avatar or worn as an attachment.</p>
+            <p>Add the appropriate NPC script to the object:</p>
+            
+            <table>
+                <tr>
+                    <th>NPC Type</th>
+                    <th>Script</th>
+                </tr>
+                <tr>
+                    <td>Imperial Guard</td>
+                    <td>Imperial_Guard_NPC_Tsar_Recognition.lsl</td>
+                </tr>
+                <tr>
+                    <td>Courtier</td>
+                    <td>Imperial_Courtier_NPC_Tsar_Recognition.lsl</td>
+                </tr>
+                <tr>
+                    <td>Servant</td>
+                    <td>Imperial_Servant_NPC_Tsar_Recognition.lsl</td>
+                </tr>
+                <tr>
+                    <td>Ekaterina Phantom</td>
+                    <td>Imperial_Ekaterina_Phantom_NPC.lsl</td>
+                </tr>
+                <tr>
+                    <td>Baba Yaga</td>
+                    <td>Imperial_Baba_Yaga_NPC.lsl</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>Configure NPC behavior</strong>
+            <p>Each NPC script contains configuration variables at the top that can be adjusted:</p>
+            <ul>
+                <li>Patrol paths and locations</li>
+                <li>Interaction responses</li>
+                <li>Special actions and abilities</li>
+                <li>Recognition settings for the Tsar's UUID</li>
+            </ul>
+            <p>Modify these settings to match your specific Second Life location and roleplay needs.</p>
+        </div>
+        
+        <div class="note">
+            <strong>Tsar Recognition:</strong> Make sure the Tsar UUID is correctly set in all NPC scripts to ensure they properly recognize the Tsar character (UUID: 49238f92-08a4-4f72-bca4-e66a15c75e02).
+        </div>
+        
+        <h2 id="accessories">9. Configuring Accessories</h2>
+        
+        <p>Various accessory items enhance the roleplay experience with interactive objects.</p>
+        
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Create accessory objects</strong>
+            <p>Design and create physical objects in Second Life for each accessory type:</p>
+            <ul>
+                <li>Weapons for the combat system</li>
+                <li>Food items for health restoration</li>
+                <li>Sacred relics for faith enhancement</li>
+                <li>Ruble coins and vendors</li>
+                <li>Rest stations and healing items</li>
+                <li>Usher system for announcements</li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>Install accessory scripts</strong>
+            <p>Add the appropriate script to each accessory object:</p>
+            
+            <table>
+                <tr>
+                    <th>Accessory Type</th>
+                    <th>Script</th>
+                </tr>
+                <tr>
+                    <td>Combat Weapons</td>
+                    <td>Imperial_Combat_System.lsl</td>
+                </tr>
+                <tr>
+                    <td>Food Items</td>
+                    <td>Imperial_Food_Item.lsl</td>
+                </tr>
+                <tr>
+                    <td>Sacred Relics</td>
+                    <td>Imperial_Sacred_Relic.lsl</td>
+                </tr>
+                <tr>
+                    <td>Currency Giver</td>
+                    <td>Imperial_Ruble_Giver.lsl</td>
+                </tr>
+                <tr>
+                    <td>Ruble Vendor</td>
+                    <td>Imperial_Ruble_Vendor.lsl</td>
+                </tr>
+                <tr>
+                    <td>Rest Station</td>
+                    <td>Imperial_Rest_Station.lsl</td>
+                </tr>
+                <tr>
+                    <td>Court Usher</td>
+                    <td>Imperial_Usher.lsl</td>
+                </tr>
+                <tr>
+                    <td>Poison System</td>
+                    <td>Imperial_Poison_System.lsl</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>Configure communication channels</strong>
+            <p>Make sure all accessory objects use the correct communication channels to interact with the HUD and meter systems:</p>
+            <ul>
+                <li>Check that <code>HUD_CHANNEL</code> variables match across all scripts</li>
+                <li>Ensure <code>AUTHENTICATION_KEY</code> values are consistent for security</li>
+                <li>Verify that any object-specific channels don't conflict with other system channels</li>
+            </ul>
+        </div>
+        
+        <h2 id="testing">10. Testing and Troubleshooting</h2>
+        
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Basic functionality test</strong>
+            <p>After installing all components, perform a basic test:</p>
+            <ol>
+                <li>Attach the HUD to your avatar</li>
+                <li>Attach the meter to your avatar</li>
+                <li>Make sure the HUD initializes correctly and displays a welcome message</li>
+                <li>Verify that the meter displays your character information properly</li>
+                <li>Test each module by accessing its functions through the HUD menu</li>
+            </ol>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>Interaction testing</strong>
+            <p>Test interactions between system components:</p>
+            <ul>
+                <li>Test NPC recognition by approaching NPCs with different characters</li>
+                <li>Try interactions between different player HUDs (if possible)</li>
+                <li>Test accessory objects to ensure they affect the HUD stats correctly</li>
+                <li>Verify that the relationship system records interactions properly</li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>Common troubleshooting</strong>
+            <p>If you encounter issues:</p>
+            <ul>
+                <li><strong>Script errors:</strong> Check script syntax and make sure all scripts are saved properly</li>
+                <li><strong>Communication issues:</strong> Verify that channel numbers match across all scripts</li>
+                <li><strong>Memory errors:</strong> Make sure scripts are distributed across prims to avoid memory limits</li>
+                <li><strong>UUID recognition problems:</strong> Double-check all UUID values for accuracy</li>
+                <li><strong>Performance issues:</strong> Reduce script complexity or add sleep delays to intensive operations</li>
+            </ul>
+        </div>
+        
+        <div class="warning">
+            <strong>LSL Limitations:</strong> Remember that LSL has several limitations that affect the system:
+            <ul>
+                <li>No break statements in loops (use boolean flags instead)</li>
+                <li>"event" is a reserved keyword and cannot be used as a variable</li>
+                <li>No ternary operators (use if-else statements)</li>
+                <li>Variables must be declared in the scope they're used</li>
+                <li>Memory limits of 64KB per script</li>
+            </ul>
+        </div>
+        
+        <h2 id="script-list">11. Complete Script List and Downloads</h2>
+        
+        <p>Here is a comprehensive list of all scripts developed for the Imperial Russian Court system:</p>
+        
+        <table>
+            <tr>
+                <th>Script Name</th>
+                <th>Description</th>
+                <th>Download</th>
+            </tr>
+            <tr>
+                <td>Imperial_Russian_Court_Core_HUD.lsl</td>
+                <td>Central HUD script controlling all modules</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_System_Connector_Fixed.lsl</td>
+                <td>Inter-module communication system</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Court_Meter_Updated.lsl</td>
+                <td>Public display of character information</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Court_Family_Module.lsl</td>
+                <td>Family relationships and lineage system</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Court_Religion_Module.lsl</td>
+                <td>Faith and religious activities</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Court_Banking_Module.lsl</td>
+                <td>Economy and financial system</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Politics_Factions_Module.lsl</td>
+                <td>Political alignments and factions</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Noble_Titles_Module.lsl</td>
+                <td>Nobility hierarchy and titles</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Military_Orders_Module.lsl</td>
+                <td>Military ranks and decorations</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Health_Medicine_Module.lsl</td>
+                <td>Health management and medical system</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Court_Protocol_Module.lsl</td>
+                <td>Court etiquette and ceremony</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Court_Relationships_System.lsl</td>
+                <td>Social relationships tracking</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Court_Romance_Module.lsl</td>
+                <td>Courtship and marriage system</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Education_Academia_Module.lsl</td>
+                <td>Educational system and academic progression</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Arts_Culture_Module.lsl</td>
+                <td>Arts and cultural activities</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Costume_Recommendation_Module.lsl</td>
+                <td>Period-appropriate costume suggestions</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Tsar_HUD.lsl</td>
+                <td>Special HUD for Tsar character</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Tsarina_HUD.lsl</td>
+                <td>Special HUD for Tsarina character</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Tsarevich_HUD.lsl</td>
+                <td>Special HUD for Tsarevich character with hemophilia management system</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Grand_Duchess_HUD.lsl</td>
+                <td>Special HUD for Grand Duchesses</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Dowager_Empress_HUD.lsl</td>
+                <td>Special HUD for Dowager Empress</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Rasputin_HUD.lsl</td>
+                <td>Special HUD for Rasputin character</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Grand_Duke_Michael_HUD.lsl</td>
+                <td>Special HUD for Grand Duke Michael</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Grand_Duchess_Xenia_HUD.lsl</td>
+                <td>Special HUD for Grand Duchess Xenia</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Grand_Duchess_Olga_Alex_HUD.lsl</td>
+                <td>Special HUD for Grand Duchess Olga Alexandrovna</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Grand_Duke_Dmitri_HUD.lsl</td>
+                <td>Special HUD for Grand Duke Dmitri</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Maria_Cristina_Spain_HUD.lsl</td>
+                <td>Special HUD for Queen Maria Cristina of Spain</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Emperor_Meiji_HUD.lsl</td>
+                <td>Special HUD for Emperor Meiji of Japan</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_GD_Maria_Pavlovna_Sr_HUD.lsl</td>
+                <td>Special HUD for Grand Duchess Maria Pavlovna Sr.</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_GD_Nicholas_Nikolaevich_HUD.lsl</td>
+                <td>Special HUD for Grand Duke Nicholas Nikolaevich</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Guard_NPC_Tsar_Recognition.lsl</td>
+                <td>Script for Imperial Guard NPCs</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Courtier_NPC_Tsar_Recognition.lsl</td>
+                <td>Script for Courtier NPCs</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Servant_NPC_Tsar_Recognition.lsl</td>
+                <td>Script for Servant NPCs</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Ekaterina_Phantom_NPC.lsl</td>
+                <td>Script for Ekaterina Phantom NPC</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Baba_Yaga_NPC.lsl</td>
+                <td>Script for Baba Yaga NPC</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Combat_System.lsl</td>
+                <td>Combat and dueling system</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Food_Item.lsl</td>
+                <td>Interactive food items</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Sacred_Relic.lsl</td>
+                <td>Religious relics for faith enhancement</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Ruble_Giver.lsl</td>
+                <td>Currency distribution system</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Ruble_Vendor.lsl</td>
+                <td>Purchasing system for items</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Rest_Station.lsl</td>
+                <td>Health restoration areas</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Usher.lsl</td>
+                <td>Court announcement system</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Poison_System.lsl</td>
+                <td>Poisoning mechanics for intrigue</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Costume_Display.lsl</td>
+                <td>Visual costume showcase system</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Foreign_Visitors_Module.lsl</td>
+                <td>Registration system for foreign visitors to the court</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Foreign_Visitors_Connector.lsl</td>
+                <td>Connects foreign visitors module with rest of the system</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+            <tr>
+                <td>Imperial_Foreign_Visitor_HUD.lsl</td>
+                <td>Special HUD for foreign dignitaries and visitors</td>
+                <td><a href="#" class="download-link">Download</a></td>
+            </tr>
+        </table>
+        
+        <div class="note">
+            <strong>Download Links:</strong> The download links provided would typically connect to the specific LSL scripts hosted on a website or in a shared folder. For your current implementation, you'll need to access the scripts directly from the Replit project by copy-pasting or downloading the individual files.
+        </div>
+        
+        <h2>Conclusion</h2>
+        
+        <p>This installation guide provides a step-by-step process for setting up the complete Imperial Russian Court roleplay system in Second Life. By following these instructions, you can create an immersive and historically accurate roleplay environment based on the Imperial Court of 1905.</p>
+        
+        <p>Remember that the modular design allows for flexibility in which components you choose to implement. You can start with the core HUD and meter, then gradually add more modules and special HUDs as your roleplay community grows.</p>
+        
+        <p>For ongoing support and updates, refer to the documentation website and keep an eye on new script versions that may be released to fix bugs or add new features.</p>
+    </div>
+</body>
+</html>

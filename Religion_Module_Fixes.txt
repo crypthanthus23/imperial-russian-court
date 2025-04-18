@@ -1,0 +1,44 @@
+# Religion Module Fixes
+
+## Issue Fixed
+1. Added missing `touch_start()` event handler to the Religion Module to allow players to interact with it by touching it
+
+## Religion System Functionality
+1. Players can now access religion features by:
+   - Touching the Religion Module directly 
+   - Selecting "Religion" from the main HUD menu
+2. Religion features include:
+   - Basic prayer (small faith increase)
+   - Confession (moderate faith increase, reputation restoration)
+   - Communion (larger faith increase, health benefit)
+   - Church donations (faith increase based on amount donated)
+   - Cathedral access for venerating relics and icons
+   - Special features for clergy characters
+
+## Technical Implementation
+1. Variables synchronized between Core HUD and Religion Module:
+   - faith: Religious devotion (0-100)
+   - isDead: Death status for resurrection miracles
+   - ownedRelics: Sacred items in player's possession
+   - venerated: List of relics venerated today (daily cooldown)
+2. Communication Flow:
+   - Core HUD to Religion Module: Data sent via REQUEST_RELIGION_DATA
+   - Religion Module to Core HUD: Faith updates via UPDATE_FAITH
+   - Donation handling through CHECK_RUBLES and DONATION_RESULT messages
+3. All faith improvements update both modules to keep data consistent
+
+## Spiritual System Benefits
+1. Regular religious participation increases faith stat
+2. Faith provides both tangible benefits and roleplaying opportunities:
+   - Health restoration through communion and miracles
+   - Reputation benefits through confession and donations
+   - Resurrection possibility through sacred relics
+   - Immersive historical Russian Orthodox Church roleplay
+
+## Religious Ranks
+For Clergy characters, the following ranks are supported:
+1. Patriarch (highest)
+2. Metropolitan
+3. Archbishop
+4. Bishop
+5. Priest (lowest)

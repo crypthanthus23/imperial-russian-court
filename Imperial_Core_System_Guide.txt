@@ -1,0 +1,170 @@
+=================================================
+SISTEMA CENTRAL DE ROLEPLAY CORTE IMPERIAL RUSA
+=================================================
+
+El Sistema Central es el núcleo de todo el sistema de roleplay de la Corte Imperial Rusa. Comprende los componentes fundamentales que cada jugador necesitará para participar.
+
+------------------
+COMPONENTES PRINCIPALES
+------------------
+
+1. MÁQUINA DE REGISTRO (Imperial_Registration_Machine)
+   - Permite a nuevos jugadores crear sus personajes
+   - Genera notecards con datos personalizados
+   - Entrega el HUD básico al jugador
+
+2. HUD BÁSICO (Imperial_Basic_HUD)
+   - Interfaz principal para jugadores regulares
+   - Muestra estadísticas y permite acciones sociales
+   - Se conecta con todos los demás módulos
+
+3. MEDIDOR DE ESTADÍSTICAS (Imperial_Statistics_Meter)
+   - Muestra las estadísticas del jugador como texto flotante
+   - Visible para otros jugadores en el entorno
+   - Actualización en tiempo real
+
+------------------
+INSTALACIÓN DEL SISTEMA CENTRAL
+------------------
+
+1. MÁQUINA DE REGISTRO:
+   - Crear un objeto decorativo que encaje con la estética de 1905
+   - Añadir el script "Imperial_Registration_Machine.lsl"
+   - Colocar en un lugar visible y accesible
+   - Colocar una copia del HUD básico en su contenido
+
+2. HUD BÁSICO:
+   - Crear un objeto pequeño (10cm x 10cm)
+   - Añadir el script "Imperial_Basic_HUD.lsl"
+   - Configurar como adjunto HUD (recomendado: Centro)
+   - Establecer permisos como Copiar/Transferir
+
+3. MEDIDOR DE ESTADÍSTICAS:
+   - Crear un objeto pequeño (5cm de diámetro)
+   - Añadir el script "Imperial_Statistics_Meter.lsl"
+   - Configurar como adjunto (recomendado: Encima de la cabeza)
+   - Establecer permisos como Copiar/Transferir
+
+------------------
+PROCESO DE REGISTRO
+------------------
+
+1. El jugador toca la máquina de registro
+2. La máquina realiza las siguientes preguntas en secuencia:
+   - Nombre (nombre de roleplay, no nombre de usuario SL)
+   - Apellido
+   - Familia noble (si procede)
+   - Clase social (Aristocracia, Burguesía, Clero, Intelligentsia, Campesinado, Militares)
+   - Profesión (basada en la clase social seleccionada)
+   - Facción política
+   - Género
+   - Edad
+   - Idioma preferido (Español o Inglés)
+
+3. La máquina genera una notecard con:
+   - Datos personales
+   - Estadísticas iniciales
+   - ID único para el sistema
+
+4. La máquina entrega:
+   - La notecard al jugador
+   - El HUD básico
+   - El medidor de estadísticas
+
+------------------
+FUNCIONAMIENTO DEL HUD BÁSICO
+------------------
+
+1. INICIALIZACIÓN:
+   - El jugador coloca la notecard en el contenido del HUD
+   - El HUD lee los datos personales y estadísticas
+   - Se adjunta el HUD (Centro sugerido)
+
+2. FUNCIONES PRINCIPALES:
+   - Menú Principal: Acceso a todas las funciones
+   - Perfil: Muestra datos personales
+   - Estadísticas: Muestra y gestiona estadísticas
+   - Acciones Sociales: Comandos de roleplay (/me)
+   - Configuración: Ajustes del HUD
+
+3. ESTADÍSTICAS BÁSICAS:
+   - Salud (100 máx.) - Condición física
+   - Influencia (100 máx.) - Poder político y social
+   - Rublos - Moneda para transacciones
+   - Riqueza (100 máx.) - Estatus económico general
+   - Encanto (100 máx.) - Atractivo social
+   - Popularidad (100 máx.) - Reputación general
+   - Amor (100 máx.) - Relaciones románticas
+   - Lealtad (100 máx.) - Fidelidad al régimen
+   - Fe (100 máx.) - Devoción religiosa
+   - Experiencia - Acumulativa por actividades
+
+4. MENÚS DE INTERACCIÓN:
+   - Limitados a 12 botones por página
+   - Navegación intuitiva con botones "Anterior/Siguiente"
+   - Botón permanente "Volver" para regresar al menú principal
+
+------------------
+FUNCIONAMIENTO DEL MEDIDOR
+------------------
+
+1. CONEXIÓN:
+   - El medidor se enlaza automáticamente con el HUD del propietario
+   - El jugador puede activar/desactivar la visualización
+
+2. VISUALIZACIÓN:
+   - Nombre y título del personaje
+   - 4-5 estadísticas principales (configurables)
+   - Estado especial (si aplica)
+   - Color según estado (normal, peligro, crítico)
+
+3. ALCANCE:
+   - Visible a 20 metros de distancia
+   - Texto legible a 10 metros
+
+------------------
+EXPANSIÓN Y COMPATIBILIDAD
+------------------
+
+El Sistema Central está diseñado para interactuar con todos los módulos adicionales:
+
+1. MÓDULO DE ECONOMÍA:
+   - Integración con el sistema bancario
+   - Transferencia de rublos
+   - Inversiones y préstamos
+
+2. MÓDULO DE SALUD:
+   - Tratamiento médico
+   - Enfermedades y recuperación
+   - Heridas y cuidados
+
+3. MÓDULO DE RELACIONES:
+   - Interacciones románticas
+   - Matrimonio y familia
+   - Amistad y rivalidad
+
+4. TODOS LOS DEMÁS MÓDULOS:
+   - Protocolo de comunicación estandarizado
+   - Canales dedicados no conflictivos
+   - Comandos universales para todas las interacciones
+
+------------------
+SOPORTE Y MANTENIMIENTO
+------------------
+
+Opciones para resolver problemas comunes:
+
+1. SI EL HUD NO RESPONDE:
+   - Usar el botón "Reiniciar" en el menú de configuración
+   - Desequipar y volver a equipar el HUD
+   - Verificar que la notecard esté presente y sin errores
+
+2. SI LAS ESTADÍSTICAS NO SE ACTUALIZAN:
+   - Usar el botón "Reconectar" en el menú de medidor
+   - Verificar que el medidor esté a menos de 20m del HUD
+
+3. SI LA MÁQUINA DE REGISTRO FALLA:
+   - Contactar al administrador para obtener un HUD y notecard directamente
+   - Usar la opción "Registro Manual" en la máquina
+
+=================================================

@@ -1,0 +1,173 @@
+# Imperial Russian Court System
+# Complete Documentation
+# April 2025
+
+## Overview
+The Imperial Russian Court System is a comprehensive roleplay enhancement suite for Second Life, historically accurate to 1905 Imperial Russia. The system provides immersive gameplay featuring a modular architecture that prevents memory issues while delivering complex social, political, and historical interactions.
+
+## Key Components
+
+### 1. Player HUDs
+
+#### Imperial Tsar HUD (Imperial_Tsar_HUD.lsl)
+- Exclusive to Tsar Nikolai II (UUID: 49238f92-08a4-4f72-bca4-e66a15c75e02)
+- Features:
+  - Imperial Powers menu for issuing decrees and orders
+  - Court management functions
+  - Military command capabilities
+  - Family management
+  - OOC mode that hides floating stats
+  - Specialized visible stats display
+
+#### Imperial Tsarevich HUD (Imperial_Tsarevich_HUD.lsl)
+- Exclusive to Tsarevich Aleksei (UUID: 707c2fdf-6f8a-43c9-a5fb-3debc0941064)
+- Features:
+  - Hemophilia condition management
+  - Royal education functions
+  - Reduced health regeneration
+  - Imperial family communication
+  - Court training and activities
+
+#### Core HUD for Regular Players (Imperial_Russian_Court_Core_HUD.lsl)
+- Used by all non-Imperial family players
+- Features:
+  - Basic stats display (health, faith, rubles)
+  - Module communications and coordination
+  - Interface for accessing various roleplay modules
+
+### 2. Functional Modules
+
+#### System Connector (Imperial_System_Connector.lsl)
+- Central coordination system
+- Handles inter-module communications
+- Memory management to prevent stack-heap collisions
+- Data synchronization across modules
+- Central data storage
+
+#### Health and Medicine Module (Imperial_Health_Medicine_Module.lsl)
+- Historically accurate medical treatments circa 1905
+- Imperial physicians and medical facilities
+- Health condition management
+- Special hemophilia system for Tsarevich
+- Period-appropriate illnesses and remedies
+
+#### Court Protocol Module (Imperial_Court_Protocol_Module.lsl)
+- Formal etiquette system
+- Court ceremonies and proceedings
+- Movement and conversation protocols
+- Table of Ranks implementation
+- Formal address system
+
+#### Noble Titles Module (Imperial_Noble_Titles_Module.lsl)
+- Hereditary title management
+- Property inheritance
+- Succession rules
+- Family registry and lineage tracking
+- Wealth inheritance and management
+
+#### Military Orders Module (Imperial_Military_Orders_Module.lsl)
+- Historically accurate orders and decorations
+- Military ranks and positions
+- Uniform regulations
+- Award ceremonies
+- Military career progression
+
+#### Politics and Factions Module (Imperial_Politics_Factions_Module.lsl)
+- Political factions of 1905 Russia
+- Historical events and context
+- Court influence and intrigue
+- Faction activities and alignment
+- Intelligence gathering
+
+### 3. Support Systems
+
+#### Banking Module (Imperial_Court_Banking_Module.lsl)
+- Currency management
+- Loans and interest
+- Property investments
+- Financial instruments of the period
+- Economy simulation
+
+#### Family Module (Imperial_Court_Family_Module.lsl)
+- Marriage and lineage
+- Child registration
+- Family relations
+- Hereditary trait tracking
+- Family events
+
+#### Romance Module (Imperial_Court_Romance_Module.lsl)
+- Love points system tracking flirtation and affection
+- Fraternal relationship bonds
+- Marriage requirements (100 love points)
+- Period-appropriate courtship activities
+- Engagement and wedding ceremonies
+
+#### Religion Module (Imperial_Court_Religion_Module.lsl)
+- Orthodox church functions
+- Religious ceremonies
+- Faith management
+- Church hierarchy
+- Religious festivals
+
+## Technical Information
+
+### Communication System
+All modules communicate through link messages on channel -55555, formatted as:
+```
+COMMAND|PARAMETER_1|PARAMETER_2|...|PARAMETER_N
+```
+
+Common commands include:
+- UPDATE: Update a specific data field
+- ROUTE: Route a message to a specific module
+- SYNC: Synchronize data across modules
+- QUERY: Request information
+
+### Memory Management
+The system prevents memory issues by:
+1. Using modular design with distributed functionality
+2. Regular memory monitoring in the System Connector
+3. Event pruning when memory usage is high
+4. Avoiding redundant data storage across modules
+5. Limiting string operations
+
+### Installation Instructions
+1. Place all scripts in a single prim or linkset
+2. Core HUD should be attached to avatar
+3. Ensure all necessary modules are included
+4. Scripts will automatically detect the player's role (Tsar, Tsarevich, or regular player)
+
+### UUID References
+- Tsar Nikolai II: 49238f92-08a4-4f72-bca4-e66a15c75e02
+- Tsarevich Aleksei: 707c2fdf-6f8a-43c9-a5fb-3debc0941064
+
+## Historical Accuracy Notes
+
+### Table of Ranks
+The system implements the 1722 Table of Ranks as modified through 1905, with 14 classes across military, civil, and court hierarchies.
+
+### Court Protocol
+Court protocol follows the regulations established under Alexander III and Nicholas II, known for formal strictness.
+
+### Imperial Russian Titles
+Titles follow the historical precedence and form of address, with special attention to the unique aspects of Russian noble titles versus Western European equivalents.
+
+### Religion
+The Orthodox church is presented as it existed in 1905, with appropriate hierarchy, practices, and integration with state functions.
+
+### Military Orders
+Implements the complete system of Imperial Russian orders and decorations, with historically accurate eligibility, privileges, and designs.
+
+## Version History
+- 1.0.0: Initial release with full module support
+- Future versions will be documented here
+
+## Troubleshooting
+If script memory issues occur:
+1. Touch the System Connector to display memory status
+2. Use the sync function to realign all modules
+3. In case of persistent issues, detach and reattach HUD
+
+## Credits
+Created for the Imperial Russian Court roleplay community
+LSL implementation adheres to Second Life scripting best practices

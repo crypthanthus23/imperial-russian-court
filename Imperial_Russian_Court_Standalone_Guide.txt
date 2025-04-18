@@ -1,0 +1,169 @@
+=====================================================
+GUÍA DE IMPLEMENTACIÓN DEL SISTEMA STANDALONE IMPERIAL COURT RP
+=====================================================
+
+Esta guía explica cómo implementar el sistema de roleplay de la Corte Imperial Rusa
+en Second Life sin depender de una API externa o base de datos.
+
+-------------
+COMPONENTES:
+-------------
+
+El sistema consta de tres scripts principales:
+
+1. MÁQUINA DE REGISTRO (Imperial_Court_Registration_Machine.lsl)
+   - Objeto interactivo que permite a nuevos jugadores crear su personaje
+   - Recopila información como nombre, familia, clase social, profesión, etc.
+   - Genera una notecard con toda la información del personaje
+   - Entrega la notecard y el HUD al jugador
+
+2. HUD PERSONAL (Imperial_Court_Standalone_HUD.lsl)
+   - Se coloca en el inventario del avatar
+   - Lee la notecard generada por la máquina de registro
+   - Muestra menús interactivos para acciones de roleplay
+   - Envía información al medidor
+
+3. MEDIDOR (Imperial_Court_Standalone_Meter.lsl)
+   - Muestra estadísticas del personaje como texto flotante
+   - Se comunica con el HUD personal
+   - Visible para todos los jugadores en el entorno
+
+-------------
+INSTALACIÓN:
+-------------
+
+1. CREAR LA MÁQUINA DE REGISTRO:
+   - Crear un objeto (por ejemplo, un podio o escritorio elegante)
+   - Añadir el script Imperial_Court_Registration_Machine.lsl al objeto
+   - Ubicar este objeto en un lugar visible y accesible
+
+2. CREAR EL HUD:
+   - Crear un objeto pequeño y plano (por ejemplo 10cm x 10cm)
+   - Añadir el script Imperial_Court_Standalone_HUD.lsl
+   - Marcar el objeto como "Adjuntar" y configurar la posición (recomendado: HUD - Centro)
+   - Copiar este objeto al inventario de la máquina de registro
+
+3. CREAR EL MEDIDOR:
+   - Crear un objeto pequeño y discreto (por ejemplo, un disco o esfera de 10cm)
+   - Añadir el script Imperial_Court_Standalone_Meter.lsl
+   - Este objeto debe ser llevado por el avatar o colocado cerca
+
+-------------
+USO DEL SISTEMA:
+-------------
+
+1. REGISTRO DE PERSONAJE:
+   - El jugador toca la máquina de registro
+   - Selecciona idioma (español o inglés)
+   - Completa el formulario interactivo con sus datos de personaje
+   - Al finalizar, recibe una notecard y el HUD
+
+2. CONFIGURACIÓN DEL HUD:
+   - El jugador coloca la notecard dentro del HUD
+   - Se adjunta el HUD (posición recomendada: centro)
+   - El HUD carga automáticamente los datos de la notecard
+
+3. CONFIGURACIÓN DEL MEDIDOR:
+   - El jugador lleva el medidor o lo coloca cerca (hasta 20m)
+   - Al tocar el HUD, se establece la conexión con el medidor
+   - El medidor muestra las estadísticas como texto flotante
+
+4. USANDO EL SISTEMA:
+   - Tocar el HUD para abrir el menú principal
+   - Seleccionar acciones sociales, ver estadísticas, etc.
+   - Las estadísticas se actualizan automáticamente
+   - Las acciones sociales se anuncian en el chat local
+
+-------------
+PERSONALIZACIÓN:
+-------------
+
+Los scripts están diseñados para ser fácilmente modificables:
+
+1. FAMILIAS Y CLASES SOCIALES:
+   En Imperial_Court_Registration_Machine.lsl, puedes modificar:
+   - familyOptions = ["Romanov", "Yusupov", ...] para cambiar familias disponibles
+   - classOptions = ["Aristocracia", "Burguesía", ...] para clases sociales
+   - professionOptions para modificar profesiones por clase
+
+2. ESTADÍSTICAS:
+   En Imperial_Court_Standalone_HUD.lsl, puedes ajustar:
+   - Valores iniciales (initialHealth, initialInfluence, etc.)
+   - Intervalos de actualización (STAT_UPDATE_INTERVAL)
+   - Lógica de cambio de estadísticas en updateStats()
+
+3. APARIENCIA DEL MEDIDOR:
+   En Imperial_Court_Standalone_Meter.lsl, puedes cambiar:
+   - Colores (TEXT_COLOR_NORMAL, TEXT_COLOR_WARNING, etc.)
+   - Escala de texto (TEXT_SCALE)
+   - Apariencia visual (llSetColor, llSetAlpha)
+
+-------------
+NOTAS IMPORTANTES:
+-------------
+
+1. COMUNICACIÓN ENTRE SCRIPTS:
+   - El sistema utiliza el canal -987654321 para comunicación
+   - Todos los componentes deben estar a menos de 20m para comunicarse
+   - Si cambias el canal en un script, debes cambiarlo en todos
+
+2. LIMITACIONES:
+   - El sistema almacena datos localmente, no hay persistencia central
+   - La notecard es crucial - si se pierde, se pierden los datos del personaje
+   - Cambios manuales en la notecard pueden causar problemas
+
+3. SEGURIDAD:
+   - Las notecards no están cifradas, cualquiera con acceso puede leerlas
+   - El sistema verifica el propietario para las comunicaciones HUD-Medidor
+
+4. MANTENIMIENTO:
+   - Haz copias de seguridad periódicas de las notecards
+   - Los datos se guardan cuando se modifican, no hay proceso de guardado manual
+
+-------------
+SOLUCIÓN DE PROBLEMAS:
+-------------
+
+1. EL MEDIDOR NO MUESTRA ESTADÍSTICAS:
+   - Verificar que el HUD y el medidor estén a menos de 20m
+   - Comprobar que el HUD tenga la notecard correcta
+   - Reiniciar tanto el HUD como el medidor (botón "Reiniciar" en el menú)
+
+2. LA NOTECARD NO SE CARGA:
+   - Verificar que la notecard esté dentro del HUD
+   - Comprobar el formato de la notecard (debe coincidir con el generado)
+   - Usar el botón "Recargar" en el menú de configuración
+
+3. NO SE PUEDE COMPLETAR EL REGISTRO:
+   - Si el diálogo de registro se interrumpe, tocar de nuevo la máquina
+   - Asegurarse de que los diálogos no estén bloqueados en las configuraciones de SL
+   - Intentar reiniciar la máquina de registro
+
+4. ESTADO DE COMA/MUERTE:
+   - Si un personaje entra en coma (salud 0), buscar atención médica roleada
+   - Para revivir manualmente un personaje en coma, modificar la notecard
+
+-------------
+EXTENSIONES FUTURAS:
+-------------
+
+Este sistema puede expandirse con:
+
+1. MÓDULOS ESPECIALIZADOS:
+   - Módulo de combate para duelos y confrontaciones
+   - Sistema de economía para compra/venta de bienes
+   - Módulo de relaciones para matrimonios y alianzas
+
+2. ROLES ESPECIALES:
+   - HUDs especiales para la familia Romanov (Tsar, Tsarina, etc.)
+   - NPCs controlados por script para eventos históricos
+   - Roles de servicio (mayordomos, guardias, etc.)
+
+3. EVENTOS PROGRAMADOS:
+   - Bailes y eventos sociales automatizados
+   - Crisis políticas históricas
+   - Cambios climáticos o de temporada
+
+Para cualquier duda o personalización adicional, contacta al creador del sistema.
+
+¡Disfruta de tu experiencia en la Corte Imperial Rusa!

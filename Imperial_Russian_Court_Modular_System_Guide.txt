@@ -1,0 +1,147 @@
+=================================================
+SISTEMA MODULAR DE ROLEPLAY CORTE IMPERIAL RUSA 1905
+=================================================
+
+Esta guía explica todos los componentes del sistema modular de roleplay para la Corte Imperial Rusa ambientado en 1905, diseñado para funcionar completamente en Second Life sin necesidad de conexiones externas.
+
+------------------
+VISIÓN GENERAL
+------------------
+
+El sistema está diseñado como un conjunto de módulos independientes pero interconectados que permiten una experiencia de roleplay inmersiva en la Corte Imperial Rusa. Los datos se almacenan localmente en notecards dentro de cada objeto, elimniando la necesidad de servidores externos.
+
+Los componentes principales son:
+
+1. SISTEMA CENTRAL
+   - HUD básico de jugador
+   - Medidor de estadísticas visible
+   - Máquina de registro de personajes
+
+2. MÓDULOS ESPECIALIZADOS
+   - Módulo de Economía y Banca Imperial
+   - Módulo de Familias Nobles
+   - Módulo de Rangos y Títulos
+   - Módulo de Salud y Medicina
+   - Módulo de Relaciones y Matrimonio
+   - Módulo de Condecoraciones
+   - Módulo de Política y Diplomacia
+   - Módulo de Objetos Coleccionables
+
+3. HUDS ESPECIALES
+   - HUD del Tsar
+   - HUD de la Tsarina (Emperatriz)
+   - HUD del Tsarevich (Príncipe Heredero)
+   - HUD de Grandes Duques y Grandes Duquesas
+   - HUD de Nobles
+
+4. OBJETOS INTERACTIVOS
+   - Conjunto de 50 objetos interactivos distribuidos por el sim
+
+------------------
+REQUISITOS TÉCNICOS
+------------------
+
+- Todos los scripts están optimizados para cumplir con las limitaciones de memoria de Second Life
+- Se utiliza el sistema de notecards para almacenamiento local
+- Los menús están limitados a 12 botones por página para mejorar la usabilidad
+- Los canales de comunicación están estructurados para evitar interferencias
+- Todos los objetos son de bajo impacto en el servidor
+
+------------------
+INSTALACIÓN GENERAL
+------------------
+
+1. Rezar (crear) los objetos base en el sim:
+   - Máquina de registro central en la entrada principal
+   - Terminal de banco imperial en la sección económica
+   - Dispensadores de HUD en ubicaciones relevantes
+   - Objetos interactivos distribuidos por todo el sim
+
+2. Configurar objetos con sus scripts correspondientes
+   - Cada objeto viene con instrucciones específicas de configuración
+   - Verificar el permiso "Modificar" está activado para mantenimiento
+
+3. Nombrar cada objeto con un prefijo "Imperial_" para identificación
+   - Ejemplo: "Imperial_Registration_Machine", "Imperial_Bank_Terminal"
+
+4. Establecer permisos adecuados:
+   - Configurar permisos en "Copiar/Transferir" para objetos que se entregarán
+   - Mantener "No copiar" en objetos únicos como tronos o artefactos especiales
+
+------------------
+ESTRUCTURA DE CANALES DE COMUNICACIÓN
+------------------
+
+Para evitar interferencias, los canales de comunicación están estructurados en rangos:
+
+- Canales -1000000 a -2000000: Comunicación general HUD-Medidor
+- Canales -2000001 a -3000000: Sistemas de la familia imperial
+- Canales -3000001 a -4000000: Sistemas económicos
+- Canales -4000001 a -5000000: Sistemas diplomáticos y militares
+- Canales -5000001 a -6000000: Sistemas sociales y matrimoniales
+- Canales -6000001 a -7000000: Sistemas médicos y de salud
+- Canales -7000001 a -8000000: Sistemas de títulos y condecoraciones
+- Canales -8000001 a -9000000: Objetos interactivos diversos
+
+------------------
+MANTENIMIENTO DEL SISTEMA
+------------------
+
+1. Copia de seguridad:
+   - Guardar copias de todos los objetos en su inventario
+   - Mantener versiones documentadas de cada actualización
+
+2. Resolución de problemas:
+   - Si un objeto no responde, utilice el botón "Reiniciar" en su menú
+   - Si los datos se corrompen, utilice el botón "Restaurar" 
+
+3. Actualizaciones:
+   - Las actualizaciones pueden aplicarse reemplazando scripts individuales
+   - Los datos de notecards deben preservarse durante actualizaciones
+
+------------------
+DOCUMENTACIÓN ESPECÍFICA
+------------------
+
+Cada módulo del sistema tiene su propio archivo de documentación detallado:
+
+1. Imperial_Core_System_Guide.txt - Sistema central
+2. Imperial_Economy_Module_Guide.txt - Economía y banca
+3. Imperial_Families_Module_Guide.txt - Familias nobles
+4. Imperial_Titles_Module_Guide.txt - Rangos y títulos
+5. Imperial_Health_Module_Guide.txt - Salud y medicina
+6. Imperial_Relations_Module_Guide.txt - Relaciones y matrimonio
+7. Imperial_Honors_Module_Guide.txt - Condecoraciones
+8. Imperial_Politics_Module_Guide.txt - Política y diplomacia
+9. Imperial_Collectibles_Guide.txt - Objetos coleccionables
+10. Imperial_Interactive_Objects_Guide.txt - Objetos interactivos
+11. Imperial_Special_HUDs_Guide.txt - HUDs especiales
+
+------------------
+SOPORTE TÉCNICO
+------------------
+
+Ante cualquier problema con el sistema:
+1. Consulte primero la documentación específica del módulo
+2. Utilice el objeto "Imperial_System_Diagnostics" para detectar problemas
+3. Contacte al administrador del sim designado
+
+------------------
+NOTAS HISTÓRICAS
+------------------
+
+El sistema está ambientado específicamente en la Rusia Imperial de 1905, un momento histórico crucial:
+- En medio de la Guerra Ruso-Japonesa
+- El Domingo Sangriento acaba de ocurrir (22 de enero de 1905)
+- Revolución Rusa de 1905 en desarrollo
+- Tensiones políticas extremas
+- Sistema feudal en sus últimas etapas
+
+La precisión histórica se mantiene en todos los aspectos del sistema, incluyendo:
+- Títulos y formas de tratamiento
+- Vestimenta y etiqueta
+- Estructura política y social
+- Economía y moneda
+- Relaciones internacionales
+
+=================================================

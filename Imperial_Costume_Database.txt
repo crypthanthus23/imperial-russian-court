@@ -1,0 +1,92 @@
+# IMPERIAL RUSSIAN COURT COSTUME DATABASE (1905)
+# This notecard provides historically accurate costume recommendations
+# Format: GENDER|RANK|OCCASION|SEASON|DESCRIPTION
+
+# MEN'S COURT UNIFORMS
+MALE|IMPERIAL|FORMAL|ANY|The Tsar wears a gold-embroidered dark blue tailcoat with the Grand Cross and Collar of the Order of St. Andrew, the highest Russian order, prominently displayed. The uniform includes the white breeches, silk stockings, and buckled shoes of court dress. For the most formal occasions, the Imperial mantle of ermine and gold is worn.
+
+MALE|PRINCE|FORMAL|ANY|Russian princes wear dark blue tailcoats with silver embroidery appropriate to their rank. The Orders of St. Vladimir and St. Alexander Nevsky are typically displayed. White breeches, silk stockings, and court shoes complete the formal attire.
+
+MALE|DUKE|FORMAL|ANY|Imperial dukes wear heavily embroidered dark green court uniform with gold buttons bearing the imperial double-headed eagle. Family orders and decorations are worn on a silk sash across the chest.
+
+MALE|COUNT|FORMAL|ANY|Counts of the empire wear court uniform with less elaborate embroidery than dukes, but still featuring gold braid and epaulettes. The Order of St. Anne is commonly displayed.
+
+MALE|BARON|FORMAL|ANY|Barons wear simpler court uniforms with silver rather than gold embroidery, and fewer decorations. The uniform still maintains the formal white breeches and silk stockings required for court presentation.
+
+MALE|IMPERIAL|MILITARY|ANY|The Tsar, as Supreme Commander, wears the uniform of the Preobrazhensky Regiment with full decorations, the Cross of St. George, and golden epaulettes with the imperial cipher.
+
+MALE|PRINCE|MILITARY|ANY|Imperial princes wear the uniforms of their respective regiments, with golden epaulettes bearing the imperial cipher, and all earned military decorations prominently displayed.
+
+MALE|IMPERIAL|BALL|WINTER|At winter balls, the Tsar wears full court dress with the addition of the Chain of the Order of St. Andrew. In extremely cold weather, sable-lined greatcoats may be worn when traveling to the venue, but never inside the palace.
+
+MALE|COUNT|BALL|SUMMER|For summer balls, counts wear lighter weight tailcoats with white waistcoats, still maintaining all proper decorations and orders. Fabric weight is adjusted for comfort while preserving formality.
+
+MALE|MILITARY_GENERAL|FORMAL|ANY|Generals wear dark green uniforms with extensive gold embroidery on collar and cuffs, gold epaulettes with fringe denoting rank, and a red sash. All earned decorations must be worn.
+
+MALE|MILITARY_COLONEL|FORMAL|ANY|Colonels wear their regimental uniform with silver epaulettes (unless in the Guards regiments, which use gold), and display their decorations according to military protocol.
+
+MALE|DIPLOMAT|FORMAL|ANY|Diplomatic corps members wear special uniforms with distinctive embroidery patterns that identify their diplomatic rank. Gold braid and decorations appropriate to their diplomatic status are displayed.
+
+# WOMEN'S COURT DRESS
+FEMALE|IMPERIAL|FORMAL|ANY|The Tsarina wears the traditional Russian court dress, which includes a brocaded gown with a rigid bodice, a long train (up to four arshines in length for the Empress), and the distinctive kokoshnik headdress with a flowing veil. Imperial jewels include the large diamond-and-pearl parure.
+
+FEMALE|PRINCESS|FORMAL|ANY|Princesses of the blood wear similar Russian court dress with trains of three arshines length. Their kokoshnik headdresses are slightly less elaborate than the Empress's but still feature diamonds and pearls. Family tiaras may be worn for the most formal occasions.
+
+FEMALE|DUCHESS|FORMAL|ANY|Duchesses wear the Russian court dress with two-arshine trains. Their kokoshnik headdresses feature family jewels, and they display appropriate orders and decorations according to their rank.
+
+FEMALE|COUNTESS|FORMAL|ANY|Countesses wear more modest versions of the court dress with shorter trains of one arshine. Their kokoshnik headdresses are simpler, often with silver rather than gold embroidery.
+
+FEMALE|BARONESS|FORMAL|ANY|Baronesses wear the required court dress with minimal train and simpler decoration. Their kokoshnik may be smaller and less elaborately jeweled but must conform to court regulations.
+
+FEMALE|IMPERIAL|BALL|WINTER|For winter balls, the Tsarina and Grand Duchesses wear Worth gowns in rich fabrics like velvet and heavy silk, often in pastel colors with silver embroidery. The kokoshnik is worn with a full set of imperial jewels.
+
+FEMALE|PRINCESS|BALL|SUMMER|For summer balls, princesses wear lighter Worth gowns in silk or chiffon, still maintaining the required décolletage for formal balls. Diamond and pearl jewelry is worn, with slightly reduced tiaras compared to winter balls.
+
+FEMALE|COUNTESS|RELIGIOUS|ANY|For religious ceremonies, countesses wear high-necked gowns with long sleeves. Heads must be covered with lace veils or mantillas. Jewelry is modest, usually limited to crosses or religious medals.
+
+FEMALE|LADY_IN_WAITING|FORMAL|ANY|Ladies-in-waiting wear a specific court uniform with the imperial cipher that marks their service to the royal family. Their dress has specific embroidery patterns determined by their exact rank within the imperial household.
+
+# SEASONAL VARIATIONS
+MALE|ANY|ANY|WINTER|In winter, fur-lined greatcoats in sable or seal are worn outdoors. Fur hats (shapka) are permitted outdoors but must be removed indoors. Lined leather gloves are essential.
+
+FEMALE|ANY|ANY|WINTER|Women wear fur-lined cloaks or shubas for winter travel. Fur muffs are fashionable and practical. Indoor dress remains formal, but slightly heavier fabrics are preferred.
+
+MALE|ANY|ANY|SUMMER|In summer, lightweight wool and linen are permitted for day wear. Court uniforms remain unchanged in material but may be made in slightly lighter weight fabric. White uniform trousers may be permitted for some military orders in hot weather.
+
+FEMALE|ANY|ANY|SUMMER|Summer dress features lighter silks and cotton fabrics. Parasols are used outdoors to protect complexion. Evening gowns may have slightly reduced trains for comfort in warm weather.
+
+# SPECIALIZED OCCASIONS
+MALE|ANY|MOURNING|ANY|For court mourning, men wear black armbands on their standard uniform. For personal mourning, black tailcoats with minimal decoration are worn. All orders and decorations are worn with black ribbon instead of colored sashes.
+
+FEMALE|ANY|MOURNING|ANY|Women observe strict mourning dress in black bombazine or crepe. Jewelry is limited to jet or pearls. Veils are worn for deep mourning. The Russian court dress shape is maintained, but in all black fabrics with minimal trim.
+
+MALE|CLERGY|RELIGIOUS|ANY|Orthodox bishops wear elaborate vestments including the sakkos (dalmatic), omophorion (pallium), and mitre. Colors vary by liturgical season. Bishops carry a staff (crozier) as a symbol of authority.
+
+FEMALE|ANY|CORONATION|ANY|For coronations, women of the highest ranks wear the Russian court dress with the longest permissible train for their rank. Jewels are worn in maximum quantity, with family tiaras and all orders displayed.
+
+# ACCESSORIES BY RANK
+MALE|IMPERIAL|ANY|ANY|The Tsar may wear the Cap of Monomakh or the Imperial Crown for the most formal state occasions. He carries a staff of office for certain ceremonies. The Collar of the Order of St. Andrew is worn for all state occasions.
+
+FEMALE|IMPERIAL|ANY|ANY|The Tsarina wears the small imperial crown for formal occasions. Her jewels always include the imperial diamonds and the pearl parure. She carries a fan of exotic feathers for balls and receptions.
+
+MALE|PRINCE|ANY|ANY|Princes carry dress swords with jeweled hilts appropriate to their rank. Their gloves must be white kid leather for formal occasions. Pocket watches on gold chains are displayed.
+
+FEMALE|PRINCESS|ANY|ANY|Princesses carry fans of ivory or mother-of-pearl with gold sticks. Their gloves extend above the elbow for formal occasions. Ceremonial orders are worn on silk ribbons across the bodice.
+
+# SPECIFIC MILITARY UNIFORMS
+MALE|PREOBRAZHENSKY|MILITARY|ANY|The elite Preobrazhensky Regiment wears dark green uniforms with red facings, gold buttons with the imperial eagle, and tall bearskin grenadier hats for parade.
+
+MALE|COSSACK|MILITARY|ANY|Don Cossack officers wear their distinctive uniform with cherkesska (collarless coat), gazyrnitsa (cartridge holders) across the chest, and papakha (fur hat). Shashka (sabers) are worn as part of the uniform.
+
+MALE|HUSSAR|MILITARY|ANY|Hussar officers wear the dolman jacket with extensive braiding and a pelisse hung from the left shoulder. Their shakos have plumes appropriate to their regiment. Tight riding breeches and high boots complete the ensemble.
+
+MALE|GUARD_CAVALRY|MILITARY|ANY|The Chevalier Guard wears white tunics with gold cuirasses (breastplates) for parade. Their helmets feature the imperial eagle and horsehair plumes. They carry straight-bladed pallasch swords.
+
+# REGIONAL VARIATIONS
+MALE|ANY|CAUCASIAN|ANY|Noblemen from the Caucasus regions may wear traditional cherkesska coats with gazyrnitsa and kindjal daggers, even at court, as a recognized exception to standard court dress regulations.
+
+FEMALE|ANY|TRADITIONAL|ANY|Some ladies from noble Russian families may incorporate elements of traditional sarafan (pinafore dress) and kokoshnik styles, particularly for national celebrations or when emphasizing Slavophile political leanings.
+
+MALE|FOREIGN_DIGNITARY|FORMAL|ANY|Foreign dignitaries may wear their national court dress if from a recognized royal court. Others must conform to Russian court uniform regulations or wear diplomatic uniform if applicable.
+
+# END OF DATABASE

@@ -1,0 +1,38 @@
+# Banking Module Fixes
+
+## Issues Fixed
+1. Added missing `touch_start()` event handler to the Banking Module to allow players to interact with it by touching it
+2. Added bankAccount variable to Core HUD to track bank balance (previously it was hardcoded as "0")
+3. Added loans list variable to Core HUD to track player loans
+4. Updated REQUEST_BANK_DATA handler in Core HUD to use the bankAccount variable instead of hardcoded "0"
+5. Enhanced data exchange between modules:
+   - Added UPDATE_BANK_ACCOUNT message from Banking Module to Core HUD
+   - Added UPDATE_LOANS message from Banking Module to Core HUD
+   - Implemented proper handlers for these messages in Core HUD
+6. Made sure bank account updates happen with all transactions (deposits, withdrawals, and interest)
+
+## Banking System Functionality
+1. Players can now access the bank by:
+   - Touching the Banking Module directly
+   - Selecting "Bank" from the main HUD menu
+2. Banking features include:
+   - Deposits and withdrawals of rubles
+   - Daily interest on savings (3% per annum)
+   - View loans and loan management
+   - Special features for banker characters
+
+## Technical Implementation
+1. Synchronized variables between Core HUD and Banking Module:
+   - rubles: Currency on hand
+   - bankAccount: Money stored in the bank
+   - loans: List of active loans in string format
+   - medicalDebt: Medical expenses owed
+2. Communication Flow:
+   - Core HUD to Banking Module: Data sent via REQUEST_BANK_DATA
+   - Banking Module to Core HUD: Updates sent via UPDATE_BANK_ACCOUNT and UPDATE_LOANS
+3. All financial transactions update both modules to keep data consistent
+
+## Further Improvements
+1. Could add loan request/approval workflow
+2. Could implement bank database for multi-player banking
+3. Could add investment options with varying returns

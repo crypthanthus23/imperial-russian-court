@@ -1,0 +1,112 @@
+    listen(integer channel, string name, key id, string message)
+    {
+        // Only process if it's our specific courtier channel
+        if(channel == courtierChannel)
+        {
+            // If Tsar made a selection
+            if(id == TSAR_UUID)
+            {
+                currentState = COURTIER_STATE_CONVERSING;
+                llStopAnimation(IDLE_ANIMATION);
+                llStartAnimation(CONVERSE_ANIMATION);
+                
+                if(message == "Discuss Politics")
+                {
+                    llSay(PUBLIC_CHANNEL, "The political situation is as Your Majesty knows. The liberals continue to press for reforms, while the conservatives advocate for tradition.");
+                    
+                    // Response based on faction
+                    if(courtierFaction == "Monarchist")
+                    {
+                        llSay(PUBLIC_CHANNEL, "My loyalty lies with the throne, of course. The Duma should serve Your Majesty's vision for Russia.");
+                    }
+                    else if(courtierFaction == "Liberal")
+                    {
+                        llSay(PUBLIC_CHANNEL, "With all due respect, there may be merit in considering some measured reforms to strengthen Your Majesty's position.");
+                    }
+                    else
+                    {
+                        llSay(PUBLIC_CHANNEL, "The aristocracy remains Your Majesty's most loyal supporters. Radical change would only destabilize the Empire.");
+                    }
+                }
+                else if(message == "Court Gossip")
+                {
+                    llSay(PUBLIC_CHANNEL, "*bows head* As Your Imperial Majesty wishes. There have been some... interesting developments.");
+                    
+                    // Select appropriate gossip for the Tsar
+                    integer gossip_index = (integer)llFrand(llGetListLength(politicalGossip));
+                    llSay(PUBLIC_CHANNEL, "*speaks quietly* " + llList2String(politicalGossip, gossip_index));
+                }
+                else if(message == "Military Affairs")
+                {
+                    llSay(PUBLIC_CHANNEL, "The armed forces remain strong, Your Majesty. The Guards regiments maintain their excellent standards.");
+                    llSay(PUBLIC_CHANNEL, "There are some concerns about modernization compared to other European powers, particularly in naval affairs.");
+                }
+                else if(message == "Dismiss")
+                {
+                    llSay(PUBLIC_CHANNEL, "*bows deeply* At Your Imperial Majesty's pleasure. I remain your loyal servant.");
+                    llStopAnimation(CONVERSE_ANIMATION);
+                    llStartAnimation(BOW_ANIMATION);
+                    currentState = COURTIER_STATE_GREETING;
+                    llSetTimerEvent(3.0);
+                    return;
+                }
+                
+                // Conversation continues
+                llSetTimerEvent(15.0);
+            }
+            // If another player made a selection
+            else
+            {
+                currentState = COURTIER_STATE_CONVERSING;
+                llStopAnimation(IDLE_ANIMATION);
+                llStartAnimation(CONVERSE_ANIMATION);
+                
+                if(message == "Request Introduction")
+                {
+                    llSay(PUBLIC_CHANNEL, "Of course. I would be delighted to arrange proper introductions at court. One must observe the correct protocols.");
+                    llSay(PUBLIC_CHANNEL, "The Countess Vorontsova holds considerable influence this season. Would you like an introduction to her circle?");
+                }
+                else if(message == "Court Gossip")
+                {
+                    llSay(PUBLIC_CHANNEL, "*glances around discreetly* One does hear things in certain circles...");
+                    currentState = COURTIER_STATE_GOSSIPING;
+                    
+                    // Choose random gossip
+                    if(llFrand(1.0) < 0.5)
+                    {
+                        integer gossip_index = (integer)llFrand(llGetListLength(politicalGossip));
+                        llSay(PUBLIC_CHANNEL, "*lowers voice* " + llList2String(politicalGossip, gossip_index));
+                    }
+                    else
+                    {
+                        integer gossip_index = (integer)llFrand(llGetListLength(socialGossip));
+                        llSay(PUBLIC_CHANNEL, "*speaks confidentially* " + llList2String(socialGossip, gossip_index));
+                    }
+                }
+                else if(message == "Political Discussion")
+                {
+                    // Political view depends on faction
+                    if(courtierFaction == "Monarchist")
+                    {
+                        llSay(PUBLIC_CHANNEL, "The strength of Russia lies in her traditions and the divine authority of the Tsar. These reformist notions threaten the very fabric of our great nation.");
+                    }
+                    else if(courtierFaction == "Liberal")
+                    {
+                        llSay(PUBLIC_CHANNEL, "Russia must embrace certain reforms if she is to maintain her position among the great powers. The Duma could be a force for positive change if properly empowered.");
+                    }
+                    else
+                    {
+                        llSay(PUBLIC_CHANNEL, "Order and stability must be our priorities. Change should come gradually, if at all. The aristocracy has guided Russia for centuries.");
+                    }
+                }
+                else if(message == "Social Affairs")
+                {
+                    llSay(PUBLIC_CHANNEL, "The winter season promises to be exceptional. The Grand Duchess's ball is expected to be the highlight, though the Yusupovs are planning something quite spectacular as well.");
+                    llSay(PUBLIC_CHANNEL, "One must secure the proper invitations, of course. Court society observes its hierarchies most strictly.");
+                }
+                
+                // Conversation continues
+                llSetTimerEvent(15.0);
+            }
+        }
+    }

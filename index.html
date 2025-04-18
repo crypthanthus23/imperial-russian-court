@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Juego de Rol de la Corte Imperial Rusa</title>
+    <style>
+        body {
+            font-family: 'Garamond', serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f5ea;
+            color: #333;
+        }
+        header {
+            background-color: #8b0000;
+            color: #f0d890;
+            text-align: center;
+            padding: 2rem;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Royal_Coat_of_arms_of_Russia_%28XVII_century%29.svg/800px-Royal_Coat_of_arms_of_Russia_%28XVII_century%29.svg.png');
+            background-size: 150px;
+            background-repeat: no-repeat;
+            background-position: 95% center;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        h2 {
+            color: #8b0000;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        .download-section {
+            background-color: #f4f0e5;
+            padding: 1.5rem;
+            border-radius: 5px;
+            margin: 2rem 0;
+            border-left: 5px solid #8b0000;
+        }
+        .download-button {
+            display: inline-block;
+            background-color: #8b0000;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        .download-button:hover {
+            background-color: #600000;
+        }
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .feature-item {
+            background-color: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .feature-item h3 {
+            margin-top: 0;
+            color: #8b0000;
+        }
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: #8b0000;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+        .imperial-image {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 2rem auto;
+            border: 5px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Sistema de Juego de Rol de la Corte Imperial Rusa</h1>
+        <p>Una inmersión detallada en la vida cortesana rusa de 1905</p>
+    </header>
+    
+    <div class="container">
+        <div class="download-section">
+            <h2>Descargas Disponibles</h2>
+            <p>Accede a todos los componentes necesarios para implementar el sistema completo:</p>
+            <p>
+                <a href="Imperial_Russian_Court_System_Manual.md" class="download-button">Manual Completo (MD)</a>
+                <a href="Imperial_Court_Complete_System_v3.zip" class="download-button">Paquete de Scripts V3 (ZIP)</a>
+                <a href="download_scripts_instructions.txt" class="download-button">Instrucciones de Instalación</a>
+                <a href="Guia_Instalacion_Simplificada.md" class="download-button">Guía Simplificada</a>
+                <a href="Manual_Basico.txt" class="download-button">Manual Básico</a>
+            </p>
+        </div>
+        
+        <h2>Acerca del Sistema</h2>
+        <p>El Sistema de Juego de Rol de la Corte Imperial Rusa es un conjunto completo de scripts LSL (Linden Scripting Language) diseñados para recrear con precisión histórica la vida en la corte del Tsar Nikolai II alrededor de 1905. El sistema proporciona una experiencia inmersiva y detallada que refleja la complejidad de las interacciones sociales, políticas y personales en este período histórico crucial.</p>
+        
+        <h2>Características Principales</h2>
+        <div class="feature-list">
+            <div class="feature-item">
+                <h3>HUDs Especializados</h3>
+                <p>HUDs personalizados para cada rol importante en la corte, desde el Tsar y la familia imperial hasta nobles comunes, cada uno con funcionalidades únicas.</p>
+            </div>
+            <div class="feature-item">
+                <h3>Sistema de Estadísticas</h3>
+                <p>Meters visuales detallados que muestran salud, energía, influencia, reputación y otras estadísticas relevantes para la experiencia histórica.</p>
+            </div>
+            <div class="feature-item">
+                <h3>Módulos Temáticos</h3>
+                <p>Sistemas modulares para política, matrimonio, educación, etiqueta, religión y otras facetas importantes de la vida cortesana rusa.</p>
+            </div>
+            <div class="feature-item">
+                <h3>Objetos Interactivos</h3>
+                <p>Elementos del entorno que responden de manera dinámica a la presencia y acciones de los jugadores, proporcionando inmersión adicional.</p>
+            </div>
+            <div class="feature-item">
+                <h3>NPCs Inteligentes</h3>
+                <p>Personajes no jugadores que reconocen específicamente a miembros de la familia imperial y responden según el protocolo histórico.</p>
+            </div>
+            <div class="feature-item">
+                <h3>Precisión Histórica</h3>
+                <p>Desarrollado con atención al detalle histórico, incluyendo roles, relaciones y eventos basados en documentación auténtica de la época.</p>
+            </div>
+        </div>
+        
+        <h2>Instrucciones Rápidas</h2>
+        <ol>
+            <li>Descarga el archivo ZIP completo con todos los scripts</li>
+            <li>Consulta el manual completo para comprender cada componente</li>
+            <li>Sigue las instrucciones de instalación para configurar el sistema en Second Life</li>
+            <li>Configura los canales de comunicación para asegurar la integración de todos los componentes</li>
+            <li>Personaliza nombres, títulos y funcionalidades según las necesidades de tu roleplay</li>
+        </ol>
+        
+        <h2>Compatibilidad</h2>
+        <p>El sistema está diseñado para funcionar en Second Life con las últimas actualizaciones de LSL. Todos los scripts han sido optimizados para maximizar el rendimiento mientras mantienen la complejidad necesaria para una experiencia histórica detallada.</p>
+        
+        <div class="download-section">
+            <h2>¿Necesitas Ayuda?</h2>
+            <p>Si tienes preguntas sobre la instalación o uso del sistema, no dudes en contactarnos:</p>
+            <p>
+                <strong>Email:</strong> imperialcourt@slroleplay.com<br>
+                <strong>Discord:</strong> Imperial Court Roleplay #support<br>
+                <strong>Inworld:</strong> Visita el Centro de Ayuda en el Palacio de Invierno
+            </p>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Sistema de Juego de Rol de la Corte Imperial Rusa &copy; 2025 | Desarrollado para experiencias históricas inmersivas en Second Life</p>
+    </footer>
+</body>
+</html>

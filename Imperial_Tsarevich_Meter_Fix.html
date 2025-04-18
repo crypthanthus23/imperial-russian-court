@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Imperial Tsarevich Meter System Fix</title>
+    <style>
+        body {
+            font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+            background-color: #f9f3e9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border: 1px solid #d4b786;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #7b5427;
+            font-weight: normal;
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #d4b786;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            margin-top: 40px;
+            border-bottom: 1px solid #d4b786;
+            padding-bottom: 5px;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow-x: auto;
+            line-height: 1.3;
+        }
+        code {
+            font-family: Consolas, Monaco, "Courier New", monospace;
+            background-color: #f5f5f5;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .imperial-seal {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .imperial-seal img {
+            max-width: 120px;
+        }
+        .note {
+            background-color: #fffbe6;
+            border-left: 4px solid #ffd700;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .script-box {
+            background-color: #f0f8ff;
+            border: 1px solid #add8e6;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .warning {
+            background-color: #fff0f0;
+            border-left: 4px solid #ff6b6b;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Imperial Tsarevich Meter System Fix</h1>
+        
+        <div class="note">
+            <strong>Important:</strong> This document contains the necessary scripts and instructions to fix the Tsarevich Alexei HUD and meter system. Follow these instructions exactly to ensure proper functioning.
+        </div>
+        
+        <h2>Issue Description</h2>
+        <p>The Tsarevich Alexei HUD and meter system are not communicating properly, resulting in stats not being displayed to other players.</p>
+        
+        <h2>Root Causes</h2>
+        <ul>
+            <li>The Tsarevich HUD uses a different message format than standard HUDs</li>
+            <li>Channel mismatch between the Tsarevich HUD and the standard meter system</li>
+            <li>The specialized hemophilia management features require special handling</li>
+        </ul>
+        
+        <h2>Quick Fix: Fixed Meter Script</h2>
+        <p>Replace the current meter script with this specialized version for Tsarevich Alexei:</p>
+        
+        <div class="script-box">
+            <h3>Imperial_Tsarevich_Meter_Fixed.lsl</h3>
+            <pre>// Imperial Tsarevich Stats Meter - Fixed Version
+// This script displays Tsarevich Alexei's stats as floating text visible to others
+// Version 2.0 - Direct communication fix
+
+// Constants
+integer STATS_CHANNEL = -987654321; // Standard meter channel
+integer TSAREVICH_CHANNEL = -98765432; // Special Tsarevich channel
+integer METER_CHANNEL = -8675309; // Special meter channel
+float TEXT_UPDATE_RATE = 0.5; // How often to update the floating text (in seconds)
+vector TEXT_COLOR = <1.0, 0.8, 0.6>; // Amber/gold color for text
+float TEXT_ALPHA = 1.0; // Text opacity (1.0 = fully opaque)
+string AUTHENTICATION_KEY = "ImperialRussianCourt1905"; // Must match the HUD
+
+// Variables
+string displayText = ""; // The full text to display
+vector displayColor = <1.0, 0.8, 0.6>; // Default text color
+string displayName = "Tsarevich Alexei Nikolaevich";
+string displayTitle = "Heir to the Russian Throne";
+
+// Stats storage
+float health = 100.0;
+float faith = 75.0;
+float wealth = 90.0;
+float influence = 80.0;
+integer rubles = 1000;
+string status = "Active";
+integer isBleedingActive = FALSE;
+
+// Flags
+integer textVisible = TRUE;
+integer isOOCMode = FALSE;
+integer isConnectedToHUD = FALSE;
+key ownerKey = NULL_KEY;
+
+// Function to display the text
+updateFloatingText() {
+    if (!textVisible) {
+        llSetText("", <0,0,0>, 0.0);
+        return;
+    }
+    
+    if (isOOCMode) {
+        llSetText("OOC", <1.0, 0.0, 0.0>, 1.0);
+        return;
+    }
+    
+    if (displayText == "") {
+        // Generate default display if no text has been received
+        displayText = displayTitle + "\n" +
+                      displayName + "\n" +
+                      "Born: July 30, 1904, Peterhof Palace\n" +
+                      "Health: " + (string)((integer)health) + "%";
+        
+        // Add bleeding indicator if bleeding
+        if(isBleedingActive) {
+            displayText += " [BLEEDING]";
+        }
+        
+        displayText += "\nFaith: " + (string)((integer)faith) + "%" +
+                  "\nWealth: " + (string)((integer)wealth) + "%" +
+                  "\nInfluence: " + (string)((integer)influence) + "%" +
+                  "\nRubles: " + (string)rubles +
+                  "\nStatus: " + status;
+    }
+    
+    // Display the text
+    llSetText(displayText, displayColor, TEXT_ALPHA);
+}
+
+// Process a standard stats message
+processStandardStats(string message) {
+    // Format: STATS:Name:Title:Health:Faith:Wealth:Influence:Status:Rubles
+    list parts = llParseString2List(message, [":"], []);
+    
+    if (llGetListLength(parts) < 8) {
+        return; // Invalid format
+    }
+    
+    // Skip the "STATS:" prefix (index 0)
+    displayName = llList2String(parts, 1);
+    displayTitle = llList2String(parts, 2);
+    health = (float)llList2String(parts, 3);
+    faith = (float)llList2String(parts, 4);
+    wealth = (float)llList2String(parts, 5);
+    influence = (float)llList2String(parts, 6);
+    status = llList2String(parts, 7);
+    
+    // Check if Rubles are included
+    if (llGetListLength(parts) >= 9) {
+        rubles = (integer)llList2String(parts, 8);
+    }
+    
+    // Check for bleeding status
+    if (status == "BLEEDING") {
+        isBleedingActive = TRUE;
+    } else {
+        isBleedingActive = FALSE;
+    }
+    
+    // Generate the display text
+    displayText = displayTitle + "\n" +
+                  displayName + "\n" +
+                  "Born: July 30, 1904, Peterhof Palace\n" +
+                  "Health: " + (string)((integer)health) + "%";
+    
+    // Add bleeding indicator if bleeding
+    if(isBleedingActive) {
+        displayText += " [BLEEDING]";
+    }
+    
+    displayText += "\nFaith: " + (string)((integer)faith) + "%" +
+              "\nWealth: " + (string)((integer)wealth) + "%" +
+              "\nInfluence: " + (string)((integer)influence) + "%" +
+              "\nRubles: " + (string)rubles +
+              "\nStatus: " + status;
+    
+    updateFloatingText();
+}
+
+// Process Tsarevich-specific meter update
+processTsarevichUpdate(string message) {
+    // Format: UPDATE_METER|AUTH_KEY|TEXT|COLOR
+    list parts = llParseString2List(message, ["|"], []);
+    
+    if (llGetListLength(parts) < 3) {
+        return; // Invalid format
+    }
+    
+    // Verify authentication key
+    string authKey = llList2String(parts, 1);
+    if (authKey != AUTHENTICATION_KEY) {
+        // Authentication failed, ignore this message
+        return;
+    }
+    
+    // Extract the text and color
+    displayText = llList2String(parts, 2);
+    
+    // If there's a color provided, use it
+    if (llGetListLength(parts) >= 4) {
+        displayColor = (vector)llList2String(parts, 3);
+    } else {
+        displayColor = TEXT_COLOR;
+    }
+    
+    // Check for OOC mode
+    if (displayText == "OOC") {
+        isOOCMode = TRUE;
+    } else {
+        isOOCMode = FALSE;
+        
+        // Try to extract status from text
+        integer statusIndex = llSubStringIndex(displayText, "Status: ");
+        if (statusIndex != -1) {
+            integer newlineIndex = llSubStringIndex(llGetSubString(displayText, statusIndex, -1), "\n");
+            if (newlineIndex == -1) {
+                status = llGetSubString(displayText, statusIndex + 8, -1); // To the end of string
+            } else {
+                status = llGetSubString(displayText, statusIndex + 8, statusIndex + newlineIndex - 1);
+            }
+        }
+        
+        // Try to extract bleeding status
+        if (llSubStringIndex(displayText, "[BLEEDING]") != -1) {
+            isBleedingActive = TRUE;
+        } else {
+            isBleedingActive = FALSE;
+        }
+    }
+    
+    // Update the display
+    updateFloatingText();
+    
+    isConnectedToHUD = TRUE;
+}
+
+// Actively request updates from the HUD
+requestHUDUpdate() {
+    // Request on multiple channels for redundancy
+    llRegionSay(STATS_CHANNEL, "REQUEST_STATS_UPDATE");
+    llRegionSay(TSAREVICH_CHANNEL, "REQUEST_TSAREVICH_UPDATE");
+    llRegionSay(METER_CHANNEL, "REQUEST_METER_UPDATE");
+}
+
+default {
+    state_entry() {
+        // Initialize the meter
+        llOwnerSay("Initializing Imperial Tsarevich Meter...");
+        
+        // Get owner key for authentication
+        ownerKey = llGetOwner();
+        
+        // Listen for communications on all relevant channels
+        llListen(STATS_CHANNEL, "", NULL_KEY, "");
+        llListen(TSAREVICH_CHANNEL, "", NULL_KEY, "");
+        llListen(METER_CHANNEL, "", NULL_KEY, "");
+        llListen(0, "", NULL_KEY, ""); // Listen for public chat commands
+        
+        // Set default display text
+        displayText = displayTitle + "\n" +
+                      displayName + "\n" +
+                      "Born: July 30, 1904, Peterhof Palace\n" +
+                      "Health: " + (string)((integer)health) + "%" +
+                      "\nFaith: " + (string)((integer)faith) + "%" +
+                      "\nWealth: " + (string)((integer)wealth) + "%" +
+                      "\nInfluence: " + (string)((integer)influence) + "%" +
+                      "\nRubles: " + (string)rubles +
+                      "\nStatus: " + status;
+        
+        // Update the floating text
+        updateFloatingText();
+        
+        // Start a timer for periodic updates
+        llSetTimerEvent(TEXT_UPDATE_RATE);
+        
+        // Request initial stats
+        requestHUDUpdate();
+        
+        llOwnerSay("Imperial Tsarevich Meter initialized. Wear with your Tsarevich HUD for display.");
+    }
+    
+    touch_start(integer total_number) {
+        key toucher = llDetectedKey(0);
+        
+        if (toucher == llGetOwner()) {
+            // Toggle text visibility when touched by owner
+            textVisible = !textVisible;
+            updateFloatingText();
+            
+            string visibilityStatus;
+            if (textVisible) {
+                visibilityStatus = "visible";
+            } else {
+                visibilityStatus = "hidden";
+            }
+            llOwnerSay("Stats display " + visibilityStatus);
+        }
+    }
+    
+    listen(integer channel, string name, key id, string message) {
+        // Process public chat commands from owner
+        if (channel == 0 && llGetOwnerKey(id) == ownerKey) {
+            if (message == "/meter reset") {
+                llResetScript();
+            }
+            else if (message == "/meter update") {
+                requestHUDUpdate();
+            }
+        }
+        // Process standard meter stats messages
+        else if (channel == STATS_CHANNEL) {
+            if (llSubStringIndex(message, "STATS:") == 0) {
+                processStandardStats(message);
+            }
+        }
+        // Process Tsarevich-specific meter updates
+        else if (channel == METER_CHANNEL) {
+            if (llSubStringIndex(message, "UPDATE_METER|") == 0) {
+                processTsarevichUpdate(message);
+            }
+        }
+        // Process messages on Tsarevich channel
+        else if (channel == TSAREVICH_CHANNEL) {
+            // This channel reserved for future specialized communication
+        }
+    }
+    
+    timer() {
+        // If we've received no data for a while, try to reconnect
+        if (!isConnectedToHUD) {
+            requestHUDUpdate();
+        }
+    }
+    
+    changed(integer change) {
+        if (change & CHANGED_OWNER) {
+            // Reset script when ownership changes
+            llResetScript();
+        }
+    }
+}</pre>
+        </div>
+        
+        <h2>Quick Fix: Update for Tsarevich HUD</h2>
+        <p>Add this function to the Tsarevich HUD script to ensure proper communication:</p>
+        
+        <div class="script-box">
+            <h3>Add to Imperial_Tsarevich_HUD.lsl</h3>
+            <pre>// Add this function immediately after the sendStandardMeterUpdate() function
+requestMeterConnection() {
+    // Broadcast a connection request on standard stats channel
+    integer STATS_METER_CHANNEL = -987654321;
+    llRegionSay(STATS_METER_CHANNEL, "CONNECT_METER:" + (string)llGetOwner());
+    
+    // Also broadcast on Tsarevich-specific channel
+    llRegionSay(TSAREVICH_CHANNEL, "TSAREVICH_CONNECT_METER:" + (string)llGetOwner());
+    
+    // Update the meter directly
+    updateMeter();
+}</pre>
+        </div>
+        
+        <p>Also add this code to the state_entry() function in the Tsarevich HUD:</p>
+        
+        <div class="script-box">
+            <h3>Add to Imperial_Tsarevich_HUD.lsl state_entry()</h3>
+            <pre>        // Initialize meter connection
+        llOwnerSay("Connecting to Imperial Tsarevich Meter...");
+        requestMeterConnection();</pre>
+        </div>
+        
+        <h2>Communication Protocol</h2>
+        <p>The meter system uses the following channels for communication:</p>
+        
+        <table>
+            <tr>
+                <th>Channel</th>
+                <th>Value</th>
+                <th>Purpose</th>
+            </tr>
+            <tr>
+                <td>STATS_CHANNEL</td>
+                <td>-987654321</td>
+                <td>Standard meter communication</td>
+            </tr>
+            <tr>
+                <td>TSAREVICH_CHANNEL</td>
+                <td>-98765432</td>
+                <td>Tsarevich-specific communication</td>
+            </tr>
+            <tr>
+                <td>METER_CHANNEL</td>
+                <td>-8675309</td>
+                <td>Direct HUD-to-meter updates</td>
+            </tr>
+        </table>
+        
+        <h2>Message Formats</h2>
+        <p>The system supports two message formats:</p>
+        
+        <h3>Standard Format</h3>
+        <pre>STATS:Name:Title:Health:Faith:Wealth:Influence:Status:Rubles</pre>
+        
+        <h3>Tsarevich Format</h3>
+        <pre>UPDATE_METER|AUTHENTICATION_KEY|DISPLAY_TEXT|TEXT_COLOR</pre>
+        
+        <h2>Testing the Fix</h2>
+        <ol>
+            <li>Reset both the Tsarevich HUD and meter scripts</li>
+            <li>Ensure both are attached to the avatar</li>
+            <li>Try the command <code>/meter update</code> in public chat</li>
+            <li>Verify that stats are visible above the avatar</li>
+            <li>Test hemophilia features with <code>/activity running</code></li>
+        </ol>
+        
+        <div class="warning">
+            <strong>Warning:</strong> Make sure to use the exact same channel numbers and authentication keys as shown in these scripts. Any mismatch will cause communication failure.
+        </div>
+        
+        <h2>Support and Troubleshooting</h2>
+        <p>If you continue to experience issues with the meter system, please check:</p>
+        <ul>
+            <li>All communication channels match between HUD and meter</li>
+            <li>Authentication keys match exactly</li>
+            <li>Both scripts are reset after making changes</li>
+            <li>You are logged in as the correct character (UUID verification)</li>
+        </ul>
+    </div>
+</body>
+</html>

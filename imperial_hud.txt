@@ -1,0 +1,1770 @@
+// Imperial Russian Court HUD - 1905
+
+// Advanced roleplay system for the Winter Palace
+
+// ============= CONSTANTS =============
+
+// Imperial and Noble Ranks
+
+string RANK_IMPERIAL_0 = "Tsar/Tsarina"; // Emperor/Empress
+
+string RANK_IMPERIAL_1 = "Dowager Tsarina"; // Emperor's Mother
+
+string RANK_IMPERIAL_2 = "Tsarevich/Tsarevna"; // Heir to the throne
+
+string RANK_IMPERIAL_3 = "Grand Duke/Grand Duchess"; // Imperial Family
+
+string RANK_IMPERIAL_4 = "Imperial Prince/Princess"; // Imperial Blood
+
+string RANK_NOBLE_0 = "Prince/Princess";
+
+string RANK_NOBLE_1 = "Duke/Duchess";
+
+string RANK_NOBLE_2 = "Marquess/Marchioness";
+
+string RANK_NOBLE_3 = "Count/Countess";
+
+string RANK_NOBLE_4 = "Viscount/Viscountess";
+
+string RANK_NOBLE_5 = "Baron/Baroness";
+
+string RANK_NOBLE_6 = "Knight/Dame";
+
+// Russian equivalents
+
+string RUSSIAN_IMPERIAL_0 = "Imperator/Imperatritsa";
+
+string RUSSIAN_IMPERIAL_1 = "Vdovstvuyushchaya Imperatritsa";
+
+string RUSSIAN_IMPERIAL_2 = "Tsesarevich/Tsesarevna";
+
+string RUSSIAN_IMPERIAL_3 = "Velikiy Knyaz/Velikaya Knyaginya";
+
+string RUSSIAN_IMPERIAL_4 = "Imperatorskiy Knyaz/Knyaginya";
+
+string RUSSIAN_NOBLE_0 = "Knyaz/Knyaginya";
+
+string RUSSIAN_NOBLE_1 = "Gertsog/Gertsoginya";
+
+string RUSSIAN_NOBLE_2 = "Markiz/Markiza";
+
+string RUSSIAN_NOBLE_3 = "Graf/Grafinya";
+
+string RUSSIAN_NOBLE_4 = "Vikont/Vikontessa";
+
+string RUSSIAN_NOBLE_5 = "Baron/Baronessa";
+
+string RUSSIAN_NOBLE_6 = "Rytsar/Dama";
+
+// Clergy Ranks
+
+string RANK_CLERGY_0 = "Patriarch";
+
+string RANK_CLERGY_1 = "Metropolitan";
+
+string RANK_CLERGY_2 = "Archbishop";
+
+string RANK_CLERGY_3 = "Bishop";
+
+string RANK_CLERGY_4 = "Priest";
+
+// Military Ranks
+
+string RANK_MILITARY_0 = "Field Marshal";
+
+string RANK_MILITARY_1 = "General";
+
+string RANK_MILITARY_2 = "Colonel";
+
+string RANK_MILITARY_3 = "Captain";
+
+string RANK_MILITARY_4 = "Lieutenant";
+
+string RANK_MILITARY_5 = "Sergeant";
+
+string RANK_MILITARY_6 = "Private";
+
+// Citizen Ranks
+
+string RANK_CITIZEN_0 = "High Official";
+
+string RANK_CITIZEN_1 = "Banker";
+
+string RANK_CITIZEN_2 = "Merchant";
+
+string RANK_CITIZEN_3 = "Doctor/Professor";
+
+string RANK_CITIZEN_4 = "Artisan";
+
+string RANK_CITIZEN_5 = "Citizen";
+
+// Peasant Ranks
+
+string RANK_PEASANT_0 = "Village Elder";
+
+string RANK_PEASANT_1 = "Craftsman";
+
+string RANK_PEASANT_2 = "Servant";
+
+string RANK_PEASANT_3 = "Farmer";
+
+string RANK_PEASANT_4 = "Laborer";
+
+// Forms of Address
+
+string ADDRESS_IMPERIAL_0 = "Your Imperial Majesty";
+
+string ADDRESS_IMPERIAL_1 = "Your Imperial Highness";
+
+string ADDRESS_IMPERIAL_2 = "Your Imperial Highness";
+
+string ADDRESS_IMPERIAL_3 = "Your Highness";
+
+string ADDRESS_NOBLE_0 = "Your Serene Highness";
+
+string ADDRESS_NOBLE_1 = "Your Grace";
+
+string ADDRESS_NOBLE_2 = "My Lord/Lady Marquess";
+
+string ADDRESS_NOBLE_3 = "Your Excellency";
+
+string ADDRESS_NOBLE_4 = "My Lord/Lady Viscount";
+
+string ADDRESS_NOBLE_5 = "My Lord/Lady Baron";
+
+string ADDRESS_NOBLE_6 = "Sir/Lady";
+
+// Court Positions
+
+list COURT_POSITIONS = [
+
+"None",
+
+"Court Chamberlain",
+
+"Master of Ceremonies",
+
+"Minister of the Imperial Court",
+
+"Lady-in-Waiting",
+
+"Maid of Honor",
+
+"Imperial Advisor",
+
+"Master of the Hunt",
+
+"Grand Marshal",
+
+"Keeper of the Imperial Seal"
+
+];
+
+// Greeting types
+
+string GREETING_0 = "Imperial Bow";
+
+string GREETING_1 = "Court Bow";
+
+string GREETING_2 = "Respectful Bow";
+
+string GREETING_3 = "Deep Curtsy";
+
+string GREETING_4 = "Court Curtsy";
+
+string GREETING_5 = "Hand Kiss";
+
+string GREETING_6 = "Military Salute";
+
+string GREETING_7 = "Religious Blessing";
+
+// Major Court Events
+
+list COURT_EVENTS = [
+
+"Imperial Ball",
+
+"State Dinner",
+
+"Military Review",
+
+"Drawing Room",
+
+"Levée",
+
+"Hunt",
+
+"Ballet Performance",
+
+"Religious Ceremony"
+
+];
+
+// ============= COMMUNICATION CHANNELS =============
+
+integer MAIN_MENU_CHANNEL = -98001;
+
+integer REGISTER_CHANNEL = -98002;
+
+integer CLASS_CHANNEL = -98003;
+
+integer RANK_CHANNEL = -98004;
+
+integer SOCIAL_CHANNEL = -98005;
+
+integer IMPERIAL_CHANNEL = -98006;
+
+integer COURT_CHANNEL = -98007;
+
+integer EVENT_CHANNEL = -98008;
+
+integer GREETING_CHANNEL = -98009;
+
+// ADDED FOR STATS DISPLAY
+
+integer STATS_UPDATE_CHANNEL = -98010; // Channel for sending stat
+updates to display
+
+integer TOGGLE_CHANNEL = -98011; // Channel for toggling display
+visibility
+
+integer GENDER_CHANNEL = -98012; // Channel for gender selection
+
+integer OOC_CHANNEL = -98013; // Channel for Out Of Character messages
+
+// ============= PLAYER DATA =============
+
+// Imperial Family Constants
+
+key TSAR_UUID = "49238f92-08a4-4f72-bca4-e66a15c75e02"; // Tsar Nicholas
+II Romanov
+
+string TSAR_FORMAL_NAME = "Nikolai II Romanov of Russia";
+
+string TSAR_TITLE = "Emperor and Autocrat of All Russia";
+
+key ownerID;
+
+string playerName = ""; // RP first name
+
+string familyName = ""; // RP family name
+
+integer socialClass = 5; // 0=Imperial, 1=Noble, 2=Clergy, 3=Military,
+4=Citizen, 5=Peasant
+
+integer rankLevel = 0; // Rank within class (higher number = higher
+rank)
+
+integer courtPosition = 0; // Position at court
+
+integer imperialFavor = 0; // Favor with the Imperial family (0-100)
+
+integer playerGender = 0; // 0=male, 1=female
+
+// Core Stats (visible to other players)
+
+integer health = 100; // Health points (0-100)
+
+integer charm = 0; // Social grace and appeal (0-100)
+
+integer experience = 0; // RP experience points
+
+integer influence = 1; // Political and social influence (0-100)
+
+integer rubles = 500; // Money
+
+integer wealth = 0; // Wealth rank (0-5)
+
+// Additional Stats
+
+integer fame = 0; // Public recognition (0-100)
+
+integer reputation = 50; // Social standing (0-100)
+
+integer fatigue = 0; // Tiredness (0-100)
+
+integer hunger = 100; // Food level (0-100)
+
+integer love = 0; // For marriage system (0-100)
+
+// Relationship Data
+
+key spouseID = NULL_KEY; // Spouse if married
+
+string spouseName = ""; // Spouse's name
+
+integer isMarried = FALSE; // Marriage status
+
+list allies = []; // Political/social allies
+
+list rivals = []; // Political/social rivals
+
+// System Variables
+
+list activeListeners = []; // Track active listeners
+
+integer isRegistered = FALSE; // Registration status
+
+integer hudVisible = TRUE; // HUD visibility toggle
+
+string currentState = "INIT"; // Track current menu/state
+
+integer isTsar = FALSE; // Whether player is the Tsar
+
+// Registration variables
+
+string tempFirstName = "";
+
+string tempLastName = "";
+
+integer tempClass = -1;
+
+integer tempGender = -1; // -1=not selected, 0=male, 1=female
+
+// Notecard variables
+
+string NOTECARD_NAME = "tsar_data.txt";
+
+key notecardQueryId;
+
+integer notecardLine;
+
+integer notecardReading = FALSE;
+
+// ============= HELPER FUNCTIONS =============
+
+// Function to get rank name based on class and rank
+
+string getRankName(integer class, integer rank) {
+
+if(class == 0) { // Imperial
+
+if(rank == 0) return RANK_IMPERIAL_0;
+
+else if(rank == 1) return RANK_IMPERIAL_1;
+
+else if(rank == 2) return RANK_IMPERIAL_2;
+
+else if(rank == 3) return RANK_IMPERIAL_3;
+
+}
+
+else if(class == 1) { // Noble
+
+if(rank == 0) return RANK_NOBLE_0;
+
+else if(rank == 1) return RANK_NOBLE_1;
+
+else if(rank == 2) return RANK_NOBLE_2;
+
+else if(rank == 3) return RANK_NOBLE_3;
+
+else if(rank == 4) return RANK_NOBLE_4;
+
+else if(rank == 5) return RANK_NOBLE_5;
+
+else if(rank == 6) return RANK_NOBLE_6;
+
+}
+
+else if(class == 2) { // Clergy
+
+if(rank == 0) return RANK_CLERGY_0;
+
+else if(rank == 1) return RANK_CLERGY_1;
+
+else if(rank == 2) return RANK_CLERGY_2;
+
+else if(rank == 3) return RANK_CLERGY_3;
+
+else if(rank == 4) return RANK_CLERGY_4;
+
+}
+
+else if(class == 3) { // Military
+
+if(rank == 0) return RANK_MILITARY_0;
+
+else if(rank == 1) return RANK_MILITARY_1;
+
+else if(rank == 2) return RANK_MILITARY_2;
+
+else if(rank == 3) return RANK_MILITARY_3;
+
+else if(rank == 4) return RANK_MILITARY_4;
+
+else if(rank == 5) return RANK_MILITARY_5;
+
+else if(rank == 6) return RANK_MILITARY_6;
+
+}
+
+else if(class == 4) { // Citizen
+
+if(rank == 0) return RANK_CITIZEN_0;
+
+else if(rank == 1) return RANK_CITIZEN_1;
+
+else if(rank == 2) return RANK_CITIZEN_2;
+
+else if(rank == 3) return RANK_CITIZEN_3;
+
+else if(rank == 4) return RANK_CITIZEN_4;
+
+else if(rank == 5) return RANK_CITIZEN_5;
+
+}
+
+else if(class == 5) { // Peasant
+
+if(rank == 0) return RANK_PEASANT_0;
+
+else if(rank == 1) return RANK_PEASANT_1;
+
+else if(rank == 2) return RANK_PEASANT_2;
+
+else if(rank == 3) return RANK_PEASANT_3;
+
+else if(rank == 4) return RANK_PEASANT_4;
+
+}
+
+return "Unknown Rank";
+
+}
+
+// Function to get Russian rank name
+
+string getRussianRankName(integer class, integer rank) {
+
+if(class == 0) { // Imperial
+
+if(rank == 0) return RUSSIAN_IMPERIAL_0;
+
+else if(rank == 1) return RUSSIAN_IMPERIAL_1;
+
+else if(rank == 2) return RUSSIAN_IMPERIAL_2;
+
+else if(rank == 3) return RUSSIAN_IMPERIAL_3;
+
+}
+
+else if(class == 1) { // Noble
+
+if(rank == 0) return RUSSIAN_NOBLE_0;
+
+else if(rank == 1) return RUSSIAN_NOBLE_1;
+
+else if(rank == 2) return RUSSIAN_NOBLE_2;
+
+else if(rank == 3) return RUSSIAN_NOBLE_3;
+
+else if(rank == 4) return RUSSIAN_NOBLE_4;
+
+else if(rank == 5) return RUSSIAN_NOBLE_5;
+
+else if(rank == 6) return RUSSIAN_NOBLE_6;
+
+}
+
+return ""; // Only Imperial and Noble have Russian equivalents
+
+}
+
+// Function to get class name
+
+string getClassName(integer class) {
+
+if(class == 0) return "Imperial";
+
+else if(class == 1) return "Noble";
+
+else if(class == 2) return "Clergy";
+
+else if(class == 3) return "Military";
+
+else if(class == 4) return "Citizen";
+
+else if(class == 5) return "Peasant";
+
+return "Unknown Class";
+
+}
+
+// Function to get proper form of address
+
+string getFormOfAddress(integer class, integer rank) {
+
+if(class == 0) { // Imperial
+
+if(rank == 0) return ADDRESS_IMPERIAL_0;
+
+else if(rank == 1) return ADDRESS_IMPERIAL_1;
+
+else if(rank == 2) return ADDRESS_IMPERIAL_2;
+
+else if(rank == 3) return ADDRESS_IMPERIAL_3;
+
+}
+
+else if(class == 1) { // Noble
+
+if(rank == 0) return ADDRESS_NOBLE_0;
+
+else if(rank == 1) return ADDRESS_NOBLE_1;
+
+else if(rank == 2) return ADDRESS_NOBLE_2;
+
+else if(rank == 3) return ADDRESS_NOBLE_3;
+
+else if(rank == 4) return ADDRESS_NOBLE_4;
+
+else if(rank == 5) return ADDRESS_NOBLE_5;
+
+else if(rank == 6) return ADDRESS_NOBLE_6;
+
+}
+
+return "Sir/Madam"; // Default for other classes
+
+}
+
+// Function to check wealth category
+
+string getWealthCategory(integer wealth) {
+
+if(wealth == 0) return "Destitute";
+
+else if(wealth == 1) return "Poor";
+
+else if(wealth == 2) return "Modest";
+
+else if(wealth == 3) return "Comfortable";
+
+else if(wealth == 4) return "Wealthy";
+
+else if(wealth == 5) return "Opulent";
+
+return "Unknown";
+
+}
+
+// Security function to prevent unauthorized script modifications
+
+secureScript() {
+
+// Only allow script editing by the creator
+
+key scriptCreator = llGetCreator();
+
+key currentOwner = llGetOwner();
+
+// If the current owner is not the creator, lock down editing
+
+if (scriptCreator != currentOwner) {
+
+// Make the script harder to modify by non-creators
+
+llSetScriptState(llGetScriptName(), FALSE);
+
+llSleep(0.1);
+
+llSetScriptState(llGetScriptName(), TRUE);
+
+llOwnerSay("Imperial Court HUD: Security check complete.");
+
+}
+
+}
+
+// Function to initialize Tsar data in memory variables
+
+// This ensures the Tsar data is preserved when the HUD is transferred
+
+initializeTsarData() {
+
+// In this memory-based approach, we'll check if the global variables
+have values
+
+if (TSAR_UUID == "" || TSAR_UUID == NULL_KEY) {
+
+// Tsar data not set, initialize with default values
+
+llOwnerSay("Initializing Tsar data with default values.");
+
+// Set the default values
+
+TSAR_UUID = "49238f92-08a4-4f72-bca4-e66a15c75e02";
+
+TSAR_FORMAL_NAME = "Nikolai II Romanov of Russia";
+
+TSAR_TITLE = "Emperor and Autocrat of All Russia";
+
+llOwnerSay("Tsar data initialized with: " + TSAR_FORMAL_NAME + ", " +
+TSAR_TITLE);
+
+} else {
+
+// Tsar data exists, just verify it
+
+verifyTsarData();
+
+}
+
+}
+
+// Function to verify Tsar data in memory
+
+verifyTsarData() {
+
+// In this version we're using memory variables directly instead of a
+notecard
+
+// The TSAR_UUID, TSAR_FORMAL_NAME, and TSAR_TITLE variables are already
+set
+
+// Always use the fixed Tsar data
+
+TSAR_UUID = "49238f92-08a4-4f72-bca4-e66a15c75e02";
+
+TSAR_FORMAL_NAME = "Nikolai II Romanov of Russia";
+
+TSAR_TITLE = "Emperor and Autocrat of All Russia";
+
+// Get the script creator ID - only the creator can be Tsar
+
+key scriptCreator = llGetCreator();
+
+// Check if current owner is the creator
+
+if (ownerID == scriptCreator) {
+
+isTsar = TRUE;
+
+llOwnerSay("You are recognized as " + TSAR_FORMAL_NAME + ", " +
+TSAR_TITLE + "!");
+
+} else {
+
+isTsar = FALSE;
+
+llOwnerSay("Tsar data loaded: " + TSAR_FORMAL_NAME + ", " + TSAR_TITLE);
+
+llOwnerSay("Note: Only the original creator can assume the Tsar role.");
+
+}
+
+}
+
+// Function to check if the notecard exists and create it if it doesn't
+
+// This ensures the Tsar data is preserved when the HUD is transferred
+
+checkAndCreateNotecard() {
+
+if (llGetInventoryType(NOTECARD_NAME) == INVENTORY_NONE) {
+
+// Notecard doesn't exist, use default values
+
+llOwnerSay("Tsar data notecard not found. Using default values.");
+
+// Set the default values
+
+TSAR_UUID = "49238f92-08a4-4f72-bca4-e66a15c75e02";
+
+TSAR_FORMAL_NAME = "Nikolai II Romanov of Russia";
+
+TSAR_TITLE = "Emperor and Autocrat of All Russia";
+
+llOwnerSay("Using default Tsar data: " + TSAR_FORMAL_NAME + ", " +
+TSAR_TITLE);
+
+// NOTE: In Second Life, you cannot create notecards through scripts
+
+// Notecards must be created manually and placed in the object's
+inventory
+
+llOwnerSay("IMPORTANT: To save Tsar data, manually create a notecard
+named '" +
+
+NOTECARD_NAME + "' with the following content:");
+
+llOwnerSay((string)TSAR_UUID + "\n" + TSAR_FORMAL_NAME + "\n" +
+TSAR_TITLE);
+
+} else {
+
+// Notecard exists, read it
+
+loadTsarDataFromNotecard();
+
+}
+
+}
+
+// Function to load Tsar data from the notecard
+
+loadTsarDataFromNotecard() {
+
+if (llGetInventoryType(NOTECARD_NAME) != INVENTORY_NONE) {
+
+notecardLine = 0;
+
+notecardReading = TRUE;
+
+notecardQueryId = llGetNotecardLine(NOTECARD_NAME, notecardLine);
+
+} else {
+
+llOwnerSay("ERROR: Tsar data notecard not found!");
+
+}
+
+}
+
+// Function to save Tsar data to the notecard
+
+saveTsarDataToNotecard() {
+
+string notecardContent = (string)TSAR_UUID + "\n" +
+
+TSAR_FORMAL_NAME + "\n" +
+
+TSAR_TITLE;
+
+// In Second Life, notecards can't be created or updated through scripts
+
+// Provide instructions to the user instead
+
+llOwnerSay("IMPORTANT: To save current Tsar data, please:");
+
+llOwnerSay("1. Create a new notecard in your inventory");
+
+llOwnerSay("2. Name it '" + NOTECARD_NAME + "'");
+
+llOwnerSay("3. Copy and paste the following content into it:");
+
+llOwnerSay(notecardContent);
+
+llOwnerSay("4. Drag the notecard into this object's inventory");
+
+if (llGetInventoryType(NOTECARD_NAME) != INVENTORY_NONE) {
+
+llOwnerSay("5. You may need to remove the existing '" + NOTECARD_NAME +
+"' first");
+
+}
+
+}
+
+// Constants for meter communication
+
+integer METER_STATS_CHANNEL = -987654321; // Must match the channel in
+the meter script
+
+// Function to update the HUD display
+
+updateHUD() {
+
+string hudText = "\n=== IMPERIAL RUSSIAN COURT ===\n\n";
+
+// Player info
+
+hudText += playerName + " " + familyName + "\n";
+
+hudText += getRankName(socialClass, rankLevel) + "\n";
+
+if (getRussianRankName(socialClass, rankLevel) != "") {
+
+hudText += "(" + getRussianRankName(socialClass, rankLevel) + ")\n";
+
+}
+
+// Court position
+
+string courtPositionText = "";
+
+if (courtPosition > 0) {
+
+courtPositionText = llList2String(COURT_POSITIONS, courtPosition);
+
+hudText += "Position: " + courtPositionText + "\n";
+
+}
+
+// Stats
+
+hudText += "\n--- STATS ---\n";
+
+hudText += "Health: " + (string)health + "/100\n";
+
+hudText += "Charm: " + (string)charm + "/100\n";
+
+hudText += "Influence: " + (string)influence + "/100\n";
+
+hudText += "Rubles: " + (string)rubles + "\n";
+
+hudText += "Wealth: " + getWealthCategory(wealth) + "\n";
+
+hudText += "Imperial Favor: " + (string)imperialFavor + "/100\n";
+
+hudText += "Experience: " + (string)experience + "\n";
+
+// Send stats to HUD display
+
+llMessageLinked(LINK_SET, STATS_UPDATE_CHANNEL, hudText, NULL_KEY);
+
+// Also send stats to any meter objects in range
+
+sendStatsToMeter();
+
+}
+
+// Function to send stats to external meter
+
+sendStatsToMeter() {
+
+string meterData = "STATS_DATA:";
+
+// Format:
+name||family||rank||russianRank||position||health||charm||influence||xp||rubles||favor||wealth||gender
+
+string courtPositionText = "";
+
+if (courtPosition > 0) {
+
+courtPositionText = llList2String(COURT_POSITIONS, courtPosition);
+
+}
+
+meterData += playerName + "||" +
+
+familyName + "||" +
+
+getRankName(socialClass, rankLevel) + "||" +
+
+getRussianRankName(socialClass, rankLevel) + "||" +
+
+courtPositionText + "||" +
+
+(string)health + "||" +
+
+(string)charm + "||" +
+
+(string)influence + "||" +
+
+(string)experience + "||" +
+
+(string)rubles + "||" +
+
+(string)imperialFavor + "||" +
+
+getWealthCategory(wealth) + "||" +
+
+(string)playerGender;
+
+// Send data on the meter channel
+
+llRegionSay(METER_STATS_CHANNEL, meterData);
+
+}
+
+// Main menu function
+
+showMainMenu() {
+
+string menuText = "\n=== IMPERIAL COURT HUD ===\n\n";
+
+menuText += "Select an option:\n";
+
+list buttons = ["Social", "Class", "Court", "Imperial", "OOC", "Stats",
+"Toggle HUD", "Connect Meter"];
+
+if (!isRegistered) {
+
+menuText = "\n=== WELCOME TO THE IMPERIAL COURT ===\n\n";
+
+menuText += "You must register to participate.\n";
+
+buttons = ["Register"];
+
+}
+
+llDialog(ownerID, menuText, buttons, MAIN_MENU_CHANNEL);
+
+currentState = "MAIN_MENU";
+
+}
+
+// Registration menu function
+
+showRegistrationMenu() {
+
+string menuText = "\n=== REGISTRATION ===\n\n";
+
+menuText += "Enter your character's details:\n";
+
+if (tempFirstName == "") {
+
+llTextBox(ownerID, "Enter your character's first name:",
+REGISTER_CHANNEL);
+
+currentState = "REG_FIRSTNAME";
+
+}
+
+else if (tempLastName == "") {
+
+llTextBox(ownerID, "Enter your character's family name:",
+REGISTER_CHANNEL);
+
+currentState = "REG_LASTNAME";
+
+}
+
+else if (tempGender == -1) {
+
+llDialog(ownerID, "Select your character's gender:",
+
+["Male", "Female"], GENDER_CHANNEL);
+
+currentState = "REG_GENDER";
+
+}
+
+else if (tempClass == -1) {
+
+llDialog(ownerID, "Select your character's social class:",
+
+["Imperial", "Noble", "Clergy", "Military", "Citizen", "Peasant"],
+CLASS_CHANNEL);
+
+currentState = "REG_CLASS";
+
+}
+
+}
+
+// Function to complete registration
+
+completeRegistration() {
+
+playerName = tempFirstName;
+
+familyName = tempLastName;
+
+socialClass = tempClass;
+
+playerGender = tempGender;
+
+// Set rank based on class
+
+if (socialClass == 0) { // Imperial
+
+rankLevel = 3; // Default to Grand Duke/Duchess
+
+// Check if this player is the Tsar
+
+if (ownerID == TSAR_UUID) {
+
+rankLevel = 0; // Tsar/Tsarina
+
+isTsar = TRUE;
+
+}
+
+}
+
+else if (socialClass == 1) { // Noble
+
+rankLevel = 3; // Default to Count/Countess
+
+}
+
+else if (socialClass == 2) { // Clergy
+
+rankLevel = 3; // Default to Bishop
+
+}
+
+else if (socialClass == 3) { // Military
+
+rankLevel = 3; // Default to Captain
+
+}
+
+else if (socialClass == 4) { // Citizen
+
+rankLevel = 5; // Default to Citizen
+
+}
+
+else if (socialClass == 5) { // Peasant
+
+rankLevel = 3; // Default to Farmer
+
+}
+
+// Reset temp variables
+
+tempFirstName = "";
+
+tempLastName = "";
+
+tempClass = -1;
+
+tempGender = -1;
+
+isRegistered = TRUE;
+
+// Update HUD
+
+updateHUD();
+
+llOwnerSay("Registration complete! Welcome to the Imperial Russian
+Court, " +
+
+getFormOfAddress(socialClass, rankLevel) + ".");
+
+showMainMenu();
+
+}
+
+// Initialize function to set up listeners
+
+initListeners() {
+
+// Clear any existing listeners
+
+integer i;
+
+for(i = 0; i < llGetListLength(activeListeners); i++) {
+
+llListenRemove(llList2Integer(activeListeners, i));
+
+}
+
+activeListeners = [];
+
+// Add new listeners
+
+integer mainMenuListener = llListen(MAIN_MENU_CHANNEL, "", ownerID, "");
+
+integer registerListener = llListen(REGISTER_CHANNEL, "", ownerID, "");
+
+integer classListener = llListen(CLASS_CHANNEL, "", ownerID, "");
+
+integer rankListener = llListen(RANK_CHANNEL, "", ownerID, "");
+
+integer socialListener = llListen(SOCIAL_CHANNEL, "", ownerID, "");
+
+integer imperialListener = llListen(IMPERIAL_CHANNEL, "", ownerID, "");
+
+integer courtListener = llListen(COURT_CHANNEL, "", ownerID, "");
+
+integer eventListener = llListen(EVENT_CHANNEL, "", ownerID, "");
+
+integer greetingListener = llListen(GREETING_CHANNEL, "", ownerID, "");
+
+integer toggleListener = llListen(TOGGLE_CHANNEL, "", ownerID, "");
+
+integer genderListener = llListen(GENDER_CHANNEL, "", ownerID, "");
+
+integer oocListener = llListen(OOC_CHANNEL, "", ownerID, "");
+
+integer meterListener = llListen(METER_STATS_CHANNEL, "", NULL_KEY, "");
+
+// Add listeners to the tracking list
+
+activeListeners = [mainMenuListener, registerListener, classListener,
+rankListener,
+
+socialListener, imperialListener, courtListener, eventListener,
+
+greetingListener, toggleListener, genderListener, oocListener,
+meterListener];
+
+// Announce HUD presence to any meters in the area
+
+llRegionSay(METER_STATS_CHANNEL, "HUD_CONNECTED");
+
+}
+
+// Function to handle the class selection menu
+
+handleClassMenu(string message) {
+
+if (message == "Imperial") tempClass = 0;
+
+else if (message == "Noble") tempClass = 1;
+
+else if (message == "Clergy") tempClass = 2;
+
+else if (message == "Military") tempClass = 3;
+
+else if (message == "Citizen") tempClass = 4;
+
+else if (message == "Peasant") tempClass = 5;
+
+completeRegistration();
+
+}
+
+// Function to handle social interactions menu
+
+showSocialMenu() {
+
+string menuText = "\n=== SOCIAL INTERACTIONS ===\n\n";
+
+menuText += "Select an action:\n";
+
+list buttons = ["Greet", "Introduce", "Bow/Curtsy", "Converse", "Back"];
+
+llDialog(ownerID, menuText, buttons, SOCIAL_CHANNEL);
+
+currentState = "SOCIAL_MENU";
+
+}
+
+// Function to handle court interactions menu
+
+showCourtMenu() {
+
+string menuText = "\n=== COURT AFFAIRS ===\n\n";
+
+menuText += "Select an action:\n";
+
+list buttons = ["Attend Event", "Court Position", "Gossip", "Intrigue",
+"Back"];
+
+llDialog(ownerID, menuText, buttons, COURT_CHANNEL);
+
+currentState = "COURT_MENU";
+
+}
+
+// Function to handle imperial interactions menu
+
+showImperialMenu() {
+
+string menuText = "\n=== IMPERIAL AFFAIRS ===\n\n";
+
+menuText += "Select an action:\n";
+
+list buttons = ["Seek Audience", "Petition", "Pledge Loyalty", "Back"];
+
+llDialog(ownerID, menuText, buttons, IMPERIAL_CHANNEL);
+
+currentState = "IMPERIAL_MENU";
+
+}
+
+// Function to handle greeting menu
+
+showGreetingMenu() {
+
+string menuText = "\n=== GREETINGS ===\n\n";
+
+menuText += "Select a greeting:\n";
+
+list buttons = [GREETING_0, GREETING_1, GREETING_2, GREETING_3,
+
+GREETING_4, GREETING_5, GREETING_6, GREETING_7, "Back"];
+
+llDialog(ownerID, menuText, buttons, GREETING_CHANNEL);
+
+currentState = "GREETING_MENU";
+
+}
+
+// Function to handle events menu
+
+showEventsMenu() {
+
+string menuText = "\n=== COURT EVENTS ===\n\n";
+
+menuText += "Select an event to attend:\n";
+
+list buttons = llList2List(COURT_EVENTS, 0, 7);
+
+buttons += ["Back"];
+
+llDialog(ownerID, menuText, buttons, EVENT_CHANNEL);
+
+currentState = "EVENT_MENU";
+
+}
+
+// Function to toggle HUD visibility
+
+toggleHUD() {
+
+hudVisible = !hudVisible;
+
+llMessageLinked(LINK_SET, TOGGLE_CHANNEL, (string)hudVisible, NULL_KEY);
+
+if (hudVisible) {
+
+llOwnerSay("HUD display enabled.");
+
+} else {
+
+llOwnerSay("HUD display disabled.");
+
+}
+
+}
+
+// Function to handle OOC (Out Of Character) menu
+
+showOOCMenu() {
+
+string menuText = "\n=== OUT OF CHARACTER ===\n\n";
+
+menuText += "Enter your OOC message:\n";
+
+llTextBox(ownerID, menuText, OOC_CHANNEL);
+
+currentState = "OOC_MENU";
+
+}
+
+// ============= EVENT HANDLERS =============
+
+default {
+
+state_entry() {
+
+// Initialize the HUD
+
+ownerID = llGetOwner();
+
+// Load Tsar data from notecard
+
+checkAndCreateNotecard();
+
+// Set up listeners
+
+initListeners();
+
+// Show welcome message
+
+llOwnerSay("Imperial Russian Court HUD initialized. Welcome to the
+Winter Palace!");
+
+// Check if the owner is the Tsar
+
+if (ownerID == TSAR_UUID) {
+
+isTsar = TRUE;
+
+llOwnerSay("You are recognized as " + TSAR_FORMAL_NAME + ", " +
+TSAR_TITLE + "!");
+
+}
+
+// Show main menu after a short delay
+
+llSetTimerEvent(1.0);
+
+}
+
+timer() {
+
+llSetTimerEvent(0.0);
+
+showMainMenu();
+
+}
+
+changed(integer change) {
+
+// Handle ownership transfer
+
+if (change & CHANGED_OWNER) {
+
+// Reset when owner changes
+
+ownerID = llGetOwner();
+
+isRegistered = FALSE;
+
+// Check if new owner is the Tsar
+
+isTsar = (ownerID == TSAR_UUID);
+
+// Set up listeners for new owner
+
+initListeners();
+
+// Show welcome message
+
+llOwnerSay("Imperial Russian Court HUD transferred. Welcome to the
+Winter Palace!");
+
+// Load Tsar data from notecard
+
+loadTsarDataFromNotecard();
+
+// Show main menu after a short delay
+
+llSetTimerEvent(1.0);
+
+}
+
+if (change & CHANGED_INVENTORY) {
+
+// If the notecard is added or removed, check it
+
+if (llGetInventoryType(NOTECARD_NAME) == INVENTORY_NONE) {
+
+checkAndCreateNotecard();
+
+}
+
+}
+
+}
+
+touch_start(integer total_number) {
+
+// Only respond to owner's touch
+
+if (llDetectedKey(0) == ownerID) {
+
+showMainMenu();
+
+}
+
+}
+
+listen(integer channel, string name, key id, string message) {
+
+// Handle meter requests on the meter channel
+
+if (channel == METER_STATS_CHANNEL) {
+
+if (message == "REQUEST_STATS_UPDATE") {
+
+// Send current stats to the meter
+
+sendStatsToMeter();
+
+return;
+
+}
+
+}
+
+// For all other channels, only respond to owner
+
+if (id != ownerID) return;
+
+// Handle main menu selections
+
+if (channel == MAIN_MENU_CHANNEL) {
+
+if (message == "Register") {
+
+showRegistrationMenu();
+
+}
+
+else if (message == "Social") {
+
+showSocialMenu();
+
+}
+
+else if (message == "Class") {
+
+// Handle class-specific options
+
+// Not implemented in this example
+
+llOwnerSay("Class-specific options not implemented yet.");
+
+showMainMenu();
+
+}
+
+else if (message == "Court") {
+
+showCourtMenu();
+
+}
+
+else if (message == "Imperial") {
+
+showImperialMenu();
+
+}
+
+else if (message == "OOC") {
+
+showOOCMenu();
+
+}
+
+else if (message == "Stats") {
+
+// Display detailed stats
+
+updateHUD();
+
+showMainMenu();
+
+}
+
+else if (message == "Toggle HUD") {
+
+toggleHUD();
+
+showMainMenu();
+
+}
+
+else if (message == "Connect Meter") {
+
+// Broadcast connection request to meters in range
+
+llRegionSay(METER_STATS_CHANNEL, "HUD_CONNECTED");
+
+// Send current stats
+
+sendStatsToMeter();
+
+llOwnerSay("Connection request sent to any nearby meters. Make sure your
+meter object is nearby.");
+
+showMainMenu();
+
+}
+
+}
+
+// Handle registration process
+
+else if (channel == REGISTER_CHANNEL) {
+
+if (currentState == "REG_FIRSTNAME") {
+
+tempFirstName = message;
+
+showRegistrationMenu();
+
+}
+
+else if (currentState == "REG_LASTNAME") {
+
+tempLastName = message;
+
+showRegistrationMenu();
+
+}
+
+}
+
+// Handle gender selection
+
+else if (channel == GENDER_CHANNEL) {
+
+if (message == "Male") tempGender = 0;
+
+else if (message == "Female") tempGender = 1;
+
+showRegistrationMenu();
+
+}
+
+// Handle class selection
+
+else if (channel == CLASS_CHANNEL) {
+
+handleClassMenu(message);
+
+}
+
+// Handle social menu
+
+else if (channel == SOCIAL_CHANNEL) {
+
+if (message == "Greet") {
+
+showGreetingMenu();
+
+}
+
+else if (message == "Introduce") {
+
+// Handle introduction using gender variable
+
+string pronouns = "themselves";
+
+if (playerGender == 0) pronouns = "himself";
+
+else if (playerGender == 1) pronouns = "herself";
+
+llSay(0, playerName + " " + familyName + ", " +
+
+getRankName(socialClass, rankLevel) + ", presents " + pronouns + ".");
+
+showSocialMenu();
+
+}
+
+else if (message == "Bow/Curtsy") {
+
+// Handle bow/curtsy based on gender variable
+
+if (playerGender == 1) {
+
+llSay(0, playerName + " curtsies gracefully.");
+
+} else {
+
+llSay(0, playerName + " bows respectfully.");
+
+}
+
+showSocialMenu();
+
+}
+
+else if (message == "Converse") {
+
+// Handle conversation
+
+llSay(0, playerName + " engages in polite conversation.");
+
+showSocialMenu();
+
+}
+
+else if (message == "Back") {
+
+showMainMenu();
+
+}
+
+}
+
+// Handle court menu
+
+else if (channel == COURT_CHANNEL) {
+
+if (message == "Attend Event") {
+
+showEventsMenu();
+
+}
+
+else if (message == "Court Position") {
+
+// Handle court position
+
+llSay(0, playerName + " inquires about court positions.");
+
+showCourtMenu();
+
+}
+
+else if (message == "Gossip") {
+
+// Handle gossip
+
+llSay(0, playerName + " discreetly shares the latest court gossip.");
+
+showCourtMenu();
+
+}
+
+else if (message == "Intrigue") {
+
+// Handle intrigue
+
+llSay(0, playerName + " engages in subtle court intrigue.");
+
+showCourtMenu();
+
+}
+
+else if (message == "Back") {
+
+showMainMenu();
+
+}
+
+}
+
+// Handle imperial menu
+
+else if (channel == IMPERIAL_CHANNEL) {
+
+if (message == "Seek Audience") {
+
+// Handle audience request
+
+llSay(0, playerName + " " + familyName + " humbly requests an audience
+with " +
+
+TSAR_FORMAL_NAME + ".");
+
+showImperialMenu();
+
+}
+
+else if (message == "Petition") {
+
+// Handle petition
+
+llSay(0, playerName + " submits a formal petition to the Imperial
+Court.");
+
+showImperialMenu();
+
+}
+
+else if (message == "Pledge Loyalty") {
+
+// Handle loyalty pledge
+
+llSay(0, playerName + " " + familyName + " pledges unwavering loyalty to
+" +
+
+TSAR_FORMAL_NAME + ", " + TSAR_TITLE + ".");
+
+// Increase Imperial Favor
+
+imperialFavor += 5;
+
+if (imperialFavor > 100) imperialFavor = 100;
+
+updateHUD();
+
+showImperialMenu();
+
+}
+
+else if (message == "Back") {
+
+showMainMenu();
+
+}
+
+}
+
+// Handle greeting menu
+
+else if (channel == GREETING_CHANNEL) {
+
+if (message == "Back") {
+
+showSocialMenu();
+
+} else {
+
+// Handle greetings
+
+llSay(0, playerName + " offers a " + message + ".");
+
+showSocialMenu();
+
+}
+
+}
+
+// Handle events menu
+
+else if (channel == EVENT_CHANNEL) {
+
+if (message == "Back") {
+
+showCourtMenu();
+
+} else {
+
+// Handle event attendance
+
+llSay(0, playerName + " " + familyName + " attends the " + message +
+".");
+
+// Increase experience and possibly other stats
+
+experience += 10;
+
+charm += 2;
+
+if (charm > 100) charm = 100;
+
+updateHUD();
+
+showCourtMenu();
+
+}
+
+}
+
+// Handle OOC (Out Of Character) messages
+
+else if (channel == OOC_CHANNEL) {
+
+// Send the OOC message with player's name to distinguish who sent it
+
+llSay(0, "((OOC - " + llKey2Name(ownerID) + ": " + message + "))");
+
+showMainMenu();
+
+}
+
+}
+
+dataserver(key query_id, string data) {
+
+if (query_id == notecardQueryId) {
+
+if (data == EOF) {
+
+// Finished reading the notecard
+
+notecardReading = FALSE;
+
+llOwnerSay("Tsar data loaded successfully.");
+
+} else {
+
+// Process the line from the notecard
+
+if (notecardLine == 0) {
+
+// First line is the Tsar UUID
+
+TSAR_UUID = (key)data;
+
+} else if (notecardLine == 1) {
+
+// Second line is the formal name
+
+TSAR_FORMAL_NAME = data;
+
+} else if (notecardLine == 2) {
+
+// Third line is the title
+
+TSAR_TITLE = data;
+
+}
+
+// Request the next line
+
+notecardLine++;
+
+notecardQueryId = llGetNotecardLine(NOTECARD_NAME, notecardLine);
+
+}
+
+}
+
+}
+
+}
