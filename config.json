@@ -1,8 +1,4 @@
 {
-    "database": {
-        "host": "localhost",
-        "user": "admin",
-        "password": "1234",
-        "port": 5432
-    }
+  "port": 3000,
+  "api_base_url": "https://imperial-russian-court.onrender.com/api/get_player_info"
 }
