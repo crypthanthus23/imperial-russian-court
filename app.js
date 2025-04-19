@@ -1,6 +1,6 @@
 const express = require('express');  // Importar Express
-const cors = require('cors');  // Importar CORS para manejar solicitudes cruzadas
-const { Pool } = require('pg');  // Importar Pool para manejar la conexión con PostgreSQL
+const cors = require('cors');        // Importar CORS para manejar solicitudes cruzadas
+const { Pool } = require('pg');      // Importar Pool para manejar la conexión con PostgreSQL
 const config = require('./config.json');  // Importar la configuración (por ejemplo, la URL de la base de datos)
 
 const app = express();
@@ -18,14 +18,14 @@ const pool = new Pool({
   }
 });
 
-// Aquí agregamos el endpoint para obtener la información del jugador
+// Endpoint para obtener la información del jugador
 app.get('/api/get_player_info', async (req, res) => {
   const { player_first_name, player_last_name } = req.query;
 
   try {
     const result = await pool.query(
       `SELECT * FROM players WHERE player_first_name = $1 AND player_last_name = $2 LIMIT 1`,
-      [player_first_name, player_last_name]
+      [ player_first_name, player_last_name ]
     );
 
     if (result.rows.length === 0) {
@@ -73,7 +73,6 @@ app.post('/api/add_player', async (req, res) => {
     res.status(500).json({ success: false, error: 'Error interno del servidor' });
   }
 });
-
 
 // Iniciar el servidor en el puerto configurado
 app.listen(port, () => {
