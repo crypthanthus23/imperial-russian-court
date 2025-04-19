@@ -1,0 +1,564 @@
+// ===========================================================================
+// GoldenBookModule.lsl
+// Sistema del Libro de Oro (Velvet Book) para el HUD de la Corte Imperial
+// Gestiona los cambios de apellido familiar y las consecuencias asociadas
+// ===========================================================================
+
+// Canales de comunicación
+integer COMM_CHANNEL = -9872356;           ; // Canal principal de comunicación del HUD
+integer DB_CHANNEL;                        ; // Canal para operaciones con la base de datos
+key OWNER_KEY;                             ; // Clave del avatar
+
+// Parámetros del sistema
+string API_ENDPOINT = API_ENDPOINT = "http:; //;//0.0.0.0:5000"; // Punto final de la API
+
+// Estados del sistema
+integer LANGUAGE_MODE = 0;                 ; // 0 = Inglés, 1 = Ruso
+
+// Datos del jugador
+string playerUUID = ""                    ; // UUID de Second Life convertido a string
+string playerToken = ""                   ; // Token de autenticación
+integer isLoggedIn = FALSE;                ; // Estado de autenticación
+
+// Variables de operación
+string pendingOperation = ""              ; // Operación actual en procesamiento
+list dataQueue = [;];                       ; // Cola de operaciones a realizar
+integer retryCount = 0;                    ; // Número de reintentos para la operación actual
+integer MAX_RETRIES = 3;                   ; // Número máximo de reintentos antes de rendirse
+
+// Variables del Libro de Oro
+integer playerFamilyID = 0;                ; // ID de la familia actual del jugador
+string familyName = ""                    ; // Nombre de la familia actual
+string familyMotto = ""                   ; // Lema familiar
+string familyCoatOfArms = ""              ; // URL del escudo de armas
+integer familyPrestige = 0;                ; // Prestigio de la familia (0-100);
+string relationToHead = ""                ; // Relación con el cabeza de familia
+list familyMembers = [;];                   ; // Lista de miembros de la familia
+
+// Mensajes del sistema
+list messages_en = [;
+    "The Golden Book";,                    ; // 0
+    "Change Family Name";,                 ; // 1
+    "View Family History";,                ; // 2
+    "Family Members";,                     ; // 3
+    "Create Marriage Record";,             ; // 4
+    "Register New Family";,                ; // 5
+    "You have joined the family ";,        ; // 6
+    "Warning: Changing your family name voluntarily will result in character death!";, // 7
+    "A woman who marries joins her husband's family";, // 8
+    "Family name changed due to marriage";, // 9
+    "Imperial decree has changed your family name";, // 10
+    "You have been adopted into a new family";, // 11
+    "You have been exiled from your family";, // 12
+    "Your family has been disgraced and abolished";, // 13
+    "An entry has been made in the Golden Book";, // 14
+    "Marriage record created successfully";, // 15
+    "You cannot change your family name while holding certain titles";, // 16
+    "You need imperial permission to register a new noble family";, // 17
+    "Requesting data from the Imperial Archives...";, // 18
+    "You are now the head of the family";,; // 19
+    "The first person to take a family name becomes its head";, // 20
+    "Family leadership can only be transferred through inheritance or imperial decree" ; // 21
+];
+
+list messages_ru = [;
+    "Золотая Книга";,                     ; // 0
+    "Изменить Фамилию";,                  ; // 1
+    "Просмотреть Историю Семьи";,         ; // 2
+    "Члены Семьи";,                       ; // 3
+    "Создать Запись о Браке";,            ; // 4
+    "Зарегистрировать Новую Семью";,      ; // 5
+    "Вы присоединились к семье ";,        ; // 6
+    "Предупреждение: Добровольное изменение фамилии приведет к смерти персонажа!";, // 7
+    "Женщина, выходящая замуж, присоединяется к семье мужа";, // 8
+    "Фамилия изменена в связи с браком";, // 9
+    "Императорский указ изменил вашу фамилию";, // 10
+    "Вы были усыновлены в новую семью";, // 11
+    "Вы были изгнаны из своей семьи";, // 12
+    "Ваша семья была опозорена и упразднена";, // 13
+    "В Золотую Книгу внесена запись";, // 14
+    "Запись о браке успешно создана";, // 15
+    "Вы не можете изменить фамилию, пока владеете определенными титулами";, // 16
+    "Вам нужно императорское разрешение для регистрации новой дворянской семьи";, // 17
+    "Запрос данных из Имперских Архивов...";, // 18
+    "Вы теперь глава семьи";, // 19
+    "Первый человек, взявший фамилию, становится главой семьи";, // 20
+    "Руководство семьей может быть передано только по наследству или императорским указом" ; // 21
+];
+
+// ======= FUNCIONES DE UTILIDAD =======
+
+// Obtener mensaje según el idioma
+string  GetMessage(integer index);
+    {
+    if (LANGUAGE_MODE == 0) {
+         {
+    {
+        return llList2String(messages_en, index);
+    } else {
+         {
+        return llList2String(messages_ru, index);
+    }
+}
+
+// Cambio de familia debido al matrimonio - NO provoca muerte del personaje
+ changeFamilyByMarriage(key spouse_id, integer new_family_id, string new_family_name);
+    {
+    string url = API_ENDPOINT + "/family/change_name";
+    string postData = "token=" + playerToken + 
+                    "&player_uuid=" + playerUUID + 
+                    "&new_family_id=" + (string)new_family_id + 
+                    "&reason=marriage" +
+                    "&spouse_uuid=" + (string)spouse_id;
+    
+    llHTTPRequest(url, [HTTP_METHOD, "POST";, HTTP_MIMETYPE, "application/x-www-form-urlencoded"], postData);
+    llOwnerSay(GetMessage(9) + ": " + new_family_name);
+}
+
+// Cambio de familia voluntario - PROVOCA muerte del personaje
+ changeFamilyVoluntary(integer new_family_id);
+    {
+ // Primero mostramos una advertencia clara
+    llDialog(llGetOwner(), GetMessage(7), ["Continue";, "Cancel"], -9876543);
+    
+ // La confirmación se maneja en el evento listen
+}
+
+// Ejecutar cambio de familia que provoca muerte
+ executeFamilyChange(integer new_family_id);
+    {
+    string url = API_ENDPOINT + "/family/change_name";
+    string postData = "token=" + playerToken + 
+                    "&player_uuid=" + playerUUID + 
+                    "&new_family_id=" + (string)new_family_id + 
+                    "&reason=voluntary";
+    
+    llHTTPRequest(url, [HTTP_METHOD, "POST";, HTTP_MIMETYPE, "application/x-www-form-urlencoded"], postData);
+ // La respuesta manejará la muerte del personaje
+}
+
+// Obtener información de la familia del jugador
+getFamilyInfo();
+    {
+    string url = API_ENDPOINT + "/family/info";
+    string postData = "token=" + playerToken + "&player_uuid=" + playerUUID;
+    
+    llOwnerSay(GetMessage(18));
+    llHTTPRequest(url, [HTTP_METHOD, "POST";, HTTP_MIMETYPE, "application/x-www-form-urlencoded"], postData);
+}
+
+// Obtener lista de familias nobles
+getNobleList();
+    {
+    string url = API_ENDPOINT + "/family/list";
+    string postData = "token=" + playerToken;
+    
+    llHTTPRequest(url, [HTTP_METHOD, "POST";, HTTP_MIMETYPE, "application/x-www-form-urlencoded"], postData);
+}
+
+// Registrar una nueva familia noble (requiere aprobación imperial);
+// El primer jugador que registra una familia se convierte automáticamente en cabeza de familia
+ registerNewFamily(string family_name, string motto);
+    {
+    string url = API_ENDPOINT + "/family/register";
+    string postData = "token=" + playerToken + 
+                    "&player_uuid=" + playerUUID + 
+                    "&family_name=" + llEscapeURL(family_name) + 
+                    "&motto=" + llEscapeURL(motto) +
+                    "&set_as_head=true"; // Esta bandera establece al fundador como cabeza
+    
+ // Informar al jugador sobre el estatus de cabeza de familia
+    llOwnerSay(GetMessage(20)); // "The first person to take a family name becomes its head";
+    
+    llHTTPRequest(url, [HTTP_METHOD, "POST";, HTTP_MIMETYPE, "application/x-www-form-urlencoded"], postData);
+}
+
+// Crear una entrada en el Libro de Oro
+ createBookEntry(integer family_id, string entry_type, string entry_text);
+    {
+    string url = API_ENDPOINT + "/family/book_entry";
+    string postData = "token=" + playerToken + 
+                    "&player_uuid=" + playerUUID + 
+                    "&family_id=" + (string)family_id + 
+                    "&entry_type=" + llEscapeURL(entry_type) + 
+                    "&entry_text=" + llEscapeURL(entry_text);
+    
+    llHTTPRequest(url, [HTTP_METHOD, "POST";, HTTP_MIMETYPE, "application/x-www-form-urlencoded"], postData);
+}
+
+// Registrar un matrimonio (que puede cambiar el apellido de la esposa);
+ createMarriageRecord(key spouse1_id, key spouse2_id, integer family_name_changed);
+    {
+    string url = API_ENDPOINT + "/family/marriage";
+    string postData = "token=" + playerToken + 
+                    "&player_uuid=" + playerUUID + 
+                    "&spouse1_uuid=" + (string)spouse1_id + 
+                    "&spouse2_uuid=" + (string)spouse2_id + 
+                    "&family_name_changed=" + (string)family_name_changed;
+    
+    llHTTPRequest(url, [HTTP_METHOD, "POST";, HTTP_MIMETYPE, "application/x-www-form-urlencoded"], postData);
+}
+
+// ======= ESTADOS DEL SISTEMA =======
+
+default {
+    state_entry();
+    {
+ // Inicializar
+        OWNER_KEY = llGetOwner();
+        DB_CHANNEL = (integer)("0x" + llGetSubString((string)OWNER_KEY, 0, 7));
+        llListen(COMM_CHANNEL, "";, NULL_KEY, "");
+        llListen(DB_CHANNEL, "";, NULL_KEY, "");
+    }
+    
+    listen(integer channel, string name, key id, string message);
+    {
+ // Comunicación interna del HUD
+        if (channel == COMM_CHANNEL) {
+         {
+    {
+            if (message == "LANGUAGE_ENGLISH") {
+         {
+    {
+                LANGUAGE_MODE = 0;
+            }
+            else {
+        if (message == "LANGUAGE_RUSSIAN") {
+         {
+         {
+    {
+                LANGUAGE_MODE = 1;
+            }
+            else {
+        if (message == "AUTH_SUCCESS") {
+         {
+         {
+    {
+                isLoggedIn = TRUE;
+ // Obtener información de la familia al iniciar sesión
+                getFamilyInfo();
+            }
+            else {
+        if (llGetSubString(message, 0, 10) == "AUTH_TOKEN:") {
+         {
+         {
+    {
+                playerToken = llGetSubString(message, 11, -1);
+            }
+            else {
+        if (llGetSubString(message, 0, 11) == "PLAYER_UUID:") {
+         {
+         {
+    {
+                playerUUID = llGetSubString(message, 12, -1);
+            }
+            else {
+        if (message == "SHOW_GOLDEN_BOOK") {
+         {
+         {
+    {
+ // Mostrar opciones del Libro de Oro
+                list buttons = [;
+                    GetMessage(1),; // Cambiar apellido familiar
+                    GetMessage(2),; // Ver historia familiar
+                    GetMessage(3),; // Miembros de familia
+                    GetMessage(4),; // Crear registro de matrimonio
+                    GetMessage(5) ; // Registrar nueva familia
+                ];
+                llDialog(llGetOwner(), GetMessage(0), buttons, -9876543);
+            }
+            else {
+        if (message == "FAMILY_CHANGED_DEATH") {
+         {
+         {
+    {
+ // La familia cambió y el personaje debe morir
+                llSay(COMM_CHANNEL, "PLAYER_DIE_REQUEST");
+            }
+        }
+ // Respuesta a un diálogo
+        else {
+        if (channel == -9876543) {
+         {
+         {
+    {
+            if (message == GetMessage(1)) {
+         {
+    {; // Cambiar apellido
+                getNobleList(); // Obtener lista de familias para mostrar opciones
+            }
+            else {
+        if (message == GetMessage(2)) {
+         {
+         {
+    {; // Ver historia familiar
+                if (playerFamilyID > 0) {
+         {
+    {
+ // Solicitar entradas del libro para esta familia
+                    string url = API_ENDPOINT + "/family/history";
+                    string postData = "token=" + playerToken + "&family_id=" + (string)playerFamilyID;
+                    llHTTPRequest(url, [HTTP_METHOD, "POST";, HTTP_MIMETYPE, "application/x-www-form-urlencoded"], postData);
+                }
+            }
+            else {
+        if (message == GetMessage(3)) {
+         {
+         {
+    {; // Ver miembros de la familia
+                if (playerFamilyID > 0) {
+         {
+    {
+ // Solicitar miembros de la familia
+                    string url = API_ENDPOINT + "/family/members";
+                    string postData = "token=" + playerToken + "&family_id=" + (string)playerFamilyID;
+                    llHTTPRequest(url, [HTTP_METHOD, "POST";, HTTP_MIMETYPE, "application/x-www-form-urlencoded"], postData);
+                }
+            }
+            else {
+        if (message == GetMessage(4)) {
+         {
+         {
+    {; // Crear registro de matrimonio
+ // Diálogo para seleccionar cónyuge
+ // Este es un proceso complejo en Second Life que requeriría detectar avatares cercanos
+                llOwnerSay("Select your spouse (functionality would detect nearby avatars)");
+            }
+            else {
+        if (message == GetMessage(5)) {
+         {
+         {
+    {; // Registrar nueva familia
+                llTextBox(llGetOwner(), "Enter new family name:";, -9876544);
+                pendingOperation = "NEW_FAMILY_NAME";
+            }
+            else {
+        if (message == "Continue" && pendingOperation == "CONFIRM_FAMILY_CHANGE") {
+         {
+         {
+    {
+ // Usuario confirmó el cambio de familia voluntario (que causa muerte);
+                list params = llParseString2List(pendingOperation, ["|"], []);
+                integer new_family_id = (integer)llList2String(params, 1);
+                executeFamilyChange(new_family_id);
+                pendingOperation = "";
+            }
+            else {
+        if (message == "Cancel") {
+         {
+         {
+    {
+                pendingOperation = "";
+            }
+        }
+ // Respuesta a un textbox
+        else {
+        if (channel == -9876544) {
+         {
+         {
+    {
+            if (pendingOperation == "NEW_FAMILY_NAME") {
+         {
+    {
+                string familyName = message;
+                llTextBox(llGetOwner(), "Enter family motto:";, -9876544);
+                pendingOperation = "NEW_FAMILY_MOTTO|" + familyName;
+            }
+            else {
+        if (llGetSubString(pendingOperation, 0, 14) == "NEW_FAMILY_MOTTO") {
+         {
+         {
+    {
+                list params = llParseString2List(pendingOperation, ["|"], []);
+                string familyName = llList2String(params, 1);
+                string motto = message;
+                registerNewFamily(familyName, motto);
+                pendingOperation = "";
+            }
+        }
+    }
+    
+     http_response(key request_id, integer status, list metadata, string body);
+    {
+        if (status == 200) {
+         {
+    {
+ // Analizar la respuesta JSON
+            string response = llJsonGetValue(body, ["status"]);
+            
+            if (response == "success") {
+         {
+    {
+                string operation = llJsonGetValue(body, ["operation"]);
+                
+                if (operation == "get_family_info") {
+         {
+    {
+ // Actualizar información de la familia
+                    playerFamilyID = (integer)llJsonGetValue(body, ["family";, "id"]);
+                    familyName = llJsonGetValue(body, ["family";, "name"]);
+                    if (LANGUAGE_MODE == 0) {
+         {
+    {
+                        familyMotto = llJsonGetValue(body, ["family";, "motto_en"]);
+                    } else {
+         {
+                        familyMotto = llJsonGetValue(body, ["family";, "motto_ru"]);
+                    }
+                    familyCoatOfArms = llJsonGetValue(body, ["family";, "coat_of_arms_url"]);
+                    familyPrestige = (integer)llJsonGetValue(body, ["family";, "prestige"]);
+                    relationToHead = llJsonGetValue(body, ["relation_to_head"]);
+                }
+                else {
+        if (operation == "family_list") {
+         {
+         {
+    {
+ // Mostrar lista de familias para selección
+                    list families = llJson2List(llJsonGetValue(body, ["families"]));
+                    list familyButtons = [;];
+                    integer i;
+                    for (i = 0; i < llGetListLength(families) && i < 12; i++)
+    {
+                        string familyName = llList2String(families, i);
+                        list familyData = llParseString2List(familyName, ["|"], []);
+                        familyButtons += llList2String(familyData, 1); // Nombre de la familia
+                    }
+                    llDialog(llGetOwner(), GetMessage(1), familyButtons, -9876545);
+                }
+                else {
+        if (operation == "family_members") {
+         {
+         {
+    {
+ // Mostrar miembros de la familia
+                    list members = llJson2List(llJsonGetValue(body, ["members"]));
+                    string output = GetMessage(3) + " - " + familyName + ":\n\n";
+                    integer i;
+                    for (i = 0; i < llGetListLength(members); i++)
+    {
+                        string member = llList2String(members, i);
+                        output += "- " + member + "\n";
+                    }
+                    llOwnerSay(output);
+                }
+                else {
+        if (operation == "family_history") {
+         {
+         {
+    {
+ // Mostrar historia familiar del Libro de Oro
+                    list entries = llJson2List(llJsonGetValue(body, ["entries"]));
+                    string output = GetMessage(2) + " - " + familyName + ":\n\n";
+                    integer i;
+                    for (i = 0; i < llGetListLength(entries); i++)
+    {
+                        string entry = llList2String(entries, i);
+                        output += "- " + entry + "\n\n";
+                    }
+                    llOwnerSay(output);
+                }
+                else {
+        if (operation == "change_family") {
+         {
+         {
+    {
+ // Familia cambiada exitosamente
+                    string reason = llJsonGetValue(body, ["reason"]);
+                    if (reason == "voluntary") {
+         {
+    {
+ // Comunicar que el jugador debe morir
+                        llSay(COMM_CHANNEL, "FAMILY_CHANGED_DEATH");
+                    } else {
+         {
+ // Actualizar datos de la familia
+                        getFamilyInfo();
+                    }
+                }
+                else {
+        if (operation == "create_marriage") {
+         {
+         {
+    {
+                    llOwnerSay(GetMessage(15));
+ // Verificar si hubo cambio de apellido
+                    integer nameChanged = (integer)llJsonGetValue(body, ["name_changed"]);
+                    if (nameChanged) {
+         {
+    {
+ // La esposa cambió su apellido, actualizamos los datos
+                        getFamilyInfo();
+                    }
+                }
+                else {
+        if (operation == "register_family") {
+         {
+         {
+    {
+                    string status = llJsonGetValue(body, ["registration_status"]);
+                    if (status == "pending") {
+         {
+    {
+                        llOwnerSay(GetMessage(17));
+                    } else {
+        if (status == "approved") {
+         {
+         {
+    {
+                        llOwnerSay(GetMessage(6) + llJsonGetValue(body, ["family_name"]));
+ // Mostrar mensaje de que es cabeza de familia
+                        llOwnerSay(GetMessage(19) + ": " + llJsonGetValue(body, ["family_name"]));
+                        llOwnerSay(GetMessage(21)); // Informar sobre transferencia de liderazgo
+                        getFamilyInfo();
+                    }
+                }
+                else {
+        if (operation == "book_entry") {
+         {
+         {
+    {
+                    llOwnerSay(GetMessage(14));
+                }
+            }
+            else {
+        if (response == "error") {
+         {
+         {
+    {
+                string error = llJsonGetValue(body, ["message"]);
+                llOwnerSay("Error: " +; error);
+            }
+        }
+        else {
+         {
+ // Manejar errores HTTP
+            llOwnerSay("Error HTTP: " +; (string)status);
+            
+ // Reintentar si es posible
+            if (retryCount < MAX_RETRIES) {
+         {
+    {
+                retryCount++;
+                llSleep(1.0);
+ // Reimplementar según la operación específica
+            }
+            else {
+         {
+                llOwnerSay("Error: No se pudo completar la operación después de múltiples intentos.");
+                retryCount = 0;
+            }
+        }
+    }
+    
+ // Responder a comandos de otros scripts
+     link_message(integer sender_num, integer num, string str, key id);
+    {
+        if (str == "RESET") {
+         {
+    {
+            llResetScript();
+        }
+    }
+    return TRUE;
+}
