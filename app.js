@@ -1,22 +1,24 @@
-const express = require('express'); // <== ¡IMPORTANTE!
-const cors = require('cors');       // <== ¡IMPORTANTE!
-const { Pool } = require('pg');
-const config = require('./config.json');
+const express = require('express');  // Importar Express
+const cors = require('cors');  // Importar CORS para manejar solicitudes cruzadas
+const { Pool } = require('pg');  // Importar Pool para manejar la conexión con PostgreSQL
+const config = require('./config.json');  // Importar la configuración (por ejemplo, la URL de la base de datos)
 
 const app = express();
-const port = process.env.PORT || config.port;
+const port = process.env.PORT || config.port;  // Puerto para ejecutar el servidor
 
+// Middleware para habilitar CORS y permitir solicitudes JSON
 app.use(cors());
 app.use(express.json());
 
+// Crear un pool de conexiones para PostgreSQL
 const pool = new Pool({
-  connectionString: config.database_url,
+  connectionString: config.database_url,  // URL de la base de datos
   ssl: {
-    rejectUnauthorized: false,
+    rejectUnauthorized: false,  // Asegúrate de que esta opción esté bien configurada si usas SSL
   }
 });
 
-// Endpoint para obtener información del jugador
+// Aquí agregamos el endpoint para obtener la información del jugador
 app.get('/api/get_player_info', async (req, res) => {
   const { player_first_name, player_last_name } = req.query;
 
@@ -52,50 +54,7 @@ app.get('/api/get_player_info', async (req, res) => {
   }
 });
 
-// Endpoint para registrar un nuevo jugador
-app.post('/api/register_player', async (req, res) => {
-  const {
-    player_first_name,
-    player_last_name,
-    gender,
-    age,
-    social_class,
-    profession,
-    birthplace,
-    birthyear,
-    second_life_user,
-    second_life_uuid
-  } = req.body;
-
-  try {
-    const result = await pool.query(
-      `INSERT INTO players 
-        (player_first_name, player_last_name, gender, age, social_class, profession, birthplace, birthyear, second_life_user, second_life_uuid) 
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *`,
-      [
-        player_first_name,
-        player_last_name,
-        gender,
-        age,
-        social_class,
-        profession,
-        birthplace,
-        birthyear,
-        second_life_user,
-        second_life_uuid
-      ]
-    );
-
-    res.status(201).json({
-      message: 'Jugador registrado correctamente',
-      player: result.rows[0]
-    });
-  } catch (err) {
-    console.error('Error registrando al jugador:', err);
-    res.status(500).json({ error: 'Error interno al registrar el jugador' });
-  }
-});
-
+// Iniciar el servidor en el puerto configurado
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
 });
