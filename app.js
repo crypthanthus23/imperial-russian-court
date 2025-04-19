@@ -9,6 +9,7 @@ const port = process.env.PORT || config.port;
 app.use(cors());
 app.use(express.json());
 
+// Crear un pool de conexiones para PostgreSQL
 const pool = new Pool({
   connectionString: config.database_url,
   ssl: {
@@ -16,10 +17,12 @@ const pool = new Pool({
   }
 });
 
-// Obtener info del jugador
+// ===============================
+// Endpoint para obtener la información del jugador
+// ===============================
 app.get('/api/get_player_info', async (req, res) => {
   const { player_first_name, player_last_name } = req.query;
-
+  
   if (!player_first_name || !player_last_name) {
     return res.status(400).json({ error: 'Faltan parámetros de nombre' });
   }
@@ -56,7 +59,9 @@ app.get('/api/get_player_info', async (req, res) => {
   }
 });
 
-// Registrar nuevo jugador
+// ===============================
+// Endpoint para registrar un jugador
+// ===============================
 app.post('/api/add_player', async (req, res) => {
   const { first_name, last_name } = req.body;
 
@@ -65,6 +70,17 @@ app.post('/api/add_player', async (req, res) => {
   }
 
   try {
+    // Verificar si el jugador ya existe en la base de datos
+    const checkPlayer = await pool.query(
+      `SELECT * FROM players WHERE player_first_name = $1 AND player_last_name = $2`,
+      [first_name, last_name]
+    );
+
+    if (checkPlayer.rows.length > 0) {
+      return res.status(400).json({ error: 'Este jugador ya está registrado' });
+    }
+
+    // Insertar el nuevo jugador si no existe en la base de datos
     const result = await pool.query(
       `INSERT INTO players (player_first_name, player_last_name)
        VALUES ($1, $2)
@@ -72,6 +88,7 @@ app.post('/api/add_player', async (req, res) => {
       [first_name, last_name]
     );
 
+    // Devolvemos 201 y el registro recién creado
     res.status(201).json({
       success: true,
       player: result.rows[0]
@@ -82,6 +99,7 @@ app.post('/api/add_player', async (req, res) => {
   }
 });
 
+// Iniciar el servidor en el puerto configurado
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
 });
