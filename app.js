@@ -1,5 +1,3 @@
-const express = require('express');
-const cors = require('cors');
 const { Pool } = require('pg');
 const config = require('./config.json');
 const app = express();
@@ -12,6 +10,9 @@ app.use(express.json());
 // Configuración de la base de datos
 const pool = new Pool({
   connectionString: config.database_url,
+  ssl: {
+    rejectUnauthorized: false, // Permitir conexión SSL sin validación estricta de certificados
+  }
 });
 
 // Ruta para obtener la información del jugador desde PostgreSQL
