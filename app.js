@@ -54,6 +54,27 @@ app.get('/api/get_player_info', async (req, res) => {
   }
 });
 
+// ===============================
+// Endpoint para registrar jugador
+// ===============================
+app.post('/api/add_player', async (req, res) => {
+  const { first_name, last_name } = req.body;
+  try {
+    const result = await pool.query(
+      `INSERT INTO players (player_first_name, player_last_name)
+       VALUES ($1, $2)
+       RETURNING *`,
+      [ first_name, last_name ]
+    );
+    // Devolvemos 201 y el registro recién creado
+    res.status(201).json({ success: true, player: result.rows[0] });
+  } catch (err) {
+    console.error('Error en /api/add_player:', err);
+    res.status(500).json({ success: false, error: 'Error interno del servidor' });
+  }
+});
+
+
 // Iniciar el servidor en el puerto configurado
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
