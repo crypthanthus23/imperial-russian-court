@@ -1,31 +1,36 @@
-const express = require('express');  // Importar Express
-const cors = require('cors');        // Importar CORS para manejar solicitudes cruzadas
-const { Pool } = require('pg');      // Importar Pool para manejar la conexión con PostgreSQL
-const config = require('./config.json');  // Importar la configuración (por ejemplo, la URL de la base de datos)
+const express = require('express');
+const cors = require('cors');
+const { Pool } = require('pg');
+const config = require('./config.json');
 
 const app = express();
-const port = process.env.PORT || config.port;  // Puerto para ejecutar el servidor
+const port = process.env.PORT || config.port;
 
-// Middleware para habilitar CORS y permitir solicitudes JSON
 app.use(cors());
 app.use(express.json());
 
 // Crear un pool de conexiones para PostgreSQL
 const pool = new Pool({
-  connectionString: config.database_url,  // URL de la base de datos
+  connectionString: config.database_url,
   ssl: {
-    rejectUnauthorized: false,  // Asegúrate de que esta opción esté bien configurada si usas SSL
+    rejectUnauthorized: false,
   }
 });
 
+// ===============================
 // Endpoint para obtener la información del jugador
+// ===============================
 app.get('/api/get_player_info', async (req, res) => {
   const { player_first_name, player_last_name } = req.query;
+  
+  if (!player_first_name || !player_last_name) {
+    return res.status(400).json({ error: 'Faltan parámetros de nombre' });
+  }
 
   try {
     const result = await pool.query(
       `SELECT * FROM players WHERE player_first_name = $1 AND player_last_name = $2 LIMIT 1`,
-      [ player_first_name, player_last_name ]
+      [player_first_name, player_last_name]
     );
 
     if (result.rows.length === 0) {
@@ -55,19 +60,28 @@ app.get('/api/get_player_info', async (req, res) => {
 });
 
 // ===============================
-// Endpoint para registrar jugador
+// Endpoint para registrar un jugador
 // ===============================
 app.post('/api/add_player', async (req, res) => {
   const { first_name, last_name } = req.body;
+
+  if (!first_name || !last_name) {
+    return res.status(400).json({ error: 'Faltan parámetros de nombre' });
+  }
+
   try {
     const result = await pool.query(
       `INSERT INTO players (player_first_name, player_last_name)
        VALUES ($1, $2)
        RETURNING *`,
-      [ first_name, last_name ]
+      [first_name, last_name]
     );
+
     // Devolvemos 201 y el registro recién creado
-    res.status(201).json({ success: true, player: result.rows[0] });
+    res.status(201).json({
+      success: true,
+      player: result.rows[0]
+    });
   } catch (err) {
     console.error('Error en /api/add_player:', err);
     res.status(500).json({ success: false, error: 'Error interno del servidor' });
