@@ -1,4 +1,4 @@
 {
   "port": 3000,
-  "api_base_url": "https://imperial-russian-court.onrender.com/api/get_player_info"
+  "database_url": "postgresql://imperial_russian_game_user:CoKTfv7sjF8dhTgNSXql66WqHkO0TfW4@dpg-d01e2ja4d50c73fh40ug-a.virginia-postgres.render.com/imperial_russian_game"
 }
