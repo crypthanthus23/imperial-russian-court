@@ -11,11 +11,9 @@ app.use(cors());
 app.get('/', (req, res) => {
   res.send('Imperial Russian Court API is running. Try /api/status for more information.');
 });
-// Database connection string - direct connection
-const connectionString = 'postgresql://imperial_russian_game_user:CoKTfv7sjF8dhTgNSXql66WqHkO0TfW4@dpg-d01e2ja4d50c73fh40ug-a.virginia-postgres.render.com/imperial_russian_game';
-// Create database pool
+// Database connection using environment variable
 const pool = new Pool({
-  connectionString: connectionString,
+  connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
