@@ -7,33 +7,167 @@ const port = process.env.PORT || 3000;
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
-// Log environment and connection details (safely)
-console.log('Node environment:', process.env.NODE_ENV);
-console.log('DATABASE_URL environment variable is: ' + (process.env.DATABASE_URL ? 'set' : 'not set'));
-if (process.env.DATABASE_URL) {
-  const sanitizedUrl = process.env.DATABASE_URL.replace(/:[^:]*@/, ':****@');
-  console.log('Sanitized DATABASE_URL:', sanitizedUrl);
-}
-// PostgreSQL connection with proper SSL configuration for Render
+// Root endpoint
+app.get('/', (req, res) => {
+  res.send('Imperial Russian Court API is running. Try /api/status for more information.');
+});
+// Database connection string - direct connection
+const connectionString = 'postgresql://imperial_russian_game_user:CoKTfv7sjF8dhTgNSXql66WqHkO0TfW4@dpg-d01e2ja4d50c73fh40ug-a.virginia-postgres.render.com/imperial_russian_game';
+// Create database pool
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: connectionString,
   ssl: {
-    rejectUnauthorized: false  // Required for Render PostgreSQL
+    rejectUnauthorized: false
   }
 });
-// Test database connection
-pool.query('SELECT NOW()', (err, res) => {
+// Log database connection attempt
+console.log("Attempting to connect to database...");
+// Test the connection immediately
+pool.query('SELECT NOW() as time', (err, res) => {
   if (err) {
     console.error('Database connection test failed:', err);
   } else {
-    console.log('Database connection successful. Server time:', res.rows[0].now);
+    console.log('Database connection successful. Server time:', res.rows[0].time);
   }
 });
-// Rest of your existing code...
-// (Your API endpoints remain the same)
-// Start the server
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+// Enhanced status endpoint
+app.get('/api/status', (req, res) => {
+  // Test database connection directly when status is requested
+  pool.query('SELECT NOW() as time', (err, dbResult) => {
+    res.json({
+      status: 'API is running',
+      timestamp: new Date(),
+      database_connected: err ? false : true,
+      database_error: err ? err.message : null,
+      database_time: dbResult ? dbResult.rows[0].time : null,
+      server_info: {
+        node_version: process.version,
+        platform: process.platform
+      }
+    });
+  });
+});
+// Get player information
+app.get('/api/get_player_info', async (req, res) => {
+  const { player_first_name, player_last_name } = req.query;
+  if (!player_first_name || !player_last_name) {
+    return res.status(400).json({ error: 'Missing player name parameters' });
+  }
+  try {
+    const query = {
+      text: 'SELECT player_first_name, player_last_name, health, rubles, charm, influence, imperial_favor, faith, xp, love, family_name, russian_title, court_position, rank, supernatural_status, player_gender, political_faction, is_owner FROM players WHERE player_first_name = $1 AND player_last_name = $2',
+      values: [player_first_name, player_last_name]
+    };
+    const result = await pool.query(query);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Database error', details: err.message });
+  }
+});
+// Add a new player
+app.post('/api/add_player', async (req, res) => {
+  const { player_first_name, player_last_name, family_name, player_gender } = req.body;
+  if (!player_first_name || !player_last_name) {
+    return res.status(400).json({ error: 'Missing required parameters' });
+  }
+  try {
+    // Check if player already exists
+    const checkQuery = {
+      text: 'SELECT * FROM players WHERE player_first_name = $1 AND player_last_name = $2',
+      values: [player_first_name, player_last_name]
+    };
+    const checkResult = await pool.query(checkQuery);
+    if (checkResult.rows.length > 0) {
+      return res.status(409).json({ error: 'Player already exists' });
+    }
+    // Add love and political_faction fields with default values
+    const insertQuery = {
+      text: 'INSERT INTO players (player_first_name, player_last_name, health, rubles, charm, influence, imperial_favor, faith, xp, love, family_name, russian_title, court_position, rank, supernatural_status, player_gender, political_faction, is_owner) VALUES ($1, $2, 100, 100, 0, 0, 0, 0, 0, 0, $3, \'Ninguno\', \'Ninguno\', \'Ninguno\', \'Ninguno\', $4, \'Ninguno\', false) RETURNING *',
+      values: [player_first_name, player_last_name, family_name || 'Desconocido', player_gender || 'Unknown']
+    };
+    const insertResult = await pool.query(insertQuery);
+    res.status(201).json(insertResult.rows[0]);
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Database error', details: err.message });
+  }
+});
+// Update a player's numeric stat
+app.post('/api/update_stat', async (req, res) => {
+  const { player_first_name, player_last_name, stat_name, value } = req.body;
+  if (!player_first_name || !player_last_name || !stat_name || value === undefined) {
+    return res.status(400).json({ error: 'Missing required parameters' });
+  }
+  // Include love in the allowed stats list
+  const allowedStats = ['health', 'rubles', 'charm', 'influence', 'imperial_favor', 'faith', 'xp', 'love'];
+  if (!allowedStats.includes(stat_name)) {
+    return res.status(400).json({ error: 'Invalid stat name' });
+  }
+  try {
+    const query = {
+      text: `UPDATE players SET ${stat_name} = $1 WHERE player_first_name = $2 AND player_last_name = $3 RETURNING *`,
+      values: [value, player_first_name, player_last_name]
+    };
+    const result = await pool.query(query);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Database error', details: err.message });
+  }
+});
+// Update a player's field value (for non-numeric values)
+app.post('/api/update_field', async (req, res) => {
+  const { player_first_name, player_last_name, field_name, value } = req.body;
+  if (!player_first_name || !player_last_name || !field_name || value === undefined) {
+    return res.status(400).json({ error: 'Missing required parameters' });
+  }
+  // Include political_faction in allowed fields
+  const allowedFields = ['family_name', 'russian_title', 'court_position', 'rank', 'supernatural_status', 'player_gender', 'political_faction'];
+  if (!allowedFields.includes(field_name)) {
+    return res.status(400).json({ error: 'Invalid field name' });
+  }
+  try {
+    const query = {
+      text: `UPDATE players SET ${field_name} = $1 WHERE player_first_name = $2 AND player_last_name = $3 RETURNING *`,
+      values: [value, player_first_name, player_last_name]
+    };
+    const result = await pool.query(query);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Database error', details: err.message });
+  }
+});
+// Set owner flag for player
+app.post('/api/set_owner', async (req, res) => {
+  const { player_first_name, player_last_name, is_owner } = req.body;
+  if (!player_first_name || !player_last_name || is_owner === undefined) {
+    return res.status(400).json({ error: 'Missing required parameters' });
+  }
+  try {
+    const query = {
+      text: 'UPDATE players SET is_owner = $1 WHERE player_first_name = $2 AND player_last_name = $3 RETURNING *',
+      values: [is_owner, player_first_name, player_last_name]
+    };
+    const result = await pool.query(query);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Database error', details: err.message });
+  }
 });
 // Create tables if they don't exist on startup
 async function initDatabase() {
@@ -45,7 +179,6 @@ async function initDatabase() {
     console.log("Database connection established successfully");
     
     // Create players table if it doesn't exist
-    // Include love and political_faction fields
     await client.query(`
       CREATE TABLE IF NOT EXISTS players (
         id SERIAL PRIMARY KEY,
@@ -74,10 +207,12 @@ async function initDatabase() {
     // Add columns if they don't exist
     try {
       await client.query(`ALTER TABLE players ADD COLUMN IF NOT EXISTS love INTEGER DEFAULT 0`);
+      console.log("Love column added or verified");
+      
       await client.query(`ALTER TABLE players ADD COLUMN IF NOT EXISTS political_faction TEXT DEFAULT 'Ninguno'`);
-      console.log("New columns added or verified");
+      console.log("Political faction column added or verified");
     } catch (columnErr) {
-      console.log('Note: Columns could not be added:', columnErr.message);
+      console.log('Note: Column operations error:', columnErr.message);
     }
     console.log('Database initialized successfully');
   } catch (err) {
@@ -88,6 +223,10 @@ async function initDatabase() {
     }
   }
 }
-// Initialize database on startup
-initDatabase();
+// Start the server
+const server = app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+  // Initialize database after server starts
+  initDatabase();
+});
 module.exports = app;
