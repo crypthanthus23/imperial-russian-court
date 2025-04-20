@@ -6,7 +6,7 @@ const app = express();
 const port = process.env.PORT || config.port;
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // Add this for form data parsing
+app.use(express.urlencoded({ extended: true }));
 // Crear un pool de conexiones para PostgreSQL
 const pool = new Pool({
   connectionString: config.database_url,
@@ -36,7 +36,7 @@ app.get('/api/get_player_info', async (req, res) => {
       player_name: `${player.player_first_name} ${player.player_last_name}`,
       health: player.health,
       rubles: player.rubles,
-      rank: player.rank,
+      rank: player.rank_name,  // Changed to match your column name
       charm: player.charm,
       influence: player.influence,
       imperial_favor: player.imperial_favor,
@@ -45,7 +45,10 @@ app.get('/api/get_player_info', async (req, res) => {
       russian_title: player.russian_title,
       court_position: player.court_position,
       wealth: player.wealth,
-      supernatural_status: player.supernatural_status
+      supernatural_status: player.supernatural_status || "Ninguno",
+      xp: player.xp,
+      player_gender: player.player_gender,
+      is_owner: player.is_owner
     });
   } catch (err) {
     console.error('Error consultando la base de datos:', err);
@@ -71,8 +74,15 @@ app.post('/api/add_player', async (req, res) => {
     }
     // Insertar el nuevo jugador si no existe en la base de datos
     const result = await pool.query(
-      `INSERT INTO players (player_first_name, player_last_name, health, rubles, charm, influence, imperial_favor, faith, wealth, family_name, russian_title, court_position, supernatural_status, rank)
-       VALUES ($1, $2, 100, 100, 10, 10, 10, 10, 'Moderate', 'Desconocido', 'Ninguno', 'Ninguno', 'Ninguno', 'Ninguno')
+      `INSERT INTO players (
+         player_first_name, player_last_name, 
+         health, rubles, charm, influence, imperial_favor, faith, 
+         wealth, family_name, russian_title, court_position, 
+         rank_name, supernatural_status, xp, player_gender, is_owner)
+       VALUES (
+         $1, $2, 100, 100, 10, 10, 10, 10, 
+         'Moderate', 'Desconocido', 'Ninguno', 'Ninguno', 
+         'Ninguno', 'Ninguno', 0, 'male', false)
        RETURNING *`,
       [first_name, last_name]
     );
@@ -100,7 +110,7 @@ app.post('/api/update_stat', async (req, res) => {
     return res.status(400).json({ error: 'Faltan parámetros requeridos' });
   }
   // Validar que la estadística sea una de las permitidas
-  const allowedStats = ['health', 'rubles', 'charm', 'influence', 'imperial_favor', 'faith', 'wealth'];
+  const allowedStats = ['health', 'rubles', 'charm', 'influence', 'imperial_favor', 'faith', 'wealth', 'xp'];
   if (!allowedStats.includes(statName)) {
     return res.status(400).json({ error: 'Nombre de estadística inválido' });
   }
@@ -145,7 +155,7 @@ app.post('/api/update_field', async (req, res) => {
     return res.status(400).json({ error: 'Faltan parámetros requeridos' });
   }
   // Validar que el campo sea uno de los permitidos
-  const allowedFields = ['family_name', 'russian_title', 'court_position', 'supernatural_status', 'rank'];
+  const allowedFields = ['family_name', 'russian_title', 'court_position', 'supernatural_status', 'rank_name', 'player_gender'];
   if (!allowedFields.includes(fieldName)) {
     return res.status(400).json({ error: 'Nombre de campo inválido' });
   }
@@ -170,6 +180,41 @@ app.post('/api/update_field', async (req, res) => {
     });
   } catch (err) {
     console.error('Error actualizando campo:', err);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+// ===============================
+// Endpoint para establecer si un jugador es propietario
+// ===============================
+app.post('/api/set_owner', async (req, res) => {
+  const { player_first_name, player_last_name, is_owner } = req.body;
+  
+  if (!player_first_name || !player_last_name || is_owner === undefined) {
+    return res.status(400).json({ error: 'Faltan parámetros requeridos' });
+  }
+  try {
+    // Comprobar si el jugador existe
+    const checkPlayer = await pool.query(
+      `SELECT * FROM players WHERE player_first_name = $1 AND player_last_name = $2`,
+      [player_first_name, player_last_name]
+    );
+    if (checkPlayer.rows.length === 0) {
+      return res.status(404).json({ error: 'Jugador no encontrado' });
+    }
+    const isOwnerValue = is_owner === 'true' || is_owner === true;
+    // Actualizamos el campo is_owner
+    await pool.query(
+      `UPDATE players SET is_owner = $1 WHERE player_first_name = $2 AND player_last_name = $3`,
+      [isOwnerValue, player_first_name, player_last_name]
+    );
+    res.json({
+      action: 'set_owner',
+      player_first_name,
+      player_last_name,
+      is_owner: isOwnerValue
+    });
+  } catch (err) {
+    console.error('Error actualizando estado de propietario:', err);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
