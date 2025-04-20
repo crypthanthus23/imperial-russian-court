@@ -1,3 +1,4 @@
+// app.js with gender constraint fix
 const express = require('express');
 const { Pool } = require('pg');
 const bodyParser = require('body-parser');
@@ -209,6 +210,17 @@ async function initDatabase() {
       
       await client.query(`ALTER TABLE players ADD COLUMN IF NOT EXISTS political_faction TEXT DEFAULT 'Ninguno'`);
       console.log("Political faction column added or verified");
+      
+      // NEW CODE: Remove the gender check constraint if it exists
+      try {
+        await client.query(`
+          ALTER TABLE players DROP CONSTRAINT IF EXISTS players_player_gender_check;
+        `);
+        console.log("Gender constraint removed or not present");
+      } catch (genderErr) {
+        console.log('Note: Gender constraint operation error:', genderErr.message);
+      }
+      
     } catch (columnErr) {
       console.log('Note: Column operations error:', columnErr.message);
     }
