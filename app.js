@@ -25,9 +25,9 @@ app.get('/api/get_player_info', async (req, res) => {
     return res.status(400).json({ error: 'Missing player name parameters' });
   }
   try {
-    // Updated to include love field
+    // Updated to include political_faction field
     const query = {
-      text: 'SELECT player_first_name, player_last_name, health, rubles, charm, influence, imperial_favor, faith, xp, love, family_name, russian_title, court_position, rank, supernatural_status, player_gender, is_owner FROM players WHERE player_first_name = $1 AND player_last_name = $2',
+      text: 'SELECT player_first_name, player_last_name, health, rubles, charm, influence, imperial_favor, faith, xp, love, family_name, russian_title, court_position, rank, supernatural_status, player_gender, political_faction, is_owner FROM players WHERE player_first_name = $1 AND player_last_name = $2',
       values: [player_first_name, player_last_name]
     };
     const result = await pool.query(query);
@@ -56,9 +56,9 @@ app.post('/api/add_player', async (req, res) => {
     if (checkResult.rows.length > 0) {
       return res.status(409).json({ error: 'Player already exists' });
     }
-    // Add love field with default value of 0
+    // Add political_faction with default value of 'Ninguno'
     const insertQuery = {
-      text: 'INSERT INTO players (player_first_name, player_last_name, health, rubles, charm, influence, imperial_favor, faith, xp, love, family_name, russian_title, court_position, rank, supernatural_status, player_gender, is_owner) VALUES ($1, $2, 100, 100, 0, 0, 0, 0, 0, 0, $3, \'Ninguno\', \'Ninguno\', \'Ninguno\', \'Ninguno\', $4, false) RETURNING *',
+      text: 'INSERT INTO players (player_first_name, player_last_name, health, rubles, charm, influence, imperial_favor, faith, xp, love, family_name, russian_title, court_position, rank, supernatural_status, player_gender, political_faction, is_owner) VALUES ($1, $2, 100, 100, 0, 0, 0, 0, 0, 0, $3, \'Ninguno\', \'Ninguno\', \'Ninguno\', \'Ninguno\', $4, \'Ninguno\', false) RETURNING *',
       values: [player_first_name, player_last_name, family_name || 'Desconocido', player_gender || 'Unknown']
     };
     const insertResult = await pool.query(insertQuery);
@@ -100,7 +100,8 @@ app.post('/api/update_field', async (req, res) => {
   if (!player_first_name || !player_last_name || !field_name || value === undefined) {
     return res.status(400).json({ error: 'Missing required parameters' });
   }
-  const allowedFields = ['family_name', 'russian_title', 'court_position', 'rank', 'supernatural_status', 'player_gender'];
+  // Add political_faction to allowed fields
+  const allowedFields = ['family_name', 'russian_title', 'court_position', 'rank', 'supernatural_status', 'player_gender', 'political_faction'];
   if (!allowedFields.includes(field_name)) {
     return res.status(400).json({ error: 'Invalid field name' });
   }
@@ -151,7 +152,7 @@ async function initDatabase() {
     const client = await pool.connect();
     
     // Create players table if it doesn't exist
-    // Added love field to the table creation
+    // Added political_faction field to the table creation
     await client.query(`
       CREATE TABLE IF NOT EXISTS players (
         id SERIAL PRIMARY KEY,
@@ -171,6 +172,7 @@ async function initDatabase() {
         rank TEXT DEFAULT 'Ninguno',
         supernatural_status TEXT DEFAULT 'Ninguno',
         player_gender TEXT DEFAULT 'Unknown',
+        political_faction TEXT DEFAULT 'Ninguno',
         is_owner BOOLEAN DEFAULT false,
         UNIQUE(player_first_name, player_last_name)
       )
@@ -183,6 +185,15 @@ async function initDatabase() {
       `);
     } catch (columnErr) {
       console.log('Note: love column might already exist or could not be added:', columnErr.message);
+    }
+    // Add political_faction column if it doesn't exist (for existing tables)
+    try {
+      await client.query(`
+        ALTER TABLE players 
+        ADD COLUMN IF NOT EXISTS political_faction TEXT DEFAULT 'Ninguno'
+      `);
+    } catch (columnErr) {
+      console.log('Note: political_faction column might already exist or could not be added:', columnErr.message);
     }
     console.log('Database initialized successfully');
     client.release();
