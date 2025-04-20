@@ -1,4 +1,3 @@
-// app.js with gender constraint fix
 const express = require('express');
 const { Pool } = require('pg');
 const bodyParser = require('body-parser');
@@ -61,7 +60,26 @@ app.get('/api/get_player_info', async (req, res) => {
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Player not found' });
     }
-    res.json(result.rows[0]);
+    
+    // Validate health value before returning
+    let player = result.rows[0];
+    if (player.health !== undefined) {
+      const originalHealth = player.health;
+      player.health = Math.max(0, Math.min(100, player.health));
+      
+      // Log if health was corrected
+      if (originalHealth !== player.health) {
+        console.log(`Health corrected on get_player_info: ${originalHealth} → ${player.health} for ${player_first_name} ${player_last_name}`);
+        
+        // Update the database with the corrected value
+        await pool.query(
+          'UPDATE players SET health = $1 WHERE player_first_name = $2 AND player_last_name = $3',
+          [player.health, player_first_name, player_last_name]
+        );
+      }
+    }
+    
+    res.json(player);
   } catch (err) {
     console.error('Database error:', err);
     res.status(500).json({ error: 'Database error', details: err.message });
@@ -95,21 +113,45 @@ app.post('/api/add_player', async (req, res) => {
     res.status(500).json({ error: 'Database error', details: err.message });
   }
 });
-// Update a player's numeric stat
+// Update a player's numeric stat - with validation
 app.post('/api/update_stat', async (req, res) => {
   const { player_first_name, player_last_name, stat_name, value } = req.body;
   if (!player_first_name || !player_last_name || !stat_name || value === undefined) {
     return res.status(400).json({ error: 'Missing required parameters' });
   }
+  
   // Include love in the allowed stats list
   const allowedStats = ['health', 'rubles', 'charm', 'influence', 'imperial_favor', 'faith', 'xp', 'love'];
   if (!allowedStats.includes(stat_name)) {
     return res.status(400).json({ error: 'Invalid stat name' });
   }
+  
+  // Validate stat values based on type
+  let validatedValue = parseInt(value, 10);
+  
+  // Handle NaN case
+  if (isNaN(validatedValue)) {
+    return res.status(400).json({ error: 'Invalid numeric value' });
+  }
+  
+  // Validate different stats based on their acceptable ranges
+  const originalValue = validatedValue;
+  
+  if (stat_name === 'health') {
+    // Health is 0-100
+    validatedValue = Math.max(0, Math.min(100, validatedValue));
+    if (originalValue !== validatedValue) {
+      console.log(`Health validation: Original=${originalValue}, Validated=${validatedValue} for ${player_first_name} ${player_last_name}`);
+    }
+  } else if (['charm', 'influence', 'imperial_favor', 'faith', 'love'].includes(stat_name)) {
+    // These stats should not be negative
+    validatedValue = Math.max(0, validatedValue);
+  }
+  
   try {
     const query = {
       text: `UPDATE players SET ${stat_name} = $1 WHERE player_first_name = $2 AND player_last_name = $3 RETURNING *`,
-      values: [value, player_first_name, player_last_name]
+      values: [validatedValue, player_first_name, player_last_name]
     };
     const result = await pool.query(query);
     if (result.rows.length === 0) {
@@ -203,6 +245,7 @@ async function initDatabase() {
       )
     `);
     console.log("Players table created or verified");
+    
     // Add columns if they don't exist
     try {
       await client.query(`ALTER TABLE players ADD COLUMN IF NOT EXISTS love INTEGER DEFAULT 0`);
@@ -211,7 +254,7 @@ async function initDatabase() {
       await client.query(`ALTER TABLE players ADD COLUMN IF NOT EXISTS political_faction TEXT DEFAULT 'Ninguno'`);
       console.log("Political faction column added or verified");
       
-      // NEW CODE: Remove the gender check constraint if it exists
+      // Remove the gender check constraint if it exists
       try {
         await client.query(`
           ALTER TABLE players DROP CONSTRAINT IF EXISTS players_player_gender_check;
@@ -219,6 +262,39 @@ async function initDatabase() {
         console.log("Gender constraint removed or not present");
       } catch (genderErr) {
         console.log('Note: Gender constraint operation error:', genderErr.message);
+      }
+      
+      // Add check constraints for health
+      try {
+        await client.query(`
+          DO $$ 
+          BEGIN
+            -- Check if health constraint exists
+            IF NOT EXISTS (
+              SELECT 1 FROM pg_constraint 
+              WHERE conname = 'players_health_check'
+            ) THEN
+              ALTER TABLE players ADD CONSTRAINT players_health_check 
+              CHECK (health >= 0 AND health <= 100);
+            END IF;
+          END $$;
+        `);
+        console.log("Health constraint added or verified");
+        
+        // Fix any existing health values that are out of range
+        await client.query(`
+          UPDATE players SET health = 
+            CASE 
+              WHEN health < 0 THEN 0
+              WHEN health > 100 THEN 100
+              ELSE health
+            END
+          WHERE health < 0 OR health > 100;
+        `);
+        console.log("Any invalid health values have been corrected");
+        
+      } catch (constraintErr) {
+        console.log('Note: Constraint operations error:', constraintErr.message);
       }
       
     } catch (columnErr) {
