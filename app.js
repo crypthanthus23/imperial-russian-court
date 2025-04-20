@@ -71,8 +71,8 @@ app.post('/api/add_player', async (req, res) => {
     }
     // Insertar el nuevo jugador si no existe en la base de datos
     const result = await pool.query(
-      `INSERT INTO players (player_first_name, player_last_name)
-       VALUES ($1, $2)
+      `INSERT INTO players (player_first_name, player_last_name, health, rubles, charm, influence, imperial_favor, faith, wealth, family_name, russian_title, court_position, supernatural_status, rank)
+       VALUES ($1, $2, 100, 100, 10, 10, 10, 10, 'Moderate', 'Desconocido', 'Ninguno', 'Ninguno', 'Ninguno', 'Ninguno')
        RETURNING *`,
       [first_name, last_name]
     );
@@ -90,15 +90,13 @@ app.post('/api/add_player', async (req, res) => {
 // Endpoint para actualizar una estadística numérica del jugador
 // ===============================
 app.post('/api/update_stat', async (req, res) => {
-  const { player_first_name, player_last_name, stat, amount } = req.body;
-  
   // Support for both body and query parameters (for LSL compatibility)
-  const first_name = player_first_name || req.query.player_first_name;
-  const last_name = player_last_name || req.query.player_last_name;
-  const statName = stat || req.query.stat;
-  const statAmount = amount || req.query.amount;
+  const player_first_name = req.body.player_first_name || req.query.player_first_name;
+  const player_last_name = req.body.player_last_name || req.query.player_last_name;
+  const statName = req.body.stat || req.query.stat;
+  const statAmount = req.body.amount || req.query.amount;
   
-  if (!first_name || !last_name || !statName || statAmount === undefined) {
+  if (!player_first_name || !player_last_name || !statName || statAmount === undefined) {
     return res.status(400).json({ error: 'Faltan parámetros requeridos' });
   }
   // Validar que la estadística sea una de las permitidas
@@ -110,7 +108,7 @@ app.post('/api/update_stat', async (req, res) => {
     // Primero obtenemos el valor actual
     const currentResult = await pool.query(
       `SELECT ${statName} FROM players WHERE player_first_name = $1 AND player_last_name = $2`,
-      [first_name, last_name]
+      [player_first_name, player_last_name]
     );
     if (currentResult.rows.length === 0) {
       return res.status(404).json({ error: 'Jugador no encontrado' });
@@ -120,7 +118,7 @@ app.post('/api/update_stat', async (req, res) => {
     // Actualizamos la estadística
     await pool.query(
       `UPDATE players SET ${statName} = $1 WHERE player_first_name = $2 AND player_last_name = $3`,
-      [newValue, first_name, last_name]
+      [newValue, player_first_name, player_last_name]
     );
     res.json({
       action: 'update_stat',
@@ -137,15 +135,13 @@ app.post('/api/update_stat', async (req, res) => {
 // Endpoint para actualizar un campo de texto del jugador
 // ===============================
 app.post('/api/update_field', async (req, res) => {
-  const { player_first_name, player_last_name, field, value } = req.body;
-  
   // Support for both body and query parameters (for LSL compatibility)
-  const first_name = player_first_name || req.query.player_first_name;
-  const last_name = player_last_name || req.query.player_last_name;
-  const fieldName = field || req.query.field;
-  const fieldValue = value || req.query.value;
+  const player_first_name = req.body.player_first_name || req.query.player_first_name;
+  const player_last_name = req.body.player_last_name || req.query.player_last_name;
+  const fieldName = req.body.field || req.query.field;
+  const fieldValue = req.body.value || req.query.value;
   
-  if (!first_name || !last_name || !fieldName || fieldValue === undefined) {
+  if (!player_first_name || !player_last_name || !fieldName || fieldValue === undefined) {
     return res.status(400).json({ error: 'Faltan parámetros requeridos' });
   }
   // Validar que el campo sea uno de los permitidos
@@ -154,10 +150,18 @@ app.post('/api/update_field', async (req, res) => {
     return res.status(400).json({ error: 'Nombre de campo inválido' });
   }
   try {
+    // Comprobar si el jugador existe
+    const checkPlayer = await pool.query(
+      `SELECT * FROM players WHERE player_first_name = $1 AND player_last_name = $2`,
+      [player_first_name, player_last_name]
+    );
+    if (checkPlayer.rows.length === 0) {
+      return res.status(404).json({ error: 'Jugador no encontrado' });
+    }
     // Actualizamos el campo
     await pool.query(
       `UPDATE players SET ${fieldName} = $1 WHERE player_first_name = $2 AND player_last_name = $3`,
-      [fieldValue, first_name, last_name]
+      [fieldValue, player_first_name, player_last_name]
     );
     res.json({
       action: 'update_field',
@@ -168,6 +172,16 @@ app.post('/api/update_field', async (req, res) => {
     console.error('Error actualizando campo:', err);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
+});
+// ===============================
+// Endpoint de estado del API
+// ===============================
+app.get('/api/status', (req, res) => {
+  res.json({
+    status: 'active',
+    message: 'Imperial Russian Court API is running',
+    version: '1.0'
+  });
 });
 // Iniciar el servidor en el puerto configurado
 app.listen(port, () => {
