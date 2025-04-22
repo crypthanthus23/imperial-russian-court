@@ -864,6 +864,553 @@ async function initDatabase() {
     }
   }
 }
+app.get('/api/get_brotherhood_house_info', async (req, res) => {
+  const { house_name } = req.query;
+  
+  try {
+    let query;
+    let result;
+    
+    if (house_name) {
+      // Get specific house info
+      query = {
+        text: 'SELECT * FROM brotherhood_houses WHERE name = $1',
+        values: [house_name]
+      };
+      result = await pool.query(query);
+      
+      if (result.rows.length === 0) {
+        return res.status(404).json({ error: 'Brotherhood house not found' });
+      }
+      
+      // Get abilities for this house
+      const abilitiesQuery = {
+        text: `
+          SELECT a.name, a.description, a.activation_words
+          FROM brotherhood_abilities a
+          JOIN house_abilities ha ON a.id = ha.ability_id
+          JOIN brotherhood_houses h ON h.id = ha.house_id
+          WHERE h.name = $1
+        `,
+        values: [house_name]
+      };
+      
+      const abilitiesResult = await pool.query(abilitiesQuery);
+      
+      // Return house with its abilities
+      const house = result.rows[0];
+      house.abilities = abilitiesResult.rows;
+      
+      res.json(house);
+    } else {
+      // Get all houses
+      query = {
+        text: 'SELECT * FROM brotherhood_houses ORDER BY name'
+      };
+      result = await pool.query(query);
+      res.json(result.rows);
+    }
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Database error', details: err.message });
+  }
+});
+// Add player to Brotherhood house
+app.post('/api/join_brotherhood_house', async (req, res) => {
+  const { player_first_name, player_last_name, house_name, rank } = req.body;
+  
+  if (!player_first_name || !player_last_name || !house_name) {
+    return res.status(400).json({ error: 'Missing required parameters' });
+  }
+  
+  try {
+    // Update player's supernatural status
+    const updatePlayerQuery = {
+      text: `UPDATE players 
+             SET supernatural_status = 'BrotherhoodWolf', 
+                 brotherhood_house = $1,
+                 brotherhood_rank = $2
+             WHERE player_first_name = $3 AND player_last_name = $4 
+             RETURNING *`,
+      values: [house_name, rank || 'Iniciado', player_first_name, player_last_name]
+    };
+    
+    const result = await pool.query(updatePlayerQuery);
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+    
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Database error', details: err.message });
+  }
+});
+// Create or update wolf clan
+app.post('/api/wolf_clan', async (req, res) => {
+  const { clan_name, founder_first_name, founder_last_name, description, house_affiliation } = req.body;
+  
+  if (!clan_name || !founder_first_name || !founder_last_name) {
+    return res.status(400).json({ error: 'Missing required parameters' });
+  }
+  
+  try {
+    // Check if clan already exists
+    const checkQuery = {
+      text: 'SELECT * FROM wolf_clans WHERE clan_name = $1',
+      values: [clan_name]
+    };
+    
+    const checkResult = await pool.query(checkQuery);
+    
+    if (checkResult.rows.length > 0) {
+      // Update existing clan
+      const updateQuery = {
+        text: `UPDATE wolf_clans 
+               SET description = $1, 
+                   house_affiliation = $2
+               WHERE clan_name = $3 
+               RETURNING *`,
+        values: [description, house_affiliation, clan_name]
+      };
+      
+      const updateResult = await pool.query(updateQuery);
+      res.json(updateResult.rows[0]);
+    } else {
+      // Create new clan
+      const createQuery = {
+        text: `INSERT INTO wolf_clans 
+               (clan_name, founder_first_name, founder_last_name, description, house_affiliation) 
+               VALUES ($1, $2, $3, $4, $5) 
+               RETURNING *`,
+        values: [clan_name, founder_first_name, founder_last_name, description, house_affiliation]
+      };
+      
+      const createResult = await pool.query(createQuery);
+      
+      // Set founder as clan alpha
+      await pool.query(
+        `UPDATE players 
+         SET wolf_clan = $1, 
+             is_clan_alpha = true 
+         WHERE player_first_name = $2 AND player_last_name = $3`,
+        [clan_name, founder_first_name, founder_last_name]
+      );
+      
+      res.status(201).json(createResult.rows[0]);
+    }
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Database error', details: err.message });
+  }
+});
+// Join wolf clan
+app.post('/api/join_wolf_clan', async (req, res) => {
+  const { player_first_name, player_last_name, clan_name } = req.body;
+  
+  if (!player_first_name || !player_last_name || !clan_name) {
+    return res.status(400).json({ error: 'Missing required parameters' });
+  }
+  
+  try {
+    // Check if clan exists
+    const checkClanQuery = {
+      text: 'SELECT * FROM wolf_clans WHERE clan_name = $1',
+      values: [clan_name]
+    };
+    
+    const clanResult = await pool.query(checkClanQuery);
+    
+    if (clanResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Wolf clan not found' });
+    }
+    
+    // Update player's clan affiliation
+    const updatePlayerQuery = {
+      text: `UPDATE players 
+             SET wolf_clan = $1, 
+                 is_clan_alpha = false
+             WHERE player_first_name = $2 AND player_last_name = $3 
+             RETURNING *`,
+      values: [clan_name, player_first_name, player_last_name]
+    };
+    
+    const result = await pool.query(updatePlayerQuery);
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+    
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Database error', details: err.message });
+  }
+});
+// Brotherhood initiation system
+app.post('/api/brotherhood_initiation', async (req, res) => {
+  const { 
+    initiate_first_name, 
+    initiate_last_name, 
+    officiant_first_name, 
+    officiant_last_name, 
+    stage,
+    completed
+  } = req.body;
+  
+  if (!initiate_first_name || !initiate_last_name || !officiant_first_name || !officiant_last_name) {
+    return res.status(400).json({ error: 'Missing required parameters' });
+  }
+  
+  try {
+    // Check if officiant has proper rank to perform initiation
+    const officiantQuery = {
+      text: `SELECT brotherhood_rank FROM players
+             WHERE player_first_name = $1 AND player_last_name = $2`,
+      values: [officiant_first_name, officiant_last_name]
+    };
+    
+    const officiantResult = await pool.query(officiantQuery);
+    
+    if (officiantResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Officiant not found' });
+    }
+    
+    const officiantRank = officiantResult.rows[0].brotherhood_rank;
+    const allowedRanks = ['Prior', 'Senescal', 'Caballero Elite'];
+    
+    if (!allowedRanks.includes(officiantRank)) {
+      return res.status(403).json({ 
+        error: 'Unauthorized initiation attempt', 
+        message: 'Only Prior, Senescal, or Caballero Elite can perform initiations' 
+      });
+    }
+    
+    // Check if initiate exists
+    const initiateQuery = {
+      text: `SELECT * FROM players
+             WHERE player_first_name = $1 AND player_last_name = $2`,
+      values: [initiate_first_name, initiate_last_name]
+    };
+    
+    const initiateResult = await pool.query(initiateQuery);
+    
+    if (initiateResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Initiate not found' });
+    }
+    
+    // Check/create initiation record
+    const checkInitiationQuery = {
+      text: `SELECT * FROM brotherhood_initiations
+             WHERE initiate_first_name = $1 AND initiate_last_name = $2`,
+      values: [initiate_first_name, initiate_last_name]
+    };
+    
+    const initiationResult = await pool.query(checkInitiationQuery);
+    
+    if (initiationResult.rows.length === 0) {
+      // Create new initiation record
+      const createQuery = {
+        text: `INSERT INTO brotherhood_initiations
+               (initiate_first_name, initiate_last_name, officiant_first_name, officiant_last_name,
+                prayer_completed, blood_oath_completed, vision_completed, completed)
+               VALUES ($1, $2, $3, $4, false, false, false, false)
+               RETURNING *`,
+        values: [initiate_first_name, initiate_last_name, officiant_first_name, officiant_last_name]
+      };
+      
+      const newInitiation = await pool.query(createQuery);
+      
+      // If we're not updating a specific stage, return the new record
+      if (!stage) {
+        return res.status(201).json(newInitiation.rows[0]);
+      }
+    }
+    
+    // Update specific stage if provided
+    if (stage) {
+      let stageColumn;
+      
+      switch(stage) {
+        case 'prayer':
+          stageColumn = 'prayer_completed';
+          break;
+        case 'blood_oath':
+          stageColumn = 'blood_oath_completed';
+          break;
+        case 'vision':
+          stageColumn = 'vision_completed';
+          break;
+        default:
+          return res.status(400).json({ error: 'Invalid initiation stage' });
+      }
+      
+      const updateStageQuery = {
+        text: `UPDATE brotherhood_initiations
+               SET ${stageColumn} = true,
+                   officiant_first_name = $1,
+                   officiant_last_name = $2
+               WHERE initiate_first_name = $3 AND initiate_last_name = $4
+               RETURNING *`,
+        values: [officiant_first_name, officiant_last_name, initiate_first_name, initiate_last_name]
+      };
+      
+      const updatedInitiation = await pool.query(updateStageQuery);
+      
+      // Check if all stages are complete
+      const checkCompletionQuery = {
+        text: `SELECT * FROM brotherhood_initiations
+               WHERE initiate_first_name = $1 AND initiate_last_name = $2`,
+        values: [initiate_first_name, initiate_last_name]
+      };
+      
+      const completion = await pool.query(checkCompletionQuery);
+      const initRecord = completion.rows[0];
+      
+      if (initRecord.prayer_completed && initRecord.blood_oath_completed && initRecord.vision_completed) {
+        // All stages complete, mark initiation as complete
+        const finalizeQuery = {
+          text: `UPDATE brotherhood_initiations
+                 SET completed = true
+                 WHERE initiate_first_name = $1 AND initiate_last_name = $2
+                 RETURNING *`,
+          values: [initiate_first_name, initiate_last_name]
+        };
+        
+        const finalized = await pool.query(finalizeQuery);
+        
+        // Update player record
+        await pool.query(
+          `UPDATE players
+           SET supernatural_status = 'BrotherhoodWolf',
+               brotherhood_rank = 'Iniciado'
+           WHERE player_first_name = $1 AND player_last_name = $2`,
+          [initiate_first_name, initiate_last_name]
+        );
+        
+        res.json({
+          ...finalized.rows[0],
+          message: 'Initiation complete! Player is now a Brotherhood Wolf.'
+        });
+      } else {
+        res.json(updatedInitiation.rows[0]);
+      }
+    } else if (completed) {
+      // Force completion of all stages
+      const forceCompleteQuery = {
+        text: `UPDATE brotherhood_initiations
+               SET prayer_completed = true,
+                   blood_oath_completed = true,
+                   vision_completed = true,
+                   completed = true,
+                   officiant_first_name = $1,
+                   officiant_last_name = $2
+               WHERE initiate_first_name = $3 AND initiate_last_name = $4
+               RETURNING *`,
+        values: [officiant_first_name, officiant_last_name, initiate_first_name, initiate_last_name]
+      };
+      
+      const forcedComplete = await pool.query(forceCompleteQuery);
+      
+      // Update player record
+      await pool.query(
+        `UPDATE players
+         SET supernatural_status = 'BrotherhoodWolf',
+             brotherhood_rank = 'Iniciado'
+         WHERE player_first_name = $1 AND player_last_name = $2`,
+        [initiate_first_name, initiate_last_name]
+      );
+      
+      res.json({
+        ...forcedComplete.rows[0],
+        message: 'Initiation completed by officiant authority! Player is now a Brotherhood Wolf.'
+      });
+    } else {
+      // Just return current initiation status
+      res.json(initiationResult.rows[0]);
+    }
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Database error', details: err.message });
+  }
+});
+// Brotherhood wolf transformation status
+app.post('/api/wolf_transformation', async (req, res) => {
+  const { player_first_name, player_last_name, transformed } = req.body;
+  
+  if (!player_first_name || !player_last_name || transformed === undefined) {
+    return res.status(400).json({ error: 'Missing required parameters' });
+  }
+  
+  try {
+    // Check if player is a Brotherhood Wolf
+    const checkWolfQuery = {
+      text: `SELECT supernatural_status FROM players
+             WHERE player_first_name = $1 AND player_last_name = $2`,
+      values: [player_first_name, player_last_name]
+    };
+    
+    const wolfCheck = await pool.query(checkWolfQuery);
+    
+    if (wolfCheck.rows.length === 0) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+    
+    if (wolfCheck.rows[0].supernatural_status !== 'BrotherhoodWolf') {
+      return res.status(403).json({ 
+        error: 'Unauthorized transformation attempt', 
+        message: 'Only Brotherhood Wolves can transform' 
+      });
+    }
+    
+    // Update transformation status
+    const updateQuery = {
+      text: `UPDATE players
+             SET is_transformed = $1
+             WHERE player_first_name = $2 AND player_last_name = $3
+             RETURNING *`,
+      values: [transformed, player_first_name, player_last_name]
+    };
+    
+    const result = await pool.query(updateQuery);
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Database error', details: err.message });
+  }
+});
+// Track sacred deer hunts
+app.post('/api/record_deer_hunt', async (req, res) => {
+  const { 
+    player_first_name, 
+    player_last_name, 
+    deer_type,
+    hunt_success,
+    hunt_date
+  } = req.body;
+  
+  if (!player_first_name || !player_last_name || !deer_type) {
+    return res.status(400).json({ error: 'Missing required parameters' });
+  }
+  
+  try {
+    // Record the hunt
+    const huntQuery = {
+      text: `INSERT INTO sacred_deer_hunts
+             (player_first_name, player_last_name, deer_type, hunt_success, hunt_date)
+             VALUES ($1, $2, $3, $4, $5)
+             RETURNING *`,
+      values: [
+        player_first_name, 
+        player_last_name, 
+        deer_type, 
+        hunt_success || false, 
+        hunt_date || new Date()
+      ]
+    };
+    
+    const huntResult = await pool.query(huntQuery);
+    
+    // If hunt was successful, grant appropriate bonuses
+    if (hunt_success) {
+      let faithBonus = 0;
+      let healthBonus = 0;
+      
+      if (deer_type === 'blue') {
+        faithBonus = 5;
+        healthBonus = 10;
+      } else if (deer_type === 'white') {
+        faithBonus = 20;
+        healthBonus = 25;
+      }
+      
+      // Update player stats
+      const updateStatsQuery = {
+        text: `UPDATE players
+               SET faith = faith + $1,
+                   health = LEAST(100, health + $2)
+               WHERE player_first_name = $3 AND player_last_name = $4
+               RETURNING *`,
+        values: [faithBonus, healthBonus, player_first_name, player_last_name]
+      };
+      
+      const updatedPlayer = await pool.query(updateStatsQuery);
+      
+      res.json({
+        hunt: huntResult.rows[0],
+        player: updatedPlayer.rows[0],
+        bonuses: {
+          faith: faithBonus,
+          health: healthBonus
+        }
+      });
+    } else {
+      res.json({
+        hunt: huntResult.rows[0],
+        message: 'Hunt recorded but unsuccessful. No bonuses granted.'
+      });
+    }
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Database error', details: err.message });
+  }
+});
+// Get Brotherhood wolf abilities
+app.get('/api/brotherhood_abilities', async (req, res) => {
+  const { house_name, rank } = req.query;
+  
+  try {
+    let query;
+    let result;
+    
+    if (house_name && rank) {
+      // Get abilities for specific house and rank
+      query = {
+        text: `
+          SELECT a.name, a.description, a.activation_words, a.required_rank
+          FROM brotherhood_abilities a
+          JOIN house_abilities ha ON a.id = ha.ability_id
+          JOIN brotherhood_houses h ON h.id = ha.house_id
+          WHERE h.name = $1 AND a.required_rank <= $2
+          ORDER BY a.required_rank
+        `,
+        values: [house_name, rank]
+      };
+    } else if (house_name) {
+      // Get all abilities for specific house
+      query = {
+        text: `
+          SELECT a.name, a.description, a.activation_words, a.required_rank
+          FROM brotherhood_abilities a
+          JOIN house_abilities ha ON a.id = ha.ability_id
+          JOIN brotherhood_houses h ON h.id = ha.house_id
+          WHERE h.name = $1
+          ORDER BY a.required_rank
+        `,
+        values: [house_name]
+      };
+    } else {
+      // Get all abilities
+      query = {
+        text: `
+          SELECT a.name, a.description, a.activation_words, a.required_rank,
+                 h.name as house_name
+          FROM brotherhood_abilities a
+          JOIN house_abilities ha ON a.id = ha.ability_id
+          JOIN brotherhood_houses h ON h.id = ha.house_id
+          ORDER BY h.name, a.required_rank
+        `
+      };
+    }
+    
+    result = await pool.query(query);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Database error', details: err.message });
+  }
+});
 // Start the server
 const server = app.listen(port, () => {
   console.log(`Server running on port ${port}`);
