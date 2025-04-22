@@ -855,6 +855,199 @@ async function initDatabase() {
     `);
     console.log("Family structure view created or replaced");
     
+    // Add Brotherhood werewolf system tables
+    console.log("Initializing Brotherhood werewolf system tables...");
+    // Add Brotherhood-related columns to players table
+    await client.query(`
+      ALTER TABLE players 
+      ADD COLUMN IF NOT EXISTS brotherhood_house VARCHAR(100),
+      ADD COLUMN IF NOT EXISTS brotherhood_rank VARCHAR(50),
+      ADD COLUMN IF NOT EXISTS wolf_clan VARCHAR(100),
+      ADD COLUMN IF NOT EXISTS is_clan_alpha BOOLEAN DEFAULT FALSE,
+      ADD COLUMN IF NOT EXISTS is_transformed BOOLEAN DEFAULT FALSE
+    `);
+    console.log("Brotherhood player columns added or verified");
+    // Create brotherhood_houses table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS brotherhood_houses (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100) NOT NULL UNIQUE,
+        description TEXT,
+        founding_date DATE,
+        specialty VARCHAR(100),
+        coat_of_arms TEXT,
+        motto TEXT,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log("Brotherhood houses table created or verified");
+    // Create brotherhood_abilities table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS brotherhood_abilities (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100) NOT NULL UNIQUE,
+        description TEXT,
+        activation_words TEXT,
+        required_rank VARCHAR(50) NOT NULL,
+        power_level INTEGER CHECK (power_level >= 1 AND power_level <= 10),
+        cooldown_minutes INTEGER DEFAULT 0,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log("Brotherhood abilities table created or verified");
+    // Create house_abilities table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS house_abilities (
+        id SERIAL PRIMARY KEY,
+        house_id INTEGER REFERENCES brotherhood_houses(id) ON DELETE CASCADE,
+        ability_id INTEGER REFERENCES brotherhood_abilities(id) ON DELETE CASCADE,
+        UNIQUE (house_id, ability_id)
+      )
+    `);
+    console.log("House abilities table created or verified");
+    // Create brotherhood_initiations table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS brotherhood_initiations (
+        id SERIAL PRIMARY KEY,
+        initiate_first_name VARCHAR(100) NOT NULL,
+        initiate_last_name VARCHAR(100) NOT NULL,
+        officiant_first_name VARCHAR(100) NOT NULL,
+        officiant_last_name VARCHAR(100) NOT NULL,
+        prayer_completed BOOLEAN DEFAULT FALSE,
+        blood_oath_completed BOOLEAN DEFAULT FALSE,
+        vision_completed BOOLEAN DEFAULT FALSE,
+        completed BOOLEAN DEFAULT FALSE,
+        initiation_started TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        completion_date TIMESTAMP WITH TIME ZONE,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE (initiate_first_name, initiate_last_name)
+      )
+    `);
+    console.log("Brotherhood initiations table created or verified");
+    // Create sacred_deer_hunts table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS sacred_deer_hunts (
+        id SERIAL PRIMARY KEY,
+        player_first_name VARCHAR(100) NOT NULL,
+        player_last_name VARCHAR(100) NOT NULL,
+        deer_type VARCHAR(50) NOT NULL CHECK (deer_type IN ('blue', 'white')),
+        hunt_success BOOLEAN DEFAULT FALSE,
+        hunt_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log("Sacred deer hunts table created or verified");
+    // Create secrecy system tables
+    console.log("Initializing secrecy system tables...");
+    // Add secrecy-related columns to players table
+    await client.query(`
+      ALTER TABLE players 
+      ADD COLUMN IF NOT EXISTS court_title VARCHAR(100),
+      ADD COLUMN IF NOT EXISTS secrecy_level INTEGER DEFAULT 10 CHECK (secrecy_level BETWEEN 0 AND 10),
+      ADD COLUMN IF NOT EXISTS cover_identity TEXT,
+      ADD COLUMN IF NOT EXISTS suspicion_level INTEGER DEFAULT 0 CHECK (suspicion_level BETWEEN 0 AND 100)
+    `);
+    console.log("Secrecy player columns added or verified");
+    // Create supernatural_exposure table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS supernatural_exposure (
+        id SERIAL PRIMARY KEY,
+        player_first_name VARCHAR(100) NOT NULL,
+        player_last_name VARCHAR(100) NOT NULL,
+        exposure_type VARCHAR(50) NOT NULL,
+        witness_count INTEGER DEFAULT 1,
+        exposure_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        location VARCHAR(100),
+        was_contained BOOLEAN DEFAULT FALSE,
+        containment_method TEXT,
+        exposure_severity INTEGER CHECK (exposure_severity BETWEEN 1 AND 10),
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log("Supernatural exposure table created or verified");
+    // Create views
+    console.log("Creating Brotherhood and secrecy system views...");
+    // Brotherhood hierarchy view
+    await client.query(`
+      CREATE OR REPLACE VIEW brotherhood_hierarchy AS
+      SELECT 
+          p.player_first_name, 
+          p.player_last_name, 
+          p.brotherhood_rank, 
+          p.brotherhood_house,
+          p.wolf_clan,
+          p.is_clan_alpha,
+          p.is_transformed,
+          p.faith,
+          p.health
+      FROM 
+          players p
+      WHERE 
+          p.supernatural_status = 'BrotherhoodWolf'
+      ORDER BY 
+          CASE 
+              WHEN p.brotherhood_rank = 'Prior' THEN 1
+              WHEN p.brotherhood_rank = 'Senescal' THEN 2
+              WHEN p.brotherhood_rank = 'Caballero Elite' THEN 3
+              WHEN p.brotherhood_rank = 'Caballero' THEN 4
+              WHEN p.brotherhood_rank = 'Escudero' THEN 5
+              WHEN p.brotherhood_rank = 'Iniciado' THEN 6
+              ELSE 7
+          END, 
+          p.brotherhood_house, 
+          p.player_first_name, 
+          p.player_last_name
+    `);
+    console.log("Brotherhood hierarchy view created or replaced");
+    // Supernatural exposure risk view
+    await client.query(`
+      CREATE OR REPLACE VIEW supernatural_exposure_risk AS
+      SELECT 
+          p.player_first_name,
+          p.player_last_name,
+          p.supernatural_status,
+          p.court_title,
+          p.court_position,
+          p.secrecy_level,
+          p.suspicion_level,
+          COUNT(se.id) AS exposure_incidents,
+          MAX(se.exposure_date) AS last_exposure
+      FROM 
+          players p
+      LEFT JOIN 
+          supernatural_exposure se ON p.player_first_name = se.player_first_name 
+                                 AND p.player_last_name = se.player_last_name
+      WHERE 
+          p.supernatural_status IN ('Vampire', 'BrotherhoodWolf')
+      GROUP BY 
+          p.player_first_name, p.player_last_name, p.supernatural_status, 
+          p.court_title, p.court_position, p.secrecy_level, p.suspicion_level
+      ORDER BY 
+          p.suspicion_level DESC, exposure_incidents DESC
+    `);
+    console.log("Supernatural exposure risk view created or replaced");
+    // Insert noble houses if they don't exist
+    await client.query(`
+      INSERT INTO brotherhood_houses (name, description, specialty, motto)
+      VALUES 
+      ('Volkov', 'Masters of tracking and hunting, the Volkov house specializes in finding those who wish to remain hidden.', 'Tracking', 'We find what hides in darkness'),
+      ('Wurdulac', 'Skilled alchemists who create potions and elixirs to enhance Brotherhood abilities.', 'Alchemy', 'Our blood is our strength'),
+      ('Karkas', 'The intelligence gatherers of the Brotherhood, they excel at infiltration and espionage.', 'Intelligence', 'Knowledge is power, silence is wisdom'),
+      ('Kreschei', 'Healers who tend to the wounded and provide spiritual guidance.', 'Healing', 'We mend what is broken'),
+      ('Beorn', 'Warriors at heart, members of House Beorn are the frontline fighters of the Brotherhood.', 'Combat', 'Strike with swift fury'),
+      ('Lovanov', 'Skilled diplomats who maintain relations with human authorities and other supernatural entities.', 'Diplomacy', 'Words before fangs'),
+      ('Zorvolov', 'The logistical backbone of the Brotherhood, they ensure all houses have the resources they need.', 'Logistics', 'We provide the path'),
+      ('Dravolk', 'Innovators who adapt modern technology to the Brotherhood ancient ways.', 'Technology', 'Old blood, new tools'),
+      ('Morozov', 'Guardians of the Brotherhood ancient relics and sacred artifacts.', 'Artifacts', 'We protect what is holy'),
+      ('Severov', 'Keepers of the Brotherhood history and sacred texts.', 'Archives', 'Remember the blood of our fathers')
+      ON CONFLICT (name) DO NOTHING
+    `);
+    console.log("Brotherhood houses populated or verified");
+    console.log("Database fully initialized with Brotherhood and secrecy systems");
+    
     console.log('Database initialized successfully');
   } catch (err) {
     console.error('Error initializing database:', err);
