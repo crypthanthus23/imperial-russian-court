@@ -1411,6 +1411,264 @@ app.get('/api/brotherhood_abilities', async (req, res) => {
     res.status(500).json({ error: 'Database error', details: err.message });
   }
 });
+// Update player's court identity/cover
+app.post('/api/update_court_identity', async (req, res) => {
+  const { player_first_name, player_last_name, court_title, court_position, cover_identity } = req.body;
+  
+  if (!player_first_name || !player_last_name) {
+    return res.status(400).json({ error: 'Missing required parameters' });
+  }
+  
+  try {
+    const updateQuery = {
+      text: `UPDATE players
+             SET court_title = $1,
+                 court_position = $2,
+                 cover_identity = $3
+             WHERE player_first_name = $4 AND player_last_name = $5
+             RETURNING *`,
+      values: [
+        court_title || null,
+        court_position || null,
+        cover_identity || null,
+        player_first_name,
+        player_last_name
+      ]
+    };
+    
+    const result = await pool.query(updateQuery);
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+    
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Database error', details: err.message });
+  }
+});
+// Record supernatural exposure incident
+app.post('/api/record_exposure', async (req, res) => {
+  const { 
+    player_first_name, 
+    player_last_name, 
+    exposure_type, 
+    witness_count, 
+    location,
+    was_contained,
+    containment_method,
+    exposure_severity
+  } = req.body;
+  
+  if (!player_first_name || !player_last_name || !exposure_type) {
+    return res.status(400).json({ error: 'Missing required parameters' });
+  }
+  
+  try {
+    // Start a transaction
+    await pool.query('BEGIN');
+    
+    // Record the exposure incident
+    const exposureQuery = {
+      text: `INSERT INTO supernatural_exposure
+             (player_first_name, player_last_name, exposure_type, witness_count, 
+              location, was_contained, containment_method, exposure_severity)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+             RETURNING *`,
+      values: [
+        player_first_name,
+        player_last_name,
+        exposure_type,
+        witness_count || 1,
+        location || 'Unknown',
+        was_contained || false,
+        containment_method || null,
+        exposure_severity || 5
+      ]
+    };
+    
+    const exposureResult = await pool.query(exposureQuery);
+    
+    // Calculate suspicion increase based on factors
+    let suspicionIncrease = (exposure_severity || 5) * (witness_count || 1);
+    
+    // Reduce increase if contained
+    if (was_contained) {
+      suspicionIncrease = Math.floor(suspicionIncrease / 2);
+    }
+    
+    // Update player's suspicion level
+    const updateQuery = {
+      text: `UPDATE players
+             SET suspicion_level = LEAST(100, suspicion_level + $1),
+                 secrecy_level = GREATEST(0, secrecy_level - $2)
+             WHERE player_first_name = $3 AND player_last_name = $4
+             RETURNING *`,
+      values: [
+        suspicionIncrease,
+        Math.ceil(suspicionIncrease / 10),
+        player_first_name,
+        player_last_name
+      ]
+    };
+    
+    const playerResult = await pool.query(updateQuery);
+    
+    // Commit the transaction
+    await pool.query('COMMIT');
+    
+    res.json({
+      exposure: exposureResult.rows[0],
+      player: playerResult.rows[0],
+      suspicion_change: suspicionIncrease
+    });
+  } catch (err) {
+    // Roll back the transaction in case of error
+    await pool.query('ROLLBACK');
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Database error', details: err.message });
+  }
+});
+// Implement containment action for exposure
+app.post('/api/contain_exposure', async (req, res) => {
+  const { 
+    exposure_id, 
+    containment_method,
+    containing_player_first_name,
+    containing_player_last_name
+  } = req.body;
+  
+  if (!exposure_id || !containment_method) {
+    return res.status(400).json({ error: 'Missing required parameters' });
+  }
+  
+  try {
+    // Start a transaction
+    await pool.query('BEGIN');
+    
+    // Get exposure details
+    const exposureQuery = {
+      text: `SELECT * FROM supernatural_exposure WHERE id = $1`,
+      values: [exposure_id]
+    };
+    
+    const exposureResult = await pool.query(exposureQuery);
+    
+    if (exposureResult.rows.length === 0) {
+      await pool.query('ROLLBACK');
+      return res.status(404).json({ error: 'Exposure incident not found' });
+    }
+    
+    const exposure = exposureResult.rows[0];
+    
+    // Update exposure record to mark as contained
+    const updateExposureQuery = {
+      text: `UPDATE supernatural_exposure
+             SET was_contained = true,
+                 containment_method = $1
+             WHERE id = $2
+             RETURNING *`,
+      values: [containment_method, exposure_id]
+    };
+    
+    const updatedExposure = await pool.query(updateExposureQuery);
+    
+    // Reduce the player's suspicion
+    const suspicionReduction = Math.ceil(exposure.exposure_severity / 2);
+    
+    const updatePlayerQuery = {
+      text: `UPDATE players
+             SET suspicion_level = GREATEST(0, suspicion_level - $1)
+             WHERE player_first_name = $2 AND player_last_name = $3
+             RETURNING *`,
+      values: [
+        suspicionReduction,
+        exposure.player_first_name,
+        exposure.player_last_name
+      ]
+    };
+    
+    const updatedPlayer = await pool.query(updatePlayerQuery);
+    
+    // Record containment action by containing player if provided
+    let containmentRecord = null;
+    
+    if (containing_player_first_name && containing_player_last_name) {
+      const recordActionQuery = {
+        text: `INSERT INTO player_actions
+               (action_type, actor_first_name, actor_last_name, 
+                target_first_name, target_last_name, action_description)
+               VALUES ('exposure_containment', $1, $2, $3, $4, $5)
+               RETURNING *`,
+        values: [
+          containing_player_first_name,
+          containing_player_last_name,
+          exposure.player_first_name,
+          exposure.player_last_name,
+          `Contained exposure incident: ${containment_method}`
+        ]
+      };
+      
+      try {
+        containmentRecord = await pool.query(recordActionQuery);
+      } catch (err) {
+        // If player_actions table doesn't exist, just continue
+        console.log('Could not record containment action - table may not exist');
+      }
+    }
+    
+    // Commit the transaction
+    await pool.query('COMMIT');
+    
+    res.json({
+      exposure: updatedExposure.rows[0],
+      player: updatedPlayer.rows[0],
+      suspicion_reduction: suspicionReduction,
+      containment_record: containmentRecord ? containmentRecord.rows[0] : null
+    });
+  } catch (err) {
+    // Roll back the transaction in case of error
+    await pool.query('ROLLBACK');
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Database error', details: err.message });
+  }
+});
+// Get court personas for all supernaturals - suitable for public display
+app.get('/api/court_directory', async (req, res) => {
+  try {
+    const query = {
+      text: `SELECT 
+              player_first_name, 
+              player_last_name, 
+              court_title, 
+              court_position, 
+              gender, 
+              political_faction,
+              social_rank
+             FROM players 
+             WHERE court_position IS NOT NULL
+             ORDER BY 
+               CASE 
+                 WHEN social_rank = 'Tsar' THEN 1
+                 WHEN social_rank = 'Grand Duke' THEN 2
+                 WHEN social_rank = 'Prince' THEN 3
+                 WHEN social_rank = 'Count' THEN 4
+                 WHEN social_rank = 'Baron' THEN 5
+                 WHEN social_rank = 'Noble' THEN 6
+                 ELSE 7
+               END,
+               court_title,
+               player_first_name`
+    };
+    
+    const result = await pool.query(query);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Database error', details: err.message });
+  }
+});
 // Start the server
 const server = app.listen(port, () => {
   console.log(`Server running on port ${port}`);
