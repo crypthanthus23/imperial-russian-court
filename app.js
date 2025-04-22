@@ -623,6 +623,71 @@ app.get('/api/get_clan_members', async (req, res) => {
       total_members: result.rows.length,
       families: families
     });
+    // Get player information - this endpoint is used by the Vampire Heart script
+app.get('/api/get_player_info', async (req, res) => {
+  const { player_first_name, player_last_name } = req.query;
+  
+  if (!player_first_name || !player_last_name) {
+    return res.status(400).json({ error: 'Missing player name parameters' });
+  }
+  
+  try {
+    // Get player info from the database
+    const query = {
+      text: 'SELECT * FROM players WHERE player_first_name = $1 AND player_last_name = $2',
+      values: [player_first_name, player_last_name]
+    };
+    
+    const result = await pool.query(query);
+    
+    if (result.rows.length === 0) {
+      return res.json({ supernatural_status: "Human" });
+    }
+    
+    // Map the fields from your database to what the LSL script expects
+    const playerData = result.rows[0];
+    
+    // Return data in the format expected by the script
+    res.json({
+      supernatural_status: playerData.supernatural_status || "Human",
+      generation: playerData.generation || -1,
+      heart_health: playerData.health || 100,
+      feeding_disabled: playerData.feeding_disabled || false,
+      attacking_disabled: playerData.attacking_disabled || false,
+      controller: playerData.controller || "",
+      lineage: playerData.political_faction || "Unknown",
+      clan: playerData.political_faction || "Unknown",
+      mark_of_cain: playerData.mark_of_cain || false,
+      mark_provider: playerData.mark_provider || "",
+      is_in_lethargy: playerData.is_in_lethargy || false,
+      lethargy_duration: playerData.lethargy_duration || 0,
+      has_fangs: playerData.has_fangs || false,
+      rank_name: getRankName(playerData.generation)
+    });
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Database error', details: err.message });
+  }
+});
+// Helper function to get rank name based on generation
+function getRankName(generation) {
+  if (generation === 0) return "The Source";
+  if (generation === 1) return "Antediluvian";
+  if (generation === 2) return "Methuselah";
+  if (generation === 3) return "Elder";
+  if (generation === 4) return "Ancilla";
+  return "Neonate";
+}
+// Add other missing endpoints:
+app.post('/api/update_heart_health', async (req, res) => {
+  // Implementation similar to your other endpoints
+});
+app.post('/api/update_vampire_control', async (req, res) => {
+  // Implementation similar to your other endpoints
+});
+app.post('/api/update_lethargy', async (req, res) => {
+  // Implementation similar to your other endpoints
+});
   } catch (err) {
     console.error('Database error:', err);
     res.status(500).json({ error: 'Database error', details: err.message });
