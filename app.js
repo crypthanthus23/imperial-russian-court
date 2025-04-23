@@ -314,18 +314,15 @@ app.get('/api/get_clan_info', async (req, res) => {
       const disciplinesResult = await pool.query(disciplinesQuery);
       
       // Return clan with its disciplines
-      const clanData = result.rows[0];
-      clanData.disciplines = disciplinesResult.rows;
+      const clan = result.rows[0];
+      clan.disciplines = disciplinesResult.rows;
       
-      res.json(clanData);
+      res.json(clan);
     } else {
-      // Get all clans grouped by faction
-      query = `
-        SELECT faction, json_agg(json_build_object('name', name, 'description', description)) as clans
-        FROM clans
-        GROUP BY faction
-      `;
-      
+      // Get all clans
+      query = {
+        text: 'SELECT * FROM clans ORDER BY name'
+      };
       result = await pool.query(query);
       res.json(result.rows);
     }
@@ -334,7 +331,7 @@ app.get('/api/get_clan_info', async (req, res) => {
     res.status(500).json({ error: 'Database error', details: err.message });
   }
 });
-// Get bloodline information
+// Get bloodline information for a player
 app.get('/api/get_bloodline', async (req, res) => {
   const { player_first_name, player_last_name } = req.query;
   
@@ -623,7 +620,12 @@ app.get('/api/get_clan_members', async (req, res) => {
       total_members: result.rows.length,
       families: families
     });
-    // Get player information - this endpoint is used by the Vampire Heart script
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Database error', details: err.message });
+  }
+});
+// Get player information - this endpoint is used by the Vampire Heart script
 app.get('/api/get_player_info', async (req, res) => {
   const { player_first_name, player_last_name } = req.query;
   
@@ -688,440 +690,7 @@ app.post('/api/update_vampire_control', async (req, res) => {
 app.post('/api/update_lethargy', async (req, res) => {
   // Implementation similar to your other endpoints
 });
-  } catch (err) {
-    console.error('Database error:', err);
-    res.status(500).json({ error: 'Database error', details: err.message });
-  }
-});
-// Create tables if they don't exist on startup
-async function initDatabase() {
-  let client;
-  try {
-    console.log("Attempting to initialize database...");
-    // Connect to check if the database is accessible
-    client = await pool.connect();
-    console.log("Database connection established successfully");
-    
-    // Create players table if it doesn't exist - changed rank to rank_name
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS players (
-        id SERIAL PRIMARY KEY,
-        player_first_name TEXT NOT NULL,
-        player_last_name TEXT NOT NULL,
-        health INTEGER DEFAULT 100,
-        rubles INTEGER DEFAULT 100,
-        charm INTEGER DEFAULT 0,
-        influence INTEGER DEFAULT 0,
-        imperial_favor INTEGER DEFAULT 0,
-        faith INTEGER DEFAULT 0,
-        xp INTEGER DEFAULT 0,
-        love INTEGER DEFAULT 0,
-        family_name TEXT DEFAULT 'Desconocido',
-        russian_title TEXT DEFAULT 'Ninguno',
-        court_position TEXT DEFAULT 'Ninguno',
-        rank_name TEXT DEFAULT 'Ninguno',
-        supernatural_status TEXT DEFAULT 'Ninguno',
-        player_gender TEXT DEFAULT 'Unknown',
-        political_faction TEXT DEFAULT 'Ninguno',
-        is_owner BOOLEAN DEFAULT false,
-        vitae_level INTEGER DEFAULT 100,
-        vitae_max INTEGER DEFAULT 100,
-        is_in_lethargy BOOLEAN DEFAULT FALSE,
-        generation INTEGER DEFAULT NULL,
-        UNIQUE(player_first_name, player_last_name)
-      )
-    `);
-    console.log("Players table created or verified");
-    
-    // Add columns if they don't exist
-    try {
-      await client.query(`ALTER TABLE players ADD COLUMN IF NOT EXISTS love INTEGER DEFAULT 0`);
-      console.log("Love column added or verified");
-      
-      await client.query(`ALTER TABLE players ADD COLUMN IF NOT EXISTS political_faction TEXT DEFAULT 'Ninguno'`);
-      console.log("Political faction column added or verified");
-      
-      await client.query(`ALTER TABLE players ADD COLUMN IF NOT EXISTS vitae_level INTEGER DEFAULT 100`);
-      await client.query(`ALTER TABLE players ADD COLUMN IF NOT EXISTS vitae_max INTEGER DEFAULT 100`);
-      await client.query(`ALTER TABLE players ADD COLUMN IF NOT EXISTS is_in_lethargy BOOLEAN DEFAULT FALSE`);
-      await client.query(`ALTER TABLE players ADD COLUMN IF NOT EXISTS generation INTEGER DEFAULT NULL`);
-      console.log("Vampire-specific columns added or verified");
-      
-      // Remove the gender check constraint if it exists
-      try {
-        await client.query(`
-          ALTER TABLE players DROP CONSTRAINT IF EXISTS players_player_gender_check;
-        `);
-        console.log("Gender constraint removed or not present");
-      } catch (genderErr) {
-        console.log('Note: Gender constraint operation error:', genderErr.message);
-      }
-      
-      // Add check constraints for health
-      try {
-        await client.query(`
-          DO $$ 
-          BEGIN
-            -- Check if health constraint exists
-            IF NOT EXISTS (
-              SELECT 1 FROM pg_constraint 
-              WHERE conname = 'players_health_check'
-            ) THEN
-              ALTER TABLE players ADD CONSTRAINT players_health_check 
-              CHECK (health >= 0 AND health <= 100);
-            END IF;
-          END $$;
-        `);
-        console.log("Health constraint added or verified");
-        
-        // Fix any existing health values that are out of range
-        await client.query(`
-          UPDATE players SET health = 
-            CASE 
-              WHEN health < 0 THEN 0
-              WHEN health > 100 THEN 100
-              ELSE health
-            END
-          WHERE health < 0 OR health > 100;
-        `);
-        console.log("Any invalid health values have been corrected");
-        
-      } catch (constraintErr) {
-        console.log('Note: Constraint operations error:', constraintErr.message);
-      }
-      
-    } catch (columnErr) {
-      console.log('Note: Column operations error:', columnErr.message);
-    }
-    
-    // Create or verify vampire tables
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS clans (
-        id SERIAL PRIMARY KEY,
-        name TEXT UNIQUE NOT NULL,
-        faction TEXT NOT NULL,
-        description TEXT,
-        founder TEXT,
-        tenebrous_lineage TEXT
-      )
-    `);
-    console.log("Clans table created or verified");
-    
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS disciplines (
-        id SERIAL PRIMARY KEY,
-        name TEXT UNIQUE NOT NULL,
-        description TEXT,
-        activation_words TEXT
-      )
-    `);
-    console.log("Disciplines table created or verified");
-    
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS clan_disciplines (
-        clan_id INTEGER REFERENCES clans(id),
-        discipline_id INTEGER REFERENCES disciplines(id),
-        PRIMARY KEY (clan_id, discipline_id)
-      )
-    `);
-    console.log("Clan disciplines table created or verified");
-    
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS bloodlines (
-        id SERIAL PRIMARY KEY,
-        sire_id INTEGER REFERENCES players(id),
-        progenie_id INTEGER REFERENCES players(id),
-        generation INTEGER,
-        creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        UNIQUE(progenie_id)
-      )
-    `);
-    console.log("Bloodlines table created or verified");
-    
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS feeding_history (
-        id SERIAL PRIMARY KEY,
-        vampire_id INTEGER REFERENCES players(id),
-        victim_id INTEGER REFERENCES players(id),
-        feeding_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        vitae_amount INTEGER
-      )
-    `);
-    console.log("Feeding history table created or verified");
-    
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS death_records (
-        id SERIAL PRIMARY KEY,
-        player_id INTEGER REFERENCES players(id),
-        death_type TEXT,
-        death_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        cause_of_death TEXT,
-        killer_id INTEGER REFERENCES players(id) NULL
-      )
-    `);
-    console.log("Death records table created or verified");
-    
-    // Create views
-    await client.query(`
-      CREATE OR REPLACE VIEW vampire_hierarchy AS
-      SELECT 
-        p.id,
-        p.player_first_name,
-        p.player_last_name,
-        p.supernatural_status,
-        p.political_faction,
-        p.family_name,
-        p.rank_name,
-        p.generation,
-        sire.player_first_name as sire_first_name,
-        sire.player_last_name as sire_last_name
-      FROM 
-        players p
-      LEFT JOIN 
-        bloodlines b ON p.id = b.progenie_id
-      LEFT JOIN 
-        players sire ON sire.id = b.sire_id
-      WHERE 
-        p.supernatural_status = 'SecretVampire'
-    `);
-    console.log("Vampire hierarchy view created or replaced");
-    
-    await client.query(`
-      CREATE OR REPLACE VIEW clan_members AS
-      SELECT 
-        c.name as clan_name,
-        c.faction,
-        COUNT(p.id) as member_count
-      FROM 
-        clans c
-      LEFT JOIN 
-        players p ON c.name = p.political_faction
-      WHERE
-        p.supernatural_status = 'SecretVampire'
-      GROUP BY 
-        c.name, c.faction
-    `);
-    console.log("Clan members view created or replaced");
-    
-    await client.query(`
-      CREATE OR REPLACE VIEW family_structure AS
-      SELECT 
-        p.political_faction as clan,
-        p.family_name,
-        COUNT(p.id) as family_members
-      FROM 
-        players p
-      WHERE 
-        p.supernatural_status = 'SecretVampire'
-        AND p.family_name IS NOT NULL
-        AND p.family_name != 'Desconocido'
-      GROUP BY 
-        p.political_faction, p.family_name
-    `);
-    console.log("Family structure view created or replaced");
-    
-    // Add Brotherhood werewolf system tables
-    console.log("Initializing Brotherhood werewolf system tables...");
-    // Add Brotherhood-related columns to players table
-    await client.query(`
-      ALTER TABLE players 
-      ADD COLUMN IF NOT EXISTS brotherhood_house VARCHAR(100),
-      ADD COLUMN IF NOT EXISTS brotherhood_rank VARCHAR(50),
-      ADD COLUMN IF NOT EXISTS wolf_clan VARCHAR(100),
-      ADD COLUMN IF NOT EXISTS is_clan_alpha BOOLEAN DEFAULT FALSE,
-      ADD COLUMN IF NOT EXISTS is_transformed BOOLEAN DEFAULT FALSE
-    `);
-    console.log("Brotherhood player columns added or verified");
-    // Create brotherhood_houses table
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS brotherhood_houses (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(100) NOT NULL UNIQUE,
-        description TEXT,
-        founding_date DATE,
-        specialty VARCHAR(100),
-        coat_of_arms TEXT,
-        motto TEXT,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-    console.log("Brotherhood houses table created or verified");
-    // Create brotherhood_abilities table
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS brotherhood_abilities (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(100) NOT NULL UNIQUE,
-        description TEXT,
-        activation_words TEXT,
-        required_rank VARCHAR(50) NOT NULL,
-        power_level INTEGER CHECK (power_level >= 1 AND power_level <= 10),
-        cooldown_minutes INTEGER DEFAULT 0,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-    console.log("Brotherhood abilities table created or verified");
-    // Create house_abilities table
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS house_abilities (
-        id SERIAL PRIMARY KEY,
-        house_id INTEGER REFERENCES brotherhood_houses(id) ON DELETE CASCADE,
-        ability_id INTEGER REFERENCES brotherhood_abilities(id) ON DELETE CASCADE,
-        UNIQUE (house_id, ability_id)
-      )
-    `);
-    console.log("House abilities table created or verified");
-    // Create brotherhood_initiations table
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS brotherhood_initiations (
-        id SERIAL PRIMARY KEY,
-        initiate_first_name VARCHAR(100) NOT NULL,
-        initiate_last_name VARCHAR(100) NOT NULL,
-        officiant_first_name VARCHAR(100) NOT NULL,
-        officiant_last_name VARCHAR(100) NOT NULL,
-        prayer_completed BOOLEAN DEFAULT FALSE,
-        blood_oath_completed BOOLEAN DEFAULT FALSE,
-        vision_completed BOOLEAN DEFAULT FALSE,
-        completed BOOLEAN DEFAULT FALSE,
-        initiation_started TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        completion_date TIMESTAMP WITH TIME ZONE,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        UNIQUE (initiate_first_name, initiate_last_name)
-      )
-    `);
-    console.log("Brotherhood initiations table created or verified");
-    // Create sacred_deer_hunts table
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS sacred_deer_hunts (
-        id SERIAL PRIMARY KEY,
-        player_first_name VARCHAR(100) NOT NULL,
-        player_last_name VARCHAR(100) NOT NULL,
-        deer_type VARCHAR(50) NOT NULL CHECK (deer_type IN ('blue', 'white')),
-        hunt_success BOOLEAN DEFAULT FALSE,
-        hunt_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-    console.log("Sacred deer hunts table created or verified");
-    // Create secrecy system tables
-    console.log("Initializing secrecy system tables...");
-    // Add secrecy-related columns to players table
-    await client.query(`
-      ALTER TABLE players 
-      ADD COLUMN IF NOT EXISTS court_title VARCHAR(100),
-      ADD COLUMN IF NOT EXISTS secrecy_level INTEGER DEFAULT 10 CHECK (secrecy_level BETWEEN 0 AND 10),
-      ADD COLUMN IF NOT EXISTS cover_identity TEXT,
-      ADD COLUMN IF NOT EXISTS suspicion_level INTEGER DEFAULT 0 CHECK (suspicion_level BETWEEN 0 AND 100)
-    `);
-    console.log("Secrecy player columns added or verified");
-    // Create supernatural_exposure table
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS supernatural_exposure (
-        id SERIAL PRIMARY KEY,
-        player_first_name VARCHAR(100) NOT NULL,
-        player_last_name VARCHAR(100) NOT NULL,
-        exposure_type VARCHAR(50) NOT NULL,
-        witness_count INTEGER DEFAULT 1,
-        exposure_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        location VARCHAR(100),
-        was_contained BOOLEAN DEFAULT FALSE,
-        containment_method TEXT,
-        exposure_severity INTEGER CHECK (exposure_severity BETWEEN 1 AND 10),
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-    console.log("Supernatural exposure table created or verified");
-    // Create views
-    console.log("Creating Brotherhood and secrecy system views...");
-    // Brotherhood hierarchy view
-    await client.query(`
-      CREATE OR REPLACE VIEW brotherhood_hierarchy AS
-      SELECT 
-          p.player_first_name, 
-          p.player_last_name, 
-          p.brotherhood_rank, 
-          p.brotherhood_house,
-          p.wolf_clan,
-          p.is_clan_alpha,
-          p.is_transformed,
-          p.faith,
-          p.health
-      FROM 
-          players p
-      WHERE 
-          p.supernatural_status = 'BrotherhoodWolf'
-      ORDER BY 
-          CASE 
-              WHEN p.brotherhood_rank = 'Prior' THEN 1
-              WHEN p.brotherhood_rank = 'Senescal' THEN 2
-              WHEN p.brotherhood_rank = 'Caballero Elite' THEN 3
-              WHEN p.brotherhood_rank = 'Caballero' THEN 4
-              WHEN p.brotherhood_rank = 'Escudero' THEN 5
-              WHEN p.brotherhood_rank = 'Iniciado' THEN 6
-              ELSE 7
-          END, 
-          p.brotherhood_house, 
-          p.player_first_name, 
-          p.player_last_name
-    `);
-    console.log("Brotherhood hierarchy view created or replaced");
-    // Supernatural exposure risk view
-    await client.query(`
-      CREATE OR REPLACE VIEW supernatural_exposure_risk AS
-      SELECT 
-          p.player_first_name,
-          p.player_last_name,
-          p.supernatural_status,
-          p.court_title,
-          p.court_position,
-          p.secrecy_level,
-          p.suspicion_level,
-          COUNT(se.id) AS exposure_incidents,
-          MAX(se.exposure_date) AS last_exposure
-      FROM 
-          players p
-      LEFT JOIN 
-          supernatural_exposure se ON p.player_first_name = se.player_first_name 
-                                 AND p.player_last_name = se.player_last_name
-      WHERE 
-          p.supernatural_status IN ('Vampire', 'BrotherhoodWolf')
-      GROUP BY 
-          p.player_first_name, p.player_last_name, p.supernatural_status, 
-          p.court_title, p.court_position, p.secrecy_level, p.suspicion_level
-      ORDER BY 
-          p.suspicion_level DESC, exposure_incidents DESC
-    `);
-    console.log("Supernatural exposure risk view created or replaced");
-    // Insert noble houses if they don't exist
-    await client.query(`
-      INSERT INTO brotherhood_houses (name, description, specialty, motto)
-      VALUES 
-      ('Volkov', 'Masters of tracking and hunting, the Volkov house specializes in finding those who wish to remain hidden.', 'Tracking', 'We find what hides in darkness'),
-      ('Wurdulac', 'Skilled alchemists who create potions and elixirs to enhance Brotherhood abilities.', 'Alchemy', 'Our blood is our strength'),
-      ('Karkas', 'The intelligence gatherers of the Brotherhood, they excel at infiltration and espionage.', 'Intelligence', 'Knowledge is power, silence is wisdom'),
-      ('Kreschei', 'Healers who tend to the wounded and provide spiritual guidance.', 'Healing', 'We mend what is broken'),
-      ('Beorn', 'Warriors at heart, members of House Beorn are the frontline fighters of the Brotherhood.', 'Combat', 'Strike with swift fury'),
-      ('Lovanov', 'Skilled diplomats who maintain relations with human authorities and other supernatural entities.', 'Diplomacy', 'Words before fangs'),
-      ('Zorvolov', 'The logistical backbone of the Brotherhood, they ensure all houses have the resources they need.', 'Logistics', 'We provide the path'),
-      ('Dravolk', 'Innovators who adapt modern technology to the Brotherhood ancient ways.', 'Technology', 'Old blood, new tools'),
-      ('Morozov', 'Guardians of the Brotherhood ancient relics and sacred artifacts.', 'Artifacts', 'We protect what is holy'),
-      ('Severov', 'Keepers of the Brotherhood history and sacred texts.', 'Archives', 'Remember the blood of our fathers')
-      ON CONFLICT (name) DO NOTHING
-    `);
-    console.log("Brotherhood houses populated or verified");
-    console.log("Database fully initialized with Brotherhood and secrecy systems");
-    
-    console.log('Database initialized successfully');
-  } catch (err) {
-    console.error('Error initializing database:', err);
-  } finally {
-    if (client) {
-      client.release();
-    }
-  }
-}
+// Get brotherhood house information
 app.get('/api/get_brotherhood_house_info', async (req, res) => {
   const { house_name } = req.query;
   
@@ -1671,30 +1240,50 @@ app.get('/api/brotherhood_abilities', async (req, res) => {
 });
 // Update player's court identity/cover
 app.post('/api/update_court_identity', async (req, res) => {
-  const { player_first_name, player_last_name, court_title, court_position, cover_identity } = req.body;
+  const { player_first_name, player_last_name, court_title, cover_identity, secrecy_level } = req.body;
   
   if (!player_first_name || !player_last_name) {
     return res.status(400).json({ error: 'Missing required parameters' });
   }
   
   try {
-    const updateQuery = {
+    let updateFields = [];
+    let values = [player_first_name, player_last_name];
+    let valueIndex = 3;
+    
+    if (court_title !== undefined) {
+      updateFields.push(`court_title = $${valueIndex}`);
+      values.push(court_title);
+      valueIndex++;
+    }
+    
+    if (cover_identity !== undefined) {
+      updateFields.push(`cover_identity = $${valueIndex}`);
+      values.push(cover_identity);
+      valueIndex++;
+    }
+    
+    if (secrecy_level !== undefined) {
+      // Validate secrecy level
+      const validatedSecrecy = Math.max(0, Math.min(10, secrecy_level));
+      updateFields.push(`secrecy_level = $${valueIndex}`);
+      values.push(validatedSecrecy);
+      valueIndex++;
+    }
+    
+    if (updateFields.length === 0) {
+      return res.status(400).json({ error: 'No fields to update' });
+    }
+    
+    const query = {
       text: `UPDATE players
-             SET court_title = $1,
-                 court_position = $2,
-                 cover_identity = $3
-             WHERE player_first_name = $4 AND player_last_name = $5
+             SET ${updateFields.join(', ')}
+             WHERE player_first_name = $1 AND player_last_name = $2
              RETURNING *`,
-      values: [
-        court_title || null,
-        court_position || null,
-        cover_identity || null,
-        player_first_name,
-        player_last_name
-      ]
+      values: values
     };
     
-    const result = await pool.query(updateQuery);
+    const result = await pool.query(query);
     
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Player not found' });
@@ -1901,19 +1490,19 @@ app.get('/api/court_directory', async (req, res) => {
               player_last_name, 
               court_title, 
               court_position, 
-              gender, 
+              player_gender, 
               political_faction,
-              social_rank
+              rank_name
              FROM players 
              WHERE court_position IS NOT NULL
              ORDER BY 
                CASE 
-                 WHEN social_rank = 'Tsar' THEN 1
-                 WHEN social_rank = 'Grand Duke' THEN 2
-                 WHEN social_rank = 'Prince' THEN 3
-                 WHEN social_rank = 'Count' THEN 4
-                 WHEN social_rank = 'Baron' THEN 5
-                 WHEN social_rank = 'Noble' THEN 6
+                 WHEN rank_name = 'Tsar' THEN 1
+                 WHEN rank_name = 'Grand Duke' THEN 2
+                 WHEN rank_name = 'Prince' THEN 3
+                 WHEN rank_name = 'Count' THEN 4
+                 WHEN rank_name = 'Baron' THEN 5
+                 WHEN rank_name = 'Noble' THEN 6
                  ELSE 7
                END,
                court_title,
@@ -1927,6 +1516,232 @@ app.get('/api/court_directory', async (req, res) => {
     res.status(500).json({ error: 'Database error', details: err.message });
   }
 });
+// Set player as The Source (Generation 0) - NEW ENDPOINT
+app.post('/api/set_as_source', async (req, res) => {
+  try {
+    // Extract parameters from request body
+    const { player_first_name, player_last_name } = req.body;
+    
+    // Validate required parameters
+    if (!player_first_name || !player_last_name) {
+      return res.status(400).json({ error: 'Missing required parameters' });
+    }
+    
+    console.log(`Setting ${player_first_name} ${player_last_name} as The Source (Generation 0)`);
+    
+    // First, check if player exists
+    const playerResult = await pool.query(
+      'SELECT * FROM players WHERE player_first_name = $1 AND player_last_name = $2',
+      [player_first_name, player_last_name]
+    );
+    
+    // If player doesn't exist, return error
+    if (playerResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+    
+    // Update player to be The Source
+    await pool.query(
+      'UPDATE players SET supernatural_status = $1, generation = $2, vitae_level = $3, vitae_max = $3, mark_of_cain = $4, rank_name = $5 WHERE player_first_name = $6 AND player_last_name = $7',
+      ['SecretVampire', 0, 999, true, 'The Source', player_first_name, player_last_name]
+    );
+    
+    // Get updated player data
+    const updatedPlayer = await pool.query(
+      'SELECT * FROM players WHERE player_first_name = $1 AND player_last_name = $2',
+      [player_first_name, player_last_name]
+    );
+    
+    // Return success with updated player data
+    res.json({
+      success: true,
+      message: `${player_first_name} ${player_last_name} is now The Source (Generation 0)`,
+      player: updatedPlayer.rows[0]
+    });
+    
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Database error', details: err.message });
+  }
+});
+// Create tables if they don't exist on startup
+async function initDatabase() {
+  let client;
+  try {
+    console.log("Attempting to initialize database...");
+    // Connect to check if the database is accessible
+    client = await pool.connect();
+    console.log("Database connection established successfully");
+    
+    // Create players table if it doesn't exist - changed rank to rank_name
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS players (
+        id SERIAL PRIMARY KEY,
+        player_first_name TEXT NOT NULL,
+        player_last_name TEXT NOT NULL,
+        health INTEGER DEFAULT 100,
+        rubles INTEGER DEFAULT 100,
+        charm INTEGER DEFAULT 0,
+        influence INTEGER DEFAULT 0,
+        imperial_favor INTEGER DEFAULT 0,
+        faith INTEGER DEFAULT 0,
+        xp INTEGER DEFAULT 0,
+        love INTEGER DEFAULT 0,
+        family_name TEXT DEFAULT 'Desconocido',
+        russian_title TEXT DEFAULT 'Ninguno',
+        court_position TEXT DEFAULT 'Ninguno',
+        rank_name TEXT DEFAULT 'Ninguno',
+        supernatural_status TEXT DEFAULT 'Ninguno',
+        player_gender TEXT DEFAULT 'Unknown',
+        political_faction TEXT DEFAULT 'Ninguno',
+        is_owner BOOLEAN DEFAULT false,
+        vitae_level INTEGER DEFAULT 100,
+        vitae_max INTEGER DEFAULT 100,
+        is_in_lethargy BOOLEAN DEFAULT FALSE,
+        generation INTEGER DEFAULT NULL,
+        UNIQUE(player_first_name, player_last_name)
+      )
+    `);
+    console.log("Players table created or verified");
+    
+    // Add columns if they don't exist
+    try {
+      await client.query(`ALTER TABLE players ADD COLUMN IF NOT EXISTS love INTEGER DEFAULT 0`);
+      console.log("Love column added or verified");
+      
+      await client.query(`ALTER TABLE players ADD COLUMN IF NOT EXISTS political_faction TEXT DEFAULT 'Ninguno'`);
+      console.log("Political faction column added or verified");
+      
+      await client.query(`ALTER TABLE players ADD COLUMN IF NOT EXISTS vitae_level INTEGER DEFAULT 100`);
+      await client.query(`ALTER TABLE players ADD COLUMN IF NOT EXISTS vitae_max INTEGER DEFAULT 100`);
+      await client.query(`ALTER TABLE players ADD COLUMN IF NOT EXISTS is_in_lethargy BOOLEAN DEFAULT FALSE`);
+      await client.query(`ALTER TABLE players ADD COLUMN IF NOT EXISTS generation INTEGER DEFAULT NULL`);
+      await client.query(`ALTER TABLE players ADD COLUMN IF NOT EXISTS mark_of_cain BOOLEAN DEFAULT FALSE`);
+      console.log("Vampire-specific columns added or verified");
+      
+      // Remove the gender check constraint if it exists
+      try {
+        await client.query(`
+          ALTER TABLE players DROP CONSTRAINT IF EXISTS players_player_gender_check;
+        `);
+        console.log("Gender constraint removed or not present");
+      } catch (genderErr) {
+        console.log('Note: Gender constraint operation error:', genderErr.message);
+      }
+      
+      // Add check constraints for health
+      try {
+        await client.query(`
+          DO $$ 
+          BEGIN
+            -- Check if health constraint exists
+            IF NOT EXISTS (
+              SELECT 1 FROM pg_constraint 
+              WHERE conname = 'players_health_check'
+            ) THEN
+              ALTER TABLE players ADD CONSTRAINT players_health_check 
+              CHECK (health >= 0 AND health <= 100);
+            END IF;
+          END $$;
+        `);
+        console.log("Health constraint added or verified");
+        
+        // Fix any existing health values that are out of range
+        await client.query(`
+          UPDATE players SET health = 
+            CASE 
+              WHEN health < 0 THEN 0
+              WHEN health > 100 THEN 100
+              ELSE health
+            END
+          WHERE health < 0 OR health > 100;
+        `);
+        console.log("Any invalid health values have been corrected");
+        
+      } catch (constraintErr) {
+        console.log('Note: Constraint operations error:', constraintErr.message);
+      }
+      
+    } catch (columnErr) {
+      console.log('Note: Column operations error:', columnErr.message);
+    }
+    
+    // Create or verify vampire tables
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS clans (
+        id SERIAL PRIMARY KEY,
+        name TEXT UNIQUE NOT NULL,
+        faction TEXT NOT NULL,
+        description TEXT,
+        founder TEXT,
+        tenebrous_lineage TEXT
+      )
+    `);
+    console.log("Clans table created or verified");
+    
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS disciplines (
+        id SERIAL PRIMARY KEY,
+        name TEXT UNIQUE NOT NULL,
+        description TEXT,
+        activation_words TEXT
+      )
+    `);
+    console.log("Disciplines table created or verified");
+    
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS clan_disciplines (
+        clan_id INTEGER REFERENCES clans(id),
+        discipline_id INTEGER REFERENCES disciplines(id),
+        PRIMARY KEY (clan_id, discipline_id)
+      )
+    `);
+    console.log("Clan disciplines table created or verified");
+    
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS bloodlines (
+        id SERIAL PRIMARY KEY,
+        sire_id INTEGER REFERENCES players(id),
+        progenie_id INTEGER REFERENCES players(id),
+        generation INTEGER,
+        creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(progenie_id)
+      )
+    `);
+    console.log("Bloodlines table created or verified");
+    
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS feeding_history (
+        id SERIAL PRIMARY KEY,
+        vampire_id INTEGER REFERENCES players(id),
+        victim_id INTEGER REFERENCES players(id),
+        feeding_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        vitae_amount INTEGER
+      )
+    `);
+    console.log("Feeding history table created or verified");
+    
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS death_records (
+        id SERIAL PRIMARY KEY,
+        player_id INTEGER REFERENCES players(id),
+        death_type TEXT,
+        death_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        cause_of_death TEXT,
+        killer_id INTEGER REFERENCES players(id) NULL
+      )
+    `);
+    console.log("Death records table created or verified");
+    
+    console.log('Database initialized successfully');
+  } catch (err) {
+    console.error('Error initializing database:', err);
+  } finally {
+    if (client) {
+      client.release();
+    }
+  }
+}
 // Start the server
 const server = app.listen(port, () => {
   console.log(`Server running on port ${port}`);
